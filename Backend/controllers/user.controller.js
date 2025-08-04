@@ -1,0 +1,70 @@
+const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
+
+const User = require('../models/User')
+
+
+
+exports.register = async (req, res) => {
+
+  try {
+    const data = req.body
+    const usr = new User(data)
+
+    const salt = await bcrypt.genSalt(10)
+    const cryptedPassword = await bcrypt.hash(usr.password, salt)
+    usr.password = cryptedPassword
+
+    const registredUser = await usr.save()
+
+    res.status(201).json(registredUser)
+        
+  } catch (err) {
+    console.error("Registration error:", err);
+    res.status(500).json({ error: err.message });
+  }
+
+};
+
+
+
+exports.login = async (req, res) => {
+
+  try {
+    const data = req.body;
+    const user = await User.findOne({ email: data.email });
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    const validPassword = await bcrypt.compare(data.password, user.password);
+
+    if (!validPassword) {
+      return res.status(401).json({ message: 'Invalid email or password' });
+    }
+
+    const payload = { _id: user._id };
+    const token = jwt.sign(payload, process.env.JWT_SECRET);
+
+    res.status(200).json({ myToken: token });
+
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+
+};
+
+
+
+exports.getAll = async (req, res) => {
+
+  try {
+    const users = await User.find();
+    res.status(200).json(users);
+    
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+
+};
