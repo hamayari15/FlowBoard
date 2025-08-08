@@ -9,12 +9,12 @@ import { catchError, switchMap, tap } from 'rxjs/operators';
 export class AuthService {
   islogedInSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
-  apiUrl = 'http://localhost:3000';
+  apiUrl = 'http://localhost:3000/userRouter';
 
   constructor(private http: HttpClient) {}
 
   register(registerData: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/userRouter`, registerData);
+    return this.http.post(`${this.apiUrl}/register`, registerData);
   }
 
   // login(loginData: any): Observable<any> {
