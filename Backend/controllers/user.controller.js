@@ -20,6 +20,11 @@ exports.register = async (req, res) => {
     res.status(201).json(registredUser)
         
   } catch (err) {
+
+    if (err.code === 11000) {
+      return res.status(400).json({ error: 'Username or email already exists' });
+    }
+
     console.error("Registration error:", err);
     res.status(500).json({ error: err.message });
   }
