@@ -12,6 +12,7 @@ import { HomeComponent } from './features/home/home.component';
 import { RegisterComponent } from './features/auth/register/register.component';
 import { LoginComponent } from './features/auth/login/login.component';
 import { FooterComponent } from './features/footer/footer.component';
+import { GuardTestComponent } from './guard-test/guard-test.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { FooterComponent } from './features/footer/footer.component';
     HomeComponent,
     RegisterComponent,
     LoginComponent,
-    FooterComponent
+    FooterComponent,
+    GuardTestComponent
   ],
   imports: [
     BrowserModule,
