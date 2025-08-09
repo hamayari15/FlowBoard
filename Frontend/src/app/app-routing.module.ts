@@ -11,7 +11,10 @@ import { GuardTestComponent } from './guard-test/guard-test.component';
 const routes: Routes = [
 
     { path: '', component: HomeComponent},
-    { path: 'home', component: HomeComponent},
+    {
+    path: 'home',
+    loadChildren: () => import('./features/home/home.module').then(m => m.HomeModule)
+    },
     { path: 'register', component: RegisterComponent},
     { path: 'guardTest', component: GuardTestComponent, canActivate:[UserGuard]},
     { path: 'login', component: LoginComponent}

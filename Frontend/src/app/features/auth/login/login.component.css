@@ -17,12 +17,10 @@ h3 {
 }
 
 form {
-    max-width: 420px;
-    width: 100%;
+    max-height: 500px;
+    width: 380px;
     border: 1px solid #3c4b59;
     border-radius: 8px;
-    padding: 20px;
-    background: white;
 }
 
 form input {
