@@ -13,6 +13,7 @@ import { RegisterComponent } from './features/auth/register/register.component';
 import { LoginComponent } from './features/auth/login/login.component';
 import { FooterComponent } from './features/footer/footer.component';
 import { GuardTestComponent } from './guard-test/guard-test.component';
+import { WorkSpaceComponent } from './work-space/work-space.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { GuardTestComponent } from './guard-test/guard-test.component';
     RegisterComponent,
     LoginComponent,
     FooterComponent,
-    GuardTestComponent
+    GuardTestComponent,
+    WorkSpaceComponent
   ],
   imports: [
     BrowserModule,
