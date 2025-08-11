@@ -15,27 +15,26 @@ export class AuthService {
 
   register(registerData: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/register`, registerData);
+  };
+
+  login(loginData: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/login`, loginData).pipe(
+      tap((res: any) => {
+        if (res?.myToken) {
+          localStorage.setItem('Token', res.myToken);
+          console.log("✅ Token stored:", res.myToken);
+
+          this.islogedInSubject.next(true);
+        } else {
+          console.warn("⚠️ No token received from the server!");
+        }
+      })
+    )
+  };
+
+  isLoggedIn(): boolean {
+    const Token = localStorage.getItem('Token')
+    return !!Token
   }
-
-  // login(loginData: any): Observable<any> {
-  //   return this.http.post(`${this.apiUrl}/User/login`, loginData).pipe(
-  //     catchError(err => {
-  //       return this.http.post(`${this.apiUrl}/Admin/login`, loginData);
-  //     }),
-  //     tap((res: any) => {
-  //       if (res && res.Token) {
-  //         localStorage.setItem('Token', res.Token);
-  //         localStorage.setItem('Role', res.Role);
-  //         console.log("✅ Token stored:", res.Token);
-  //         console.log("✅ Role stored:", res.Role);
-
-  //         this.islogedInSubject.next(true);
-  //         this.userSubject.next(this.getUser());
-  //       } else {
-  //         console.warn("⚠️ No token received from the server!");
-  //       }
-  //     })
-  //   );
-  // }
 
 };
