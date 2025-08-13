@@ -1,7 +1,6 @@
 <div class="container">
-    
     <form [formGroup]="myForm" (ngSubmit)="onSubmit()">
-        <h3>Sign In</h3>
+        <h2 class="form-title">Sign In</h2>
 
         <input type="email" placeholder="Enter email" name="Email" formControlName="email" min="8" max="12">
         <div class="alert-danger" *ngIf="myForm.get('email')?.touched && myForm.get('email')?.errors?.['required']">Email input is required !</div>
