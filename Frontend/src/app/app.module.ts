@@ -14,6 +14,7 @@ import { LoginComponent } from './features/auth/login/login.component';
 import { FooterComponent } from './features/footer/footer.component';
 import { GuardTestComponent } from './guard-test/guard-test.component';
 import { WorkSpaceComponent } from './work-space/work-space.component';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
   declarations: [
@@ -24,17 +25,17 @@ import { WorkSpaceComponent } from './work-space/work-space.component';
     LoginComponent,
     FooterComponent,
     GuardTestComponent,
-    WorkSpaceComponent
+    WorkSpaceComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
     HttpClientModule,
-    ReactiveFormsModule
-    
+    ReactiveFormsModule,
+    RouterModule,
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}
