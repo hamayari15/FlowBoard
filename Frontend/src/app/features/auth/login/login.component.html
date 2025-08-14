@@ -1,31 +1,41 @@
 <div class="container">
-    <form [formGroup]="myForm" (ngSubmit)="onSubmit()">
-        <h2 class="form-title">Sign In</h2>
+  <form [formGroup]="myForm" (ngSubmit)="onSubmit()">
+    <h2 class="form-title">Log into Workspace</h2>
 
-        <input type="email" placeholder="Enter email" name="Email" formControlName="email" min="8" max="12">
-        <div class="alert-danger" *ngIf="myForm.get('email')?.touched && myForm.get('email')?.errors?.['required']">Email input is required !</div>
-        <div class="alert-danger" *ngIf="myForm.get('email')?.errors?.['minlength']">Email must be 8 caracters.</div>
-        <div class="alert-danger" *ngIf="myForm.get('email')?.errors?.['email']">Invalid email format.</div>
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input type="email" id="email" placeholder="Enter email" formControlName="email"/>
 
-        <div class="password-wrapper">
-        <input [type]="showPassword ? 'text' : 'password'" placeholder="Enter Password" name="Password" formControlName="password" min="6">
-        <span class="toggle-password" (click)="showPassword = !showPassword">
-            {{ showPassword ? '🙈' : '👁️' }}
-        </span>
-        </div>
-        
-        <div class="alert-danger" *ngIf="myForm.get('password')?.touched && myForm.get('password')?.errors?.['required']">Password input is required !</div>
-        <div class="alert-danger" *ngIf="myForm.get('password')?.errors?.['minlength']">Password must be 6 caracters.</div>
+      <div class="error-text" *ngIf="myForm.get('email')?.touched && myForm.get('email')?.errors?.['required']">
+        Email input is required!
+      </div>
+      <div class="error-text" *ngIf="myForm.get('email')?.errors?.['minlength']">
+        Email must be at least 8 characters.
+      </div>
+      <div class="error-text" *ngIf="myForm.get('email')?.errors?.['email']">
+        Invalid email format.
+      </div>
 
-        <button type="submit" [disabled]="myForm.invalid"> Login</button>
-        <p class="errormsg">{{serverError}}</p>
+    </div>
 
-        <p>Or</p>
+    <div class="form-group password-wrapper">
+      <label for="password">Password</label>
+      <input [type]="showPassword ? 'text' : 'password'" id="password" placeholder="Enter password" formControlName="password"/>
+      <span class="toggle-password" (click)="showPassword = !showPassword">
+        {{ showPassword ? '🙈' : '👁️' }}
+      </span>
 
-        <hr>
+      <div class="error-text" *ngIf="myForm.get('password')?.touched && myForm.get('password')?.errors?.['required']">
+        Password input is required!
+      </div>
+      <div class="error-text" *ngIf="myForm.get('password')?.errors?.['minlength']">
+        Password must be at least 6 characters.
+      </div>
 
-        <button class="register" routerLink="/register">Create an account</button>
+    </div>
 
-    </form>
-    
+    <p class="server-error">{{ serverError }}</p>
+    <button type="submit" [disabled]="myForm.invalid">Login</button>
+    <button class="register" routerLink="/register">Create an account</button>
+  </form>
 </div>
