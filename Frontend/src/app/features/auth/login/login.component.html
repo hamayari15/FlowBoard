@@ -1,41 +1,32 @@
 <div class="container">
-  <form [formGroup]="myForm" (ngSubmit)="onSubmit()">
+  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
     <h2 class="form-title">Log into Workspace</h2>
 
     <div class="form-group">
-      <label for="email">Email</label>
+      <label>Email</label>
       <input type="email" id="email" placeholder="Enter email" formControlName="email"/>
 
-      <div class="error-text" *ngIf="myForm.get('email')?.touched && myForm.get('email')?.errors?.['required']">
-        Email input is required!
+      <div class="error-text" *ngIf="loginForm.get('email')?.touched && loginForm.get('email')?.invalid">
+        <small *ngIf="loginForm.get('email')?.errors?.['required']">📧 Email is required.</small>
+        <small *ngIf="loginForm.get('email')?.errors?.['email']">📧 Invalid email address.</small>
       </div>
-      <div class="error-text" *ngIf="myForm.get('email')?.errors?.['minlength']">
-        Email must be at least 8 characters.
-      </div>
-      <div class="error-text" *ngIf="myForm.get('email')?.errors?.['email']">
-        Invalid email format.
-      </div>
-
     </div>
 
     <div class="form-group password-wrapper">
-      <label for="password">Password</label>
+      <label>Password</label>
       <input [type]="showPassword ? 'text' : 'password'" id="password" placeholder="Enter password" formControlName="password"/>
       <span class="toggle-password" (click)="showPassword = !showPassword">
         {{ showPassword ? '🙈' : '👁️' }}
       </span>
 
-      <div class="error-text" *ngIf="myForm.get('password')?.touched && myForm.get('password')?.errors?.['required']">
-        Password input is required!
+      <div class="error-text" *ngIf="loginForm.get('password')?.touched && loginForm.get('password')?.invalid">
+        <small *ngIf="loginForm.get('password')?.errors?.['required']">🔒 Password is required.</small>
+        <small *ngIf="loginForm.get('password')?.errors?.['minlength']">🔒 At least 6 characters.</small>
       </div>
-      <div class="error-text" *ngIf="myForm.get('password')?.errors?.['minlength']">
-        Password must be at least 6 characters.
-      </div>
-
     </div>
 
-    <p class="server-error">{{ serverError }}</p>
-    <button type="submit" [disabled]="myForm.invalid">Login</button>
+    <p class="server-error" *ngIf="serverError">{{ serverError }}</p>
+    <button type="submit" [disabled]="loginForm.invalid">Login</button>
     <button class="register" routerLink="/register">Create an account</button>
   </form>
 </div>

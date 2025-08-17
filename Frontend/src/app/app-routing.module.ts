@@ -6,7 +6,7 @@ import { UserGuard } from './core/guards/user.guard';
 import { HomeComponent } from './features/home/home.component';
 import { RegisterComponent } from './features/auth/register/register.component';
 import { LoginComponent } from './features/auth/login/login.component';
-import { WorkSpaceComponent } from './work-space/work-space.component';
+import { WorkSpaceComponent } from './features/work-space/work-space.component';
 
 const routes: Routes = [
 
