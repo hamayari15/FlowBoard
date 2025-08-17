@@ -10,25 +10,25 @@ import { AuthService } from 'src/app/core/services/auth.service';
 })
 export class LoginComponent {
 
-  myForm!: FormGroup
+  loginForm!: FormGroup
   serverError: String = ''
   showPassword: boolean = false
 
   constructor (private fb: FormBuilder, private authService: AuthService, private router: Router) {}
 
   ngOnInit(): void {
-    this.myForm = this.fb.group({
+    this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]]
     });
   }
 
   onSubmit(): void {
-    if(this.myForm.invalid) {
+    if(this.loginForm.invalid) {
       return
     }
 
-    this.authService.login(this.myForm.value).subscribe({
+    this.authService.login(this.loginForm.value).subscribe({
       next: (res) => {
         console.log('✅ Login successful:', res);
         this.router.navigate(['/workSpace']); 

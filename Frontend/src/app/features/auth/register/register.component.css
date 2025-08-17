@@ -3,7 +3,6 @@
   justify-content: center;
   align-items: center;
   min-height: calc(100vh - 70px);
-  margin-bottom: 32px;
 }
 
 form {
@@ -23,7 +22,7 @@ form {
   font-style: italic;
   font-weight: 700;
   color: #2c3e50;
-  margin-bottom: 24px;
+  margin-bottom: 20px;
   position: relative;
   padding-bottom: 10px;
   letter-spacing: 1px;
@@ -66,7 +65,7 @@ form {
   border: 1px solid #ccc;
   border-radius: 8px;
   font-size: 15px;
-  transition: border-color 0.2s ease;
+  transition: border-color 0.3s ease;
 }
 
 .form-group input:focus {
@@ -131,7 +130,6 @@ button[disabled] {
   text-decoration: none;
   color: #007bff;
   font-weight: 500;
-  transition: color 0.2s ease;
 }
 
 .login a:hover {
