@@ -13,6 +13,8 @@ require('dotenv').config();
 
 const userRouter = require('./routes/user')
 app.use('/userRouter', userRouter)
+const workSpaceRouter = require('./routes/workSpace')
+app.use('/workSpaceRouter', workSpaceRouter)
 
 app.use('/getImages', express.static('uploads'))
 
