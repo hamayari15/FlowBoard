@@ -32,7 +32,7 @@ exports.getAll = async (req, res) => {
 
     try {
 
-        const workSpaces = await workSpace.find()
+        const workSpaces = await workSpace.find().populate('owner').populate('members');
         res.status(200).json(workSpaces)
 
     } catch(err) {
@@ -47,7 +47,7 @@ exports.getById = async (req, res) => {
     try {
 
         const id = req.params.id
-        const wSpace = await workSpace.findById(id)
+        const wSpace = await workSpace.findById(id).populate('owner').populate('members');
 
         if(!wSpace) {
             res.status(404).json({message: 'workSpace not found'})
