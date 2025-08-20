@@ -6,7 +6,9 @@ import { UserGuard } from './core/guards/user.guard';
 import { HomeComponent } from './features/home/home.component';
 import { RegisterComponent } from './features/auth/register/register.component';
 import { LoginComponent } from './features/auth/login/login.component';
-import { WorkSpaceComponent } from './features/work-space/work-space.component';
+import { WorkspaceListComponent } from './features/workSpace/work-spaces-list/work-spaces-list.component';
+import { AddWorkSpaceComponent } from './features/workSpace/add-work-space/add-work-space.component';
+import { EditWorkSpaceComponent } from './features/workSpace/edit-work-space/edit-work-space.component';
 
 const routes: Routes = [
 
@@ -17,7 +19,9 @@ const routes: Routes = [
     },
     { path: 'register', component: RegisterComponent},
     { path: 'login', component: LoginComponent},
-    { path: 'workSpace', component: WorkSpaceComponent, canActivate:[UserGuard]}
+    { path: 'workSpaces-list', component: WorkspaceListComponent, canActivate:[UserGuard]},
+    { path: 'add-workSpace', component: AddWorkSpaceComponent, canActivate:[UserGuard]},
+    { path: 'edit-workSpace/:id', component: EditWorkSpaceComponent, canActivate:[UserGuard]}
     
 ];
 

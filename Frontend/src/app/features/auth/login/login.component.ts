@@ -31,7 +31,7 @@ export class LoginComponent {
     this.authService.login(this.loginForm.value).subscribe({
       next: (res) => {
         console.log('✅ Login successful:', res);
-        this.router.navigate(['/workSpace']); 
+        this.router.navigate(['/workSpace-list']); 
       },
       error: (err) => {
         console.error('❌ Login failed:', err);

@@ -14,7 +14,7 @@ export class WorkspaceService {
     return this.http.post(`${this.apiUrl}/Add`, workSpaceData)
   }
 
-  getworkSpaces() {
+  getWorkSpaces() {
     return this.http.get(`${this.apiUrl}/getAll`)
   }
 
