@@ -15,6 +15,8 @@ const userRouter = require('./routes/user')
 app.use('/userRouter', userRouter)
 const workSpaceRouter = require('./routes/workSpace')
 app.use('/workSpaceRouter', workSpaceRouter)
+const projectRouter = require('./routes/project')
+app.use('/projectRouter', projectRouter)
 
 app.use('/getImages', express.static('uploads'))
 

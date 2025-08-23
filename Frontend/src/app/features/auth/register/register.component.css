@@ -1,3 +1,9 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
 .container {
   display: flex;
   justify-content: center;
@@ -8,7 +14,7 @@
 form {
   width: 600px;
   background-color: #fff;
-  padding: 16px 24px 0 24px;
+  padding: 24px;
   border-radius: 12px;
   box-shadow: 0 10px 24px rgba(0, 0, 0, 0.1);
   display: flex;
@@ -22,7 +28,7 @@ form {
   font-style: italic;
   font-weight: 700;
   color: #2c3e50;
-  margin-bottom: 20px;
+  margin-bottom: 32px;
   position: relative;
   padding-bottom: 10px;
   letter-spacing: 1px;
@@ -55,7 +61,7 @@ form {
 }
 
 .form-group label {
-  margin-bottom: 4px;
+  margin-bottom: 6px;
   font-weight: 500;
   color: #333;
 }
@@ -65,7 +71,7 @@ form {
   border: 1px solid #ccc;
   border-radius: 8px;
   font-size: 15px;
-  transition: border-color 0.3s ease;
+  transition: all 0.3s ease;
 }
 
 .form-group input:focus {
@@ -74,25 +80,31 @@ form {
 }
 
 .form-group input.ng-invalid.ng-touched {
-  border-color: red;
+  border-color: #e74c3c;
+  background-color: #fdecea;
 }
 
 .form-group input.ng-valid {
-  border-color: green;
+  border-color: #27ae60;
+  background-color: #eafaf1; 
 }
 
 .error-text {
   color: #e53935;
   margin-top: 4px;
+  font-size: 16px;
+}
+
+.alert {
+  padding: 12px;
+  border-radius: 8px;
   font-size: 14px;
 }
 
-.server-error {
-  color: #e53935; 
-  margin: 0; 
-  font-size: 16px;
-  text-align: left;
-  letter-spacing: 1px;
+.error-alert {
+  background: #fdecea;
+  color: #e74c3c;
+  border: 1px solid #e74c3c;
 }
 
 button[type="submit"] {

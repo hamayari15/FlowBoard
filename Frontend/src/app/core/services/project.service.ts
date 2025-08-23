@@ -14,11 +14,11 @@ export interface Project {
   createdAt?: Date;
   updatedAt?: Date;
 }
-
 @Injectable({
   providedIn: 'root',
 })
 export class ProjectService {
+
   private apiUrl = 'http://localhost:3000/projectRouter';
 
   constructor(private http: HttpClient) {}
@@ -55,4 +55,5 @@ export class ProjectService {
   deleteProject(id: string): Observable<any> {
     return this.http.delete(`${this.apiUrl}/Delete/${id}`);
   }
-}
+
+};

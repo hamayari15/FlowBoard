@@ -1,81 +1,27 @@
-<div class="form-container">
-  <button class="back-btn" (click)="goBack()">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-      <path d="M19 12H5"></path>
-      <path d="M12 19l-7-7 7-7"></path>
-    </svg>
-  </button>
-
-  <h2>Add New Workspace</h2>
+<div class="container">
   
-  <form (ngSubmit)="onSubmit()" #workspaceForm="ngForm">
-    <!-- Name -->
+  <form [formGroup]="form" (ngSubmit)="submit()">
+    <h2 class="form-title">Add new workspace</h2>
+    
     <div class="form-group">
-      <label for="name">Workspace Name</label>
-      <input
-        type="text"
-        id="name"
-        name="name"
-        [(ngModel)]="workspace.name"
-        required
-        class="form-control"
-        placeholder="Enter workspace name..."
-        #nameField="ngModel"
-      />
-      <div class="error-message" *ngIf="nameField.invalid && nameField.touched">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <circle cx="12" cy="12" r="10"></circle>
-          <line x1="15" y1="9" x2="9" y2="15"></line>
-          <line x1="9" y1="9" x2="15" y2="15"></line>
-        </svg>
-        Workspace name is required
+      <label for="name"> Name <span class="required">*</span></label>
+      <input type="text" id="name" formControlName="name" class="form-input" placeholder="Enter workspace name" [class.error]="form.get('name')?.touched && form.get('name')?.invalid">
+      
+      <div class="error-text" *ngIf="form.get('name')?.touched && form.get('name')?.invalid">
+        <small *ngIf="form.get('name')?.errors?.['required']">❌ Name is required.</small>
       </div>
     </div>
 
-    <!-- Description -->
     <div class="form-group">
       <label for="description">Description</label>
-      <input
-        type="text"
-        id="description"
-        name="description"
-        [(ngModel)]="workspace.description"
-        class="form-control"
-        placeholder="Brief description of your workspace..."
-      />
+      <input type="text" id="description" formControlName="description" class="form-input" placeholder="Enter workspace description">
     </div>
 
-    <!-- Owner -->
-    <div class="form-group">
-      <label for="owner">Owner</label>
-      <input
-        type="text"
-        id="owner"
-        name="owner"
-        [(ngModel)]="workspace.owner"
-        required
-        class="form-control"
-        placeholder="Owner name..."
-        #ownerField="ngModel"
-      />
-      <div class="error-message" *ngIf="ownerField.invalid && ownerField.touched">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <circle cx="12" cy="12" r="10"></circle>
-          <line x1="15" y1="9" x2="9" y2="15"></line>
-          <line x1="9" y1="9" x2="15" y2="15"></line>
-        </svg>
-        Owner name is required
-      </div>
+    <div *ngIf="serverError" class="alert error-alert">
+      {{ serverError }}
     </div>
 
-    <!-- Submit -->
-    <button 
-      type="submit" 
-      [disabled]="!workspaceForm.valid" 
-      class="btn"
-      [class.loading]="isLoading"
-    >
-      <span *ngIf="!isLoading">Add Workspace</span>
-    </button>
+    <button type="submit" class="btn-submit" [disabled]="form.invalid"> Add Workspace </button>
+    <button type="button" class="btn-back" routerLink="/workSpaces-list"> ← Back to WorkSpaces List </button>
   </form>
 </div>

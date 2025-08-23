@@ -42,26 +42,16 @@ export class RegisterComponent implements OnInit {
   }
 
   onSubmit(): void {
-    if(this.registerForm.invalid) {
-      console.warn('❌ Form is invalid');
-      return
-    }
-
     this.authService.register(this.registerForm.value).subscribe({
       next: (res) => {
         console.log('✅ Registration successful:', res);
         this.router.navigate(['/login']);
       },
       error: (err) => {
-        if (err.status === 400) {
-          this.serverError = err.error.error; 
-        }
-        else {
-          this.serverError = "Something went wrong. Please try again later.";
-        }
+        this.serverError = err.error?.message || 'Register failed, please try again later.';
+        console.log(err)
       }
     })
-
   }
 
 }; 
