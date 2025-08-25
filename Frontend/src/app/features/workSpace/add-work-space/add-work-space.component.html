@@ -1,0 +1,27 @@
+<div class="container">
+  
+  <form [formGroup]="form" (ngSubmit)="submit()">
+    <h2 class="form-title">Add new workspace</h2>
+    
+    <div class="form-group">
+      <label for="name"> Name <span class="required">*</span></label>
+      <input type="text" id="name" formControlName="name" class="form-input" placeholder="Enter workspace name" [class.error]="form.get('name')?.touched && form.get('name')?.invalid">
+      
+      <div class="error-text" *ngIf="form.get('name')?.touched && form.get('name')?.invalid">
+        <small *ngIf="form.get('name')?.errors?.['required']">❌ Name is required.</small>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="description">Description</label>
+      <input type="text" id="description" formControlName="description" class="form-input" placeholder="Enter workspace description">
+    </div>
+
+    <div *ngIf="serverError" class="alert error-alert">
+      {{ serverError }}
+    </div>
+
+    <button type="submit" class="btn-submit" [disabled]="form.invalid"> Add Workspace </button>
+    <button type="button" class="btn-back" routerLink="/workSpaces-list"> ← Back to WorkSpaces List </button>
+  </form>
+</div>

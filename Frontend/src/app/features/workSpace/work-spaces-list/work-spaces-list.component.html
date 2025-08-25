@@ -1,0 +1,23 @@
+<div class="container">
+  <button class="btn-add" routerLink="/add-workSpace">+ Add Workspace</button>
+
+  <div class="workspace-list">
+    <div *ngFor="let ws of workSpaces" class="workspace-card">
+      <h3>{{ ws.name }}</h3>
+      <p>{{ ws.description || 'No description' }}</p>
+
+      <div class="owner-info">
+        <img *ngIf="ws.owner.image" [src]="'http://127.0.0.1:3000/getImages/' + ws.owner.image" alt="{{ ws.owner.name }}" class="owner-img">
+        <span>{{ ws.owner.name }} ({{ ws.owner.email }})</span>
+      </div>
+
+      <p>Members: {{ ws.members.length }}</p>
+      <p>Created: {{ ws.createdAt | date:'mediumDate' }}</p>
+
+      <div class="btn-group">
+        <button class="btn-edit" (click)="goToEdit(ws._id)">Edit</button>
+        <button class="btn-delete" (click)="delete(ws._id)">Delete</button>
+      </div>
+    </div>
+  </div>
+</div>
