@@ -7,7 +7,7 @@ import Swal from 'sweetalert2';
   selector: 'app-work-spaces-list',
   templateUrl: './work-spaces-list.component.html',
   styleUrls: ['./work-spaces-list.component.css']
-})
+})  
 export class WorkspaceListComponent { 
 
   workSpaces: any = []

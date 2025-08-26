@@ -48,8 +48,8 @@ export class RegisterComponent implements OnInit {
         this.router.navigate(['/login']);
       },
       error: (err) => {
+        console.log('❌ Login failed:', err)
         this.serverError = err.error?.message || 'Register failed, please try again later.';
-        console.log(err)
       }
     })
   }
