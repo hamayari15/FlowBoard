@@ -17,6 +17,7 @@ export interface Project {
 @Injectable({
   providedIn: 'root',
 })
+
 export class ProjectService {
 
   private apiUrl = 'http://localhost:3000/projectRouter';
@@ -36,20 +37,15 @@ export class ProjectService {
   }
 
   getProjectsByWorkspace(workspaceId: string): Observable<Project[]> {
-    return this.http.get<Project[]>(
-      `${this.apiUrl}/getByWorkspace/${workspaceId}`
-    );
+    return this.http.get<Project[]>(`${this.apiUrl}/getByWorkspace/${workspaceId}`);
   }
 
-  updateProject(
-    projectData: Partial<Project>,
-    id: string
-  ): Observable<Project> {
+  updateProject(projectData: Partial<Project>,id: string): Observable<Project> {
     return this.http.put<Project>(`${this.apiUrl}/Update/${id}`, projectData);
   }
 
   archiveProject(id: string): Observable<any> {
-    return this.http.put(`${this.apiUrl}/Archive/${id}`, {});
+    return this.http.patch(`${this.apiUrl}/Archive/${id}`, {});
   }
 
   deleteProject(id: string): Observable<any> {

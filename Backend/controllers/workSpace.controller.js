@@ -3,7 +3,7 @@ const User = require("../models/User");
 
 
 exports.Add = async (req, res) => {
-
+  
   try {
     const { name, description, owner, members } = req.body;
 
@@ -34,6 +34,7 @@ exports.Add = async (req, res) => {
   } catch (err) {
     res.status(500).json({ message: "Error creating workspace", err });
   }
+
 };
 
 
@@ -46,6 +47,7 @@ exports.getAll = async (req, res) => {
   } catch (err) {
     res.status(500).json({ message: "Error fetching workSpaces", err });
   }
+
 };
 
 
@@ -63,6 +65,7 @@ exports.getById = async (req, res) => {
   } catch (err) {
     res.status(500).json({ message: "Error fetching workSpace", err });
   }
+
 };
 
 
@@ -77,16 +80,23 @@ exports.Update = async (req, res) => {
     if (!updatedWorkSpace) {
       return res.status(404).json({ message: "Workspace not found" });
     }
+
+    // const duplicate = await workSpace.findOne({ name: name.trim(), owner });
+    // if (duplicate) {
+    //   return res.status(409).json({ message: "Workspace name already exists !" });
+    // }
+    
     res.status(200).json(updatedWorkSpace);
 
   } catch (err) {
     res.status(500).json({ message: "Error updating workSpace" });
   }
+
 };
 
 
 exports.Delete = async (req, res) => {
-    
+
   try {
     const id = req.params.id;
     deletedWorkSpace = await workSpace.findByIdAndDelete(id);
@@ -99,4 +109,5 @@ exports.Delete = async (req, res) => {
   } catch (err) {
     res.status(500).json({ message: "Error deleting workSpace" });
   }
+
 };

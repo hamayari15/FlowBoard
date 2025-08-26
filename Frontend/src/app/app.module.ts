@@ -4,6 +4,10 @@ import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
 
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
+import { MatInputModule } from '@angular/material/input';
+
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -17,6 +21,7 @@ import { FooterComponent } from './features/footer/footer.component';
 import { WorkspaceListComponent } from './features/workSpace/work-spaces-list/work-spaces-list.component';
 import { AddWorkSpaceComponent } from './features/workSpace/add-work-space/add-work-space.component';
 import { EditWorkSpaceComponent } from './features/workSpace/edit-work-space/edit-work-space.component';
+import { WorkSpaceDetailsComponent } from './features/workSpace/work-space-details/work-space-details.component';
 
 @NgModule({
   declarations: [
@@ -29,6 +34,7 @@ import { EditWorkSpaceComponent } from './features/workSpace/edit-work-space/edi
     WorkspaceListComponent,
     AddWorkSpaceComponent,
     EditWorkSpaceComponent,
+    WorkSpaceDetailsComponent,
   ],
   imports: [
     BrowserModule,
@@ -37,7 +43,10 @@ import { EditWorkSpaceComponent } from './features/workSpace/edit-work-space/edi
     HttpClientModule,
     ReactiveFormsModule,
     RouterModule,
-    FormsModule
+    FormsModule,
+    MatDialogModule,
+    MatButtonModule,
+    MatInputModule
   ],
   providers: [],
   bootstrap: [AppComponent],

@@ -4,7 +4,7 @@
 
     <div class="form-group">
       <label> Email <span class="required">*</span></label>
-      <input type="email" id="email" placeholder="Enter email" formControlName="email"/>
+      <input type="email" placeholder="Enter email" formControlName="email"/>
 
       <div class="error-text" *ngIf="loginForm.get('email')?.touched && loginForm.get('email')?.invalid">
         <small *ngIf="loginForm.get('email')?.errors?.['required']">❌ Email is required.</small>
@@ -14,7 +14,7 @@
 
     <div class="form-group password-wrapper">
       <label> Password <span class="required">*</span></label>
-      <input [type]="showPassword ? 'text' : 'password'" id="password" placeholder="Enter password" formControlName="password"/>
+      <input [type]="showPassword ? 'text' : 'password'" placeholder="Enter password" formControlName="password"/>
       <span class="toggle-password" (click)="showPassword = !showPassword">
         {{ showPassword ? '🙈' : '👁️' }}
       </span>
@@ -25,9 +25,7 @@
       </div>
     </div>
 
-    <div *ngIf="serverError" class="alert error-alert">
-        {{ serverError }}
-    </div>
+    <div *ngIf="serverError" class="alert error-alert">{{ serverError }}</div>
     <button type="submit" [disabled]="loginForm.invalid">Login</button>
     <button class="register" routerLink="/register">Create an account</button>
   </form>
