@@ -1,1 +1,7 @@
-<p>work-space-details works!</p>
+<div class="workspace-container">
+  <h2>{{ workSpaceData.name }}</h2>
+  <p><strong>Description:</strong> {{ workSpaceData.description }}</p>
+  <p><strong>Owner:</strong> {{ workSpaceData.owner.name }}</p>
+  <p><strong>Owner:</strong> {{ workSpaceData.owner.email }}</p>
+  <p><strong>Created At:</strong> {{ workSpaceData.createdAt | date:'medium' }}</p>
+</div>

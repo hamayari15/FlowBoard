@@ -1,17 +1,16 @@
-import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms'; 
 import { BrowserModule } from '@angular/platform-browser';
+import { AppComponent } from './app.component';
+import { AppRoutingModule } from './app-routing.module';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { RouterModule } from '@angular/router';
+
+import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
-
-import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './app.component';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { RouterModule } from '@angular/router';
 
 import { NavbarComponent } from './features/navbar/navbar.component';
 import { HomeComponent } from './features/home/home.component';
@@ -43,7 +42,6 @@ import { WorkSpaceDetailsComponent } from './features/workSpace/work-space-detai
     HttpClientModule,
     ReactiveFormsModule,
     RouterModule,
-    FormsModule,
     MatDialogModule,
     MatButtonModule,
     MatInputModule

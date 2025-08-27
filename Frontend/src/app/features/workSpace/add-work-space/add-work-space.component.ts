@@ -4,6 +4,7 @@ import { AuthService } from 'src/app/core/services/auth.service';
 import { WorkspaceService } from 'src/app/core/services/workspace.service';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
+
 @Component({
   selector: 'app-add-work-space',
   templateUrl: './add-work-space.component.html',
@@ -12,7 +13,7 @@ import Swal from 'sweetalert2';
 
 export class AddWorkSpaceComponent implements OnInit {
 
-  form!: FormGroup
+  addForm!: FormGroup
   userId: any = '';
   serverError = '';
 
@@ -24,23 +25,23 @@ export class AddWorkSpaceComponent implements OnInit {
   }
 
   buildForm(): void {
-    this.form = this.fb.group({
+    this.addForm = this.fb.group({
       name: ['', Validators.required],
       description: [''],
       members: []
     });
   }
 
-  submit() {
+  addWorkSpace() {
     const workspaceData = {
-      ...this.form.value,
-      owner: this.userId        
+      ...this.addForm.value,
+      owner: this.userId    
     };
 
     this.wsService.addWorkSpace(workspaceData).subscribe({
       next: (res) => {
         console.log("Workspace created successfully", res)
-        this.form.reset()
+        this.addForm.reset()
         Swal.fire({
             icon: 'success',
             title: 'success',
