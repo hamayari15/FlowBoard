@@ -9,6 +9,7 @@ import { LoginComponent } from './features/auth/login/login.component';
 import { WorkspaceListComponent } from './features/workSpace/work-spaces-list/work-spaces-list.component';
 import { AddWorkSpaceComponent } from './features/workSpace/add-work-space/add-work-space.component';
 import { EditWorkSpaceComponent } from './features/workSpace/edit-work-space/edit-work-space.component';
+import { WorkSpaceDetailsComponent } from './features/workSpace/work-space-details/work-space-details.component';
 
 const routes: Routes = [
 
@@ -21,7 +22,8 @@ const routes: Routes = [
     { path: 'login', component: LoginComponent},
     { path: 'workSpaces-list', component: WorkspaceListComponent, canActivate:[UserGuard]},
     { path: 'add-workSpace', component: AddWorkSpaceComponent, canActivate:[UserGuard]},
-    { path: 'edit-workSpace/:id', component: EditWorkSpaceComponent, canActivate:[UserGuard]}
+    { path: 'edit-workSpace/:id', component: EditWorkSpaceComponent, canActivate:[UserGuard]},
+    { path: 'workSpace-details/:id', component: WorkSpaceDetailsComponent, canActivate:[UserGuard]},
     
 ];
 
@@ -29,6 +31,7 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
+
 export class AppRoutingModule {
   static components = [];
 }

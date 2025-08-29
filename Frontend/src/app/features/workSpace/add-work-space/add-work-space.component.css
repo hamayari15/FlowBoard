@@ -76,7 +76,6 @@ form {
   border-color: #007bff;
 }
  
-.form-group .form-input.error,
 .form-group .form-input.ng-invalid.ng-touched {
   border-color: #e74c3c;
   background-color: #fdecea;

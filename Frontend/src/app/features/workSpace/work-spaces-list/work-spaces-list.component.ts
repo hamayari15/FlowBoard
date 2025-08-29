@@ -21,8 +21,11 @@ export class WorkspaceListComponent {
   getAllWorkSpaces(): any {
     this.wsService.getWorkSpaces().subscribe((res) => {
       this.workSpaces = res
-      console.log(this.workSpaces)
     })
+  }
+
+  goToDetails(id: any) {
+    this.router.navigate(['/workSpace-details', id])
   }
 
   goToEdit(id: any) {

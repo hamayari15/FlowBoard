@@ -15,6 +15,7 @@
       <p>Created: {{ ws.createdAt | date:'mediumDate' }}</p>
 
       <div class="btn-group">
+        <button class="btn-details" (click)="goToDetails(ws._id)">Details</button>
         <button class="btn-edit" (click)="goToEdit(ws._id)">Edit</button>
         <button class="btn-delete" (click)="delete(ws._id)">Delete</button>
       </div>
