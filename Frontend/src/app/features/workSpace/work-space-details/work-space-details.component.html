@@ -1,7 +1,170 @@
-<div class="workspace-container">
-  <h2>{{ workSpaceData.name }}</h2>
-  <p><strong>Description:</strong> {{ workSpaceData.description }}</p>
-  <p><strong>Owner:</strong> {{ workSpaceData.owner.name }}</p>
-  <p><strong>Owner:</strong> {{ workSpaceData.owner.email }}</p>
-  <p><strong>Created At:</strong> {{ workSpaceData.createdAt | date:'medium' }}</p>
+<div class="workspace-details-container">
+  <!-- Workspace Header Section -->
+  <mat-card class="workspace-header-card" *ngIf="!loading">
+    <mat-card-header>
+      <div mat-card-avatar class="workspace-avatar">
+        <mat-icon>work</mat-icon>
+      </div>
+      <mat-card-title>{{ workSpaceData.name }}</mat-card-title>
+      <mat-card-subtitle>Workspace Details</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="workspace-info">
+        <div class="info-item">
+          <mat-icon>description</mat-icon>
+          <span>{{
+            workSpaceData.description || "No description provided"
+          }}</span>
+        </div>
+        <div class="info-item">
+          <mat-icon>person</mat-icon>
+          <span
+            >{{ workSpaceData.owner?.name }} ({{
+              workSpaceData.owner?.email
+            }})</span
+          >
+        </div>
+        <div class="info-item">
+          <mat-icon>schedule</mat-icon>
+          <span>Created: {{ workSpaceData.createdAt | date : "medium" }}</span>
+        </div>
+        <div class="info-item">
+          <mat-icon>group</mat-icon>
+          <span>{{ workSpaceData.members?.length || 0 }} Members</span>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Loading Skeleton for Workspace -->
+  <mat-card class="workspace-header-card" *ngIf="loading">
+    <mat-card-header>
+      <div mat-card-avatar class="skeleton-avatar"></div>
+      <mat-card-title class="skeleton-text skeleton-title"></mat-card-title>
+      <mat-card-subtitle
+        class="skeleton-text skeleton-subtitle"
+      ></mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="skeleton-text"></div>
+      <div class="skeleton-text"></div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Projects Section -->
+  <mat-card class="projects-section-card">
+    <mat-card-header>
+      <mat-card-title class="projects-header">
+        <mat-icon>folder</mat-icon>
+        Projects
+        <span class="project-count" *ngIf="!loadingProjects"
+          >({{ projects.length }})</span
+        >
+      </mat-card-title>
+      <div class="header-actions">
+        <button
+          mat-raised-button
+          color="primary"
+          (click)="openAddProjectDialog()"
+        >
+          <mat-icon>add</mat-icon>
+          New Project
+        </button>
+      </div>
+    </mat-card-header>
+
+    <mat-card-content>
+      <!-- Loading State -->
+      <div *ngIf="loadingProjects" class="loading-container">
+        <mat-spinner diameter="50"></mat-spinner>
+        <p>Loading projects...</p>
+      </div>
+
+      <!-- Empty State -->
+      <div
+        *ngIf="!loadingProjects && projects.length === 0"
+        class="empty-state"
+      >
+        <mat-icon class="empty-icon">folder_open</mat-icon>
+        <h3>No Projects Yet</h3>
+        <p>
+          This workspace doesn't have any projects. Create your first project to
+          get started!
+        </p>
+        <button
+          mat-raised-button
+          color="primary"
+          (click)="openAddProjectDialog()"
+        >
+          <mat-icon>add</mat-icon>
+          Create First Project
+        </button>
+      </div>
+
+      <!-- Projects Grid -->
+      <div
+        *ngIf="!loadingProjects && projects.length > 0"
+        class="projects-grid"
+      >
+        <mat-card class="project-card" *ngFor="let project of projects">
+          <mat-card-header>
+            <div mat-card-avatar class="project-avatar">
+              <mat-icon>assignment</mat-icon>
+            </div>
+            <mat-card-title>{{ project.name }}</mat-card-title>
+            <mat-card-subtitle>
+              <mat-chip
+                [style.background-color]="getStatusColor(project.status)"
+                class="status-chip"
+              >
+                {{ project.status | titlecase }}
+              </mat-chip>
+            </mat-card-subtitle>
+          </mat-card-header>
+
+          <mat-card-content>
+            <p class="project-description">
+              {{ project.description || "No description provided" }}
+            </p>
+
+            <div class="project-meta">
+              <div class="meta-item">
+                <mat-icon>group</mat-icon>
+                <span>{{ getMembersCount(project) }} members</span>
+              </div>
+              <div class="meta-item">
+                <mat-icon>schedule</mat-icon>
+                <span>{{ project.createdAt | date : "shortDate" }}</span>
+              </div>
+            </div>
+          </mat-card-content>
+
+          <mat-card-actions align="end">
+            <button
+              mat-icon-button
+              matTooltip="Edit Project"
+              (click)="openEditProjectDialog(project)"
+            >
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button
+              mat-icon-button
+              matTooltip="Archive Project"
+              (click)="archiveProject(project)"
+            >
+              <mat-icon>archive</mat-icon>
+            </button>
+            <button
+              mat-icon-button
+              matTooltip="Delete Project"
+              color="warn"
+              (click)="deleteProject(project)"
+            >
+              <mat-icon>delete</mat-icon>
+            </button>
+          </mat-card-actions>
+        </mat-card>
+      </div>
+    </mat-card-content>
+  </mat-card>
 </div>

@@ -21,6 +21,18 @@ import { WorkspaceListComponent } from './features/workSpace/work-spaces-list/wo
 import { AddWorkSpaceComponent } from './features/workSpace/add-work-space/add-work-space.component';
 import { EditWorkSpaceComponent } from './features/workSpace/edit-work-space/edit-work-space.component';
 import { WorkSpaceDetailsComponent } from './features/workSpace/work-space-details/work-space-details.component';
+import { ProjectDialogComponent } from './features/workSpace/project-dialog/project-dialog.component';
+
+import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { CommonModule } from '@angular/common';
+
+
 
 @NgModule({
   declarations: [
@@ -34,8 +46,10 @@ import { WorkSpaceDetailsComponent } from './features/workSpace/work-space-detai
     AddWorkSpaceComponent,
     EditWorkSpaceComponent,
     WorkSpaceDetailsComponent,
+    ProjectDialogComponent,
   ],
   imports: [
+    MatIconModule,
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
@@ -44,7 +58,14 @@ import { WorkSpaceDetailsComponent } from './features/workSpace/work-space-detai
     RouterModule,
     MatDialogModule,
     MatButtonModule,
-    MatInputModule
+    MatInputModule,
+    CommonModule,
+    MatCardModule,
+    MatFormFieldModule,
+    MatSelectModule,
+    MatChipsModule,
+    MatProgressSpinnerModule,
+    MatTooltipModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

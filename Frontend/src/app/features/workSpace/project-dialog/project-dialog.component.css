@@ -1,0 +1,197 @@
+.project-dialog-container {
+  padding: 0;
+  margin: 0;
+}
+
+.dialog-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 24px 24px 16px;
+  margin: 0;
+  font-size: 24px;
+  font-weight: 600;
+  color: #333;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.dialog-title mat-icon {
+  color: #667eea;
+  font-size: 28px;
+  height: 28px;
+  width: 28px;
+}
+
+.dialog-content {
+  padding: 24px;
+  min-height: 400px;
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+.project-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.project-form .mat-mdc-form-field {
+  margin-bottom: 0;
+}
+
+/* Status Option Styling */
+.status-option-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0;
+}
+
+.status-option-content mat-icon {
+  font-size: 20px;
+  height: 20px;
+  width: 20px;
+}
+
+/* Member Option Styling */
+.member-option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0;
+  width: 100%;
+}
+
+.member-option mat-icon {
+  color: #666;
+  font-size: 20px;
+  height: 20px;
+  width: 20px;
+}
+
+.member-info {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.member-name {
+  font-weight: 500;
+  color: #333;
+  font-size: 14px;
+}
+
+.member-email {
+  font-size: 12px;
+  color: #666;
+  margin-top: 2px;
+}
+
+/* Dialog Actions */
+.dialog-actions {
+  padding: 16px 24px 24px;
+  border-top: 1px solid #e0e0e0;
+  margin: 0;
+  gap: 12px;
+}
+
+.dialog-actions button {
+  min-width: 100px;
+  height: 40px;
+}
+
+.dialog-actions .mat-mdc-raised-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dialog-actions .mat-mdc-raised-button mat-spinner {
+  margin-right: 8px;
+}
+
+/* Form Field Customization */
+.mat-mdc-form-field-outline {
+  border-radius: 8px;
+}
+
+.mat-mdc-form-field-focus-overlay {
+  border-radius: 8px;
+}
+
+.project-form .mat-mdc-form-field-subscript-wrapper {
+  margin-top: 8px;
+}
+
+.project-form .mat-mdc-form-field-hint-wrapper,
+.project-form .mat-mdc-form-field-error-wrapper {
+  padding: 0 16px;
+}
+
+/* Custom styling for textareas */
+.project-form textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  .dialog-title {
+    font-size: 20px;
+    padding: 20px 20px 12px;
+  }
+
+  .dialog-content {
+    padding: 20px;
+  }
+
+  .dialog-actions {
+    padding: 12px 20px 20px;
+    flex-direction: column-reverse;
+  }
+
+  .dialog-actions button {
+    width: 100%;
+    margin: 4px 0;
+  }
+}
+
+/* Loading state */
+.mat-mdc-raised-button[disabled] {
+  opacity: 0.7;
+}
+
+/* Error states */
+.mat-mdc-form-field.mat-form-field-invalid .mat-mdc-text-field-wrapper {
+  box-shadow: 0 0 0 2px rgba(244, 67, 54, 0.2);
+}
+
+/* Focus states */
+.mat-mdc-form-field.mat-focused .mat-mdc-text-field-wrapper {
+  box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.2);
+}
+
+/* Select panel customization */
+.mat-mdc-select-panel {
+  border-radius: 8px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+/* Hint and error text styling */
+.mat-mdc-form-field-hint,
+.mat-mdc-form-field-error {
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.mat-mdc-form-field-error {
+  color: #f44336;
+}
+
+.mat-mdc-form-field-hint {
+  color: #666;
+}

@@ -1,0 +1,106 @@
+<div class="project-dialog-container">
+  <h2 mat-dialog-title class="dialog-title">
+    <mat-icon>{{ data.mode === "add" ? "add_circle" : "edit" }}</mat-icon>
+    {{ dialogTitle }}
+  </h2>
+
+  <mat-dialog-content class="dialog-content">
+    <form [formGroup]="projectForm" class="project-form">
+      <!-- Project Name -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Project Name</mat-label>
+        <input
+          matInput
+          formControlName="name"
+          placeholder="Enter project name"
+          maxlength="100"
+        />
+        <mat-icon matSuffix>assignment</mat-icon>
+        <mat-hint
+          >{{ projectForm.get("name")?.value?.length || 0 }}/100</mat-hint
+        >
+        <mat-error>{{ getFieldError("name") }}</mat-error>
+      </mat-form-field>
+
+      <!-- Project Description -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Description</mat-label>
+        <textarea
+          matInput
+          formControlName="description"
+          placeholder="Enter project description (optional)"
+          rows="4"
+          maxlength="500"
+        ></textarea>
+        <mat-icon matSuffix>description</mat-icon>
+        <mat-hint
+          >{{
+            projectForm.get("description")?.value?.length || 0
+          }}/500</mat-hint
+        >
+        <mat-error>{{ getFieldError("description") }}</mat-error>
+      </mat-form-field>
+
+      <!-- Project Status -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Project Status</mat-label>
+        <mat-select formControlName="status">
+          <mat-option
+            *ngFor="let status of statusOptions"
+            [value]="status.value"
+            class="status-option"
+          >
+            <div class="status-option-content">
+              <mat-icon [style.color]="status.color">{{
+                status.icon
+              }}</mat-icon>
+              <span>{{ status.label }}</span>
+            </div>
+          </mat-option>
+        </mat-select>
+        <mat-icon matSuffix>flag</mat-icon>
+      </mat-form-field>
+
+      <!-- Project Members -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Project Members</mat-label>
+        <mat-select
+          formControlName="members"
+          multiple
+          (selectionChange)="onMemberSelectionChange($event.value)"
+        >
+          <mat-option
+            *ngFor="let member of availableMembers"
+            [value]="member._id"
+          >
+            <div class="member-option">
+              <mat-icon>person</mat-icon>
+              <div class="member-info">
+                <span class="member-name">{{ member.name }}</span>
+                <span class="member-email">{{ member.email }}</span>
+              </div>
+            </div>
+          </mat-option>
+        </mat-select>
+        <mat-icon matSuffix>group</mat-icon>
+        <mat-hint>{{ getSelectedMemberNames() }}</mat-hint>
+      </mat-form-field>
+    </form>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end" class="dialog-actions">
+    <button mat-button (click)="onCancel()" [disabled]="loading">Cancel</button>
+    <button
+      mat-raised-button
+      color="primary"
+      (click)="onSubmit()"
+      [disabled]="!isFormValid || loading"
+    >
+      <mat-spinner diameter="16" *ngIf="loading"></mat-spinner>
+      <mat-icon *ngIf="!loading">{{
+        data.mode === "add" ? "add" : "save"
+      }}</mat-icon>
+      {{ submitButtonText }}
+    </button>
+  </mat-dialog-actions>
+</div>
