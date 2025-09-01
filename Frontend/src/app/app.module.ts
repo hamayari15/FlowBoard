@@ -31,6 +31,7 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { CommonModule } from '@angular/common';
+import { WorkSpaceDialogComponent } from './features/workSpace/work-space-dialog/work-space-dialog.component';
 
 
 
@@ -46,6 +47,7 @@ import { CommonModule } from '@angular/common';
     AddWorkSpaceComponent,
     EditWorkSpaceComponent,
     WorkSpaceDetailsComponent,
+    WorkSpaceDialogComponent,
     ProjectDialogComponent,
   ],
   imports: [

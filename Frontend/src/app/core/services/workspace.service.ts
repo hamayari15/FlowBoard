@@ -22,7 +22,7 @@ export class WorkspaceService {
     return this.http.get(`${this.apiUrl}/getById/${id}`)
   }
 
-  updateWoksSpace(id: any, newData: any) {
+  updateWorkSpace(id: any, newData: any) {
     return this.http.put(`${this.apiUrl}/Update/${id}`, newData)
   }
 

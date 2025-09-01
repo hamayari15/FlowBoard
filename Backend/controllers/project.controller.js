@@ -33,7 +33,6 @@ exports.getAll = async (req, res) => {
   
   try {
     const projects = await Project.find({ isArchived: false })
-      .populate("workspace", "name description")
       .populate("owner", "name email")
       .populate("members", "name email");
     res.status(200).json(projects);

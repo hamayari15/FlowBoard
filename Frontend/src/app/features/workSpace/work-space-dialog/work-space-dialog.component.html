@@ -1,0 +1,53 @@
+<div class="workspace-dialog-container">
+  <h2 mat-dialog-title class="dialog-title">
+    <mat-icon>{{ data.mode === "add" ? "add_circle" : "edit" }}</mat-icon>
+    {{ dialogTitle }}
+  </h2>
+
+  <mat-dialog-content class="dialog-content">
+    <form [formGroup]="workspaceForm" class="workspace-form">
+      <!-- Workspace Name -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Workspace Name</mat-label>
+        <input
+          matInput
+          formControlName="name"
+          placeholder="Enter workspace name"
+          maxlength="100"
+        />
+        <mat-icon matSuffix>work</mat-icon>
+        <mat-hint>{{ workspaceForm.get("name")?.value?.length || 0 }}/100</mat-hint>
+        <mat-error>{{ getFieldError("name") }}</mat-error>
+      </mat-form-field>
+
+      <!-- Workspace Description -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Description</mat-label>
+        <textarea
+          matInput
+          formControlName="description"
+          placeholder="Enter workspace description (optional)"
+          rows="4"
+          maxlength="500"
+        ></textarea>
+        <mat-icon matSuffix>description</mat-icon>
+        <mat-hint>{{ workspaceForm.get("description")?.value?.length || 0 }}/500</mat-hint>
+        <mat-error>{{ getFieldError("description") }}</mat-error>
+      </mat-form-field>
+    </form>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end" class="dialog-actions">
+    <button mat-button (click)="onCancel()" [disabled]="loading">Cancel</button>
+    <button
+      mat-raised-button
+      color="primary"
+      (click)="onSubmit()"
+      [disabled]="!isFormValid || loading"
+    >
+      <mat-spinner diameter="16" *ngIf="loading"></mat-spinner>
+      <mat-icon *ngIf="!loading">{{ data.mode === "add" ? "add" : "save" }}</mat-icon>
+      {{ submitButtonText }}
+    </button>
+  </mat-dialog-actions>
+</div>

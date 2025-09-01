@@ -39,8 +39,7 @@ export class AddWorkSpaceComponent implements OnInit {
     };
 
     this.wsService.addWorkSpace(workspaceData).subscribe({
-      next: (res) => {
-        console.log("Workspace created successfully", res)
+      next: () => {
         this.addForm.reset()
         Swal.fire({
             icon: 'success',
@@ -50,7 +49,7 @@ export class AddWorkSpaceComponent implements OnInit {
           })      
           setTimeout(() => {
             this.router.navigate(['/workSpaces-list'])
-          }, 1500);  
+          }, 1500);
       },
       error: (err) => {
         this.serverError = err.error?.message || 'Unexpected error ❌';
