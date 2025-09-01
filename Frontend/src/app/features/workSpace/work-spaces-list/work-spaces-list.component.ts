@@ -1,35 +1,60 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { WorkspaceService } from 'src/app/core/services/workspace.service';
-import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
+import { MatDialog } from '@angular/material/dialog';
+import { WorkSpaceDialogComponent } from '../work-space-dialog/work-space-dialog.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-work-spaces-list',
   templateUrl: './work-spaces-list.component.html',
   styleUrls: ['./work-spaces-list.component.css']
-})  
-export class WorkspaceListComponent { 
+})
+export class WorkspaceListComponent implements OnInit {
 
-  workSpaces: any = []
+  workSpaces: any = [];
 
-  constructor (private wsService: WorkspaceService, private router: Router) {}
+  constructor(
+    private wsService: WorkspaceService,
+    private router: Router,
+    private dialog: MatDialog
+  ) {}
 
   ngOnInit() {
-    this.getAllWorkSpaces()
+    this.getAllWorkSpaces();
   }
 
-  getAllWorkSpaces(): any {
-    this.wsService.getWorkSpaces().subscribe((res) => {
-      this.workSpaces = res
-    })
+  getAllWorkSpaces() {
+    this.wsService.getWorkSpaces().subscribe({
+      next: (res) => { this.workSpaces = res; },
+      error: (err) => { console.error('Error fetching workspaces', err); }
+    });
   }
 
   goToDetails(id: any) {
-    this.router.navigate(['/workSpace-details', id])
+    this.router.navigate(['/workSpace-details', id]);
   }
 
-  goToEdit(id: any) {
-    this.router.navigate(['/edit-workSpace', id])
+  openAddDialog() {
+    const dialogRef = this.dialog.open(WorkSpaceDialogComponent, {
+      width: '500px',
+      data: { mode: 'add', workspace: null }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) this.getAllWorkSpaces();
+    });
+  }
+
+  openEditDialog(ws: any) {
+    const dialogRef = this.dialog.open(WorkSpaceDialogComponent, {
+      width: '500px',
+      data: { mode: 'edit', workspace: ws }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) this.getAllWorkSpaces();
+    });
   }
 
   delete(id: string) {
@@ -42,24 +67,19 @@ export class WorkspaceListComponent {
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
       reverseButtons: true
-
     }).then((result) => {
       if(result.isConfirmed) {
         this.wsService.deleteWorkSpace(id).subscribe({
           next: () => {
-            Swal.fire(
-              'Deleted !',
-              'workSpace has been deleted.',
-              'success'
-            )
-            this.ngOnInit();
-          }, 
+            Swal.fire('Deleted!', 'Workspace has been deleted.', 'success');
+            this.getAllWorkSpaces();
+          },
           error: (err) => {
-            console.log('Error deleting workSpace', err);
+            console.error('Error deleting workspace', err);
+            Swal.fire('Error', 'Failed to delete workspace', 'error');
           }
-        })
+        });
       }
-    })
+    });
   }
-
-};
+}

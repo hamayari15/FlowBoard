@@ -42,7 +42,7 @@ export class EditWorkSpaceComponent implements OnInit {
   }
 
   updateWorkSpace() {
-    this.wsService.updateWoksSpace(this.workSpaceId, this.editForm.value).subscribe({
+    this.wsService.updateWorkSpace(this.workSpaceId, this.editForm.value).subscribe({
       next: (res) => {
         console.log("Workspace updated successfully", res)
         this.editForm.reset()
