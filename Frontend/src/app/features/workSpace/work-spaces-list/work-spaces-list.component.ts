@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { WorkspaceService } from 'src/app/core/services/workspace.service';
-import Swal from 'sweetalert2';
-import { MatDialog } from '@angular/material/dialog';
-import { WorkSpaceDialogComponent } from '../work-space-dialog/work-space-dialog.component';
 import { Router } from '@angular/router';
+import { WorkSpaceDialogComponent } from '../work-space-dialog/work-space-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-work-spaces-list',
@@ -14,11 +14,7 @@ export class WorkspaceListComponent implements OnInit {
 
   workSpaces: any = [];
 
-  constructor(
-    private wsService: WorkspaceService,
-    private router: Router,
-    private dialog: MatDialog
-  ) {}
+  constructor(private wsService: WorkspaceService, private router: Router, private dialog: MatDialog) {}
 
   ngOnInit() {
     this.getAllWorkSpaces();

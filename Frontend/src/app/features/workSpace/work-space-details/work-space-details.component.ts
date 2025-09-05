@@ -1,7 +1,6 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
-import { MatTable } from '@angular/material/table';
 import { WorkspaceService } from 'src/app/core/services/workspace.service';
 import { ProjectService, Project } from 'src/app/core/services/project.service';
 import Swal from 'sweetalert2';
@@ -13,7 +12,6 @@ import { ProjectDialogComponent } from '../project-dialog/project-dialog.compone
   styleUrls: ['./work-space-details.component.css'],
 })
 export class WorkSpaceDetailsComponent implements OnInit {
-  @ViewChild(MatTable) table!: MatTable<Project>;
 
   workSpaceId: string = '';
   workSpaceData: any = {};
@@ -30,12 +28,7 @@ export class WorkSpaceDetailsComponent implements OnInit {
     'actions',
   ];
 
-  constructor(
-    private route: ActivatedRoute,
-    private wsService: WorkspaceService,
-    private projectService: ProjectService,
-    private dialog: MatDialog
-  ) {}
+  constructor(private route: ActivatedRoute, private wsService: WorkspaceService, private projectService: ProjectService, private dialog: MatDialog) {}
 
   ngOnInit(): void {
     this.workSpaceId = this.route.snapshot.paramMap.get('id') || '';
@@ -109,31 +102,6 @@ export class WorkSpaceDetailsComponent implements OnInit {
     });
   }
 
-  deleteProject(project: Project) {
-    Swal.fire({
-      title: 'Are you sure?',
-      text: `Do you want to delete the project "${project.name}"?`,
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#d33',
-      cancelButtonColor: '#3085d6',
-      confirmButtonText: 'Yes, delete it!',
-    }).then((result) => {
-      if (result.isConfirmed && project._id) {
-        this.projectService.deleteProject(project._id).subscribe({
-          next: () => {
-            Swal.fire('Deleted!', 'Project has been deleted.', 'success');
-            this.refreshProjects();
-          },
-          error: (error) => {
-            console.error('Error deleting project:', error);
-            Swal.fire('Error', 'Failed to delete project', 'error');
-          },
-        });
-      }
-    });
-  }
-
   archiveProject(project: Project) {
     Swal.fire({
       title: 'Archive Project',
@@ -153,6 +121,32 @@ export class WorkSpaceDetailsComponent implements OnInit {
           error: (error) => {
             console.error('Error archiving project:', error);
             Swal.fire('Error', 'Failed to archive project', 'error');
+          },
+        });
+      }
+    });
+  }
+
+    deleteProject(project: Project) {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Are you sure?',
+      text: 'You wont be able to revert this !',
+      confirmButtonText: 'Yes, delete it!',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      reverseButtons: true
+    }).then((result) => {
+      if (result.isConfirmed && project._id) {
+        this.projectService.deleteProject(project._id).subscribe({
+          next: () => {
+            Swal.fire('Deleted!', 'Project has been deleted.', 'success');
+            this.refreshProjects();
+          },
+          error: (error) => {
+            console.error('Error deleting project:', error);
+            Swal.fire('Error', 'Failed to delete project', 'error');
           },
         });
       }

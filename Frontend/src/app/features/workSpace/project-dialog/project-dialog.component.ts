@@ -122,15 +122,15 @@ export class ProjectDialogComponent implements OnInit {
         status: formData.status,
         members: this.selectedMembers,
         workspace: this.data.workspaceId,
-        owner: this.data.project?.owner || this.availableMembers[0]?._id, // Assuming first member as owner for new projects
+        owner: this.data.project?.owner || this.availableMembers[0]?._id,
       };
 
       if (this.data.mode === 'add') {
         this.projectService.addProject(projectData).subscribe({
-          next: (result) => {
+          next: (res) => {
             this.loading = false;
             Swal.fire('Success!', 'Project created successfully', 'success');
-            this.dialogRef.close(result);
+            this.dialogRef.close(res);
           },
           error: (error) => {
             this.loading = false;
@@ -142,10 +142,10 @@ export class ProjectDialogComponent implements OnInit {
         this.projectService
           .updateProject(projectData, this.data.project._id)
           .subscribe({
-            next: (result) => {
+            next: (res) => {
               this.loading = false;
               Swal.fire('Success!', 'Project updated successfully', 'success');
-              this.dialogRef.close(result);
+              this.dialogRef.close(res);  
             },
             error: (error) => {
               this.loading = false;

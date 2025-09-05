@@ -1,5 +1,4 @@
 <div class="workspace-details-container">
-  <!-- Workspace Header Section -->
   <mat-card class="workspace-header-card" *ngIf="!loading">
     <mat-card-header>
       <div mat-card-avatar class="workspace-avatar">
@@ -36,7 +35,6 @@
     </mat-card-content>
   </mat-card>
 
-  <!-- Loading Skeleton for Workspace -->
   <mat-card class="workspace-header-card" *ngIf="loading">
     <mat-card-header>
       <div mat-card-avatar class="skeleton-avatar"></div>
@@ -51,7 +49,6 @@
     </mat-card-content>
   </mat-card>
 
-  <!-- Projects Section -->
   <mat-card class="projects-section-card">
     <mat-card-header>
       <mat-card-title class="projects-header">
@@ -74,13 +71,11 @@
     </mat-card-header>
 
     <mat-card-content>
-      <!-- Loading State -->
       <div *ngIf="loadingProjects" class="loading-container">
         <mat-spinner diameter="50"></mat-spinner>
         <p>Loading projects...</p>
       </div>
 
-      <!-- Empty State -->
       <div
         *ngIf="!loadingProjects && projects.length === 0"
         class="empty-state"
@@ -101,7 +96,6 @@
         </button>
       </div>
 
-      <!-- Projects Grid -->
       <div
         *ngIf="!loadingProjects && projects.length > 0"
         class="projects-grid"

@@ -43,7 +43,6 @@
   margin-bottom: 0;
 }
 
-/* Dialog Actions */
 .dialog-actions {
   padding: 16px 24px 24px;
   border-top: 1px solid #e0e0e0;
@@ -66,7 +65,6 @@
   margin-right: 8px;
 }
 
-/* Form Field Customization */
 .mat-mdc-form-field-outline {
   border-radius: 8px;
 }
@@ -84,13 +82,11 @@
   padding: 0 16px;
 }
 
-/* Custom styling for textareas */
 .workspace-form textarea {
   resize: vertical;
   min-height: 80px;
 }
 
-/* Responsive adjustments */
 @media (max-width: 600px) {
   .dialog-title {
     font-size: 20px;
@@ -112,22 +108,18 @@
   }
 }
 
-/* Loading state */
 .mat-mdc-raised-button[disabled] {
   opacity: 0.7;
 }
 
-/* Error states */
 .mat-mdc-form-field.mat-form-field-invalid .mat-mdc-text-field-wrapper {
   box-shadow: 0 0 0 2px rgba(244, 67, 54, 0.2);
 }
 
-/* Focus states */
 .mat-mdc-form-field.mat-focused .mat-mdc-text-field-wrapper {
   box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.2);
 }
 
-/* Hint and error text styling */
 .mat-mdc-form-field-hint,
 .mat-mdc-form-field-error {
   font-size: 12px;

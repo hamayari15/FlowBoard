@@ -18,9 +18,8 @@ import { RegisterComponent } from './features/auth/register/register.component';
 import { LoginComponent } from './features/auth/login/login.component';
 import { FooterComponent } from './features/footer/footer.component';
 import { WorkspaceListComponent } from './features/workSpace/work-spaces-list/work-spaces-list.component';
-import { AddWorkSpaceComponent } from './features/workSpace/add-work-space/add-work-space.component';
-import { EditWorkSpaceComponent } from './features/workSpace/edit-work-space/edit-work-space.component';
 import { WorkSpaceDetailsComponent } from './features/workSpace/work-space-details/work-space-details.component';
+import { WorkSpaceDialogComponent } from './features/workSpace/work-space-dialog/work-space-dialog.component';
 import { ProjectDialogComponent } from './features/workSpace/project-dialog/project-dialog.component';
 
 import { MatCardModule } from '@angular/material/card';
@@ -31,7 +30,6 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { CommonModule } from '@angular/common';
-import { WorkSpaceDialogComponent } from './features/workSpace/work-space-dialog/work-space-dialog.component';
 
 
 
@@ -44,8 +42,6 @@ import { WorkSpaceDialogComponent } from './features/workSpace/work-space-dialog
     LoginComponent,
     FooterComponent,
     WorkspaceListComponent,
-    AddWorkSpaceComponent,
-    EditWorkSpaceComponent,
     WorkSpaceDetailsComponent,
     WorkSpaceDialogComponent,
     ProjectDialogComponent,

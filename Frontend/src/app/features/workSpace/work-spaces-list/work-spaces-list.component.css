@@ -1,11 +1,9 @@
-/* Container */
 .container {
   padding: 20px;
   max-width: 1200px;
   margin: 0 auto;
 }
 
-/* Add Button */
 .btn-add {
   background: #007bff;
   color: white;
@@ -23,7 +21,6 @@
   background: #0056b3;
 }
 
-/* Workspace List */
 .workspace-list {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
@@ -97,7 +94,6 @@
   font-weight: 500;
 }
 
-/* Button Group */
 .btn-group {
   display: flex;
   gap: 10px;
@@ -105,7 +101,6 @@
   justify-content: flex-end;
 }
 
-/* Edit Button */
 .btn-edit {
   background: #28a745;
   color: white;
@@ -122,7 +117,6 @@
   background: #1e7e34;
 }
 
-/* Delete Button */
 .btn-delete {
   background: #dc3545;
   color: white;
@@ -139,7 +133,6 @@
   background: #c82333;
 }
 
-/* Responsive */
 @media (max-width: 768px) {
   .workspace-list {
     grid-template-columns: 1fr;
