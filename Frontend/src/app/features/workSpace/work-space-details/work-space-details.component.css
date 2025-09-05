@@ -253,6 +253,7 @@
   margin-left: 8px;
 }
 
+/* Responsive Design */
 @media (max-width: 768px) {
   .workspace-details-container {
     padding: 16px;
