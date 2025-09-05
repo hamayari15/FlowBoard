@@ -1,6 +1,6 @@
+
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
-
 
 const workspaceSchema = new Schema({
   name: { type: String, required: true, unique: true, trim: true },

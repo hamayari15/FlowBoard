@@ -3,7 +3,6 @@ const User = require("../models/User");
 
 
 exports.Add = async (req, res) => {
-  
   try {
     const { name, description, owner, members } = req.body;
 
@@ -34,12 +33,10 @@ exports.Add = async (req, res) => {
   } catch (err) {
     res.status(500).json({ message: "Error creating workspace", err });
   }
-
 };
 
 
 exports.getAll = async (req, res) => {
-
   try {
     const workSpaces = await workSpace.find().populate("owner").populate("members");
     res.status(200).json(workSpaces);
@@ -47,12 +44,10 @@ exports.getAll = async (req, res) => {
   } catch (err) {
     res.status(500).json({ message: "Error fetching workSpaces", err });
   }
-
 };
 
 
 exports.getById = async (req, res) => {
-
   try {
     const id = req.params.id;
     const wSpace = await workSpace.findById(id).populate("owner").populate("members");
@@ -65,12 +60,10 @@ exports.getById = async (req, res) => {
   } catch (err) {
     res.status(500).json({ message: "Error fetching workSpace", err });
   }
-
 };
 
 
 exports.Update = async (req, res) => {
-
   try {
     const id = req.params.id;
     const newData = req.body;
@@ -91,12 +84,10 @@ exports.Update = async (req, res) => {
   } catch (err) {
     res.status(500).json({ message: "Error updating workSpace" });
   }
-
 };
 
 
 exports.Delete = async (req, res) => {
-
   try {
     const id = req.params.id;
     deletedWorkSpace = await workSpace.findByIdAndDelete(id);
@@ -109,5 +100,4 @@ exports.Delete = async (req, res) => {
   } catch (err) {
     res.status(500).json({ message: "Error deleting workSpace" });
   }
-
 };

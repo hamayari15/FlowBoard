@@ -15,6 +15,7 @@ export interface DialogData {
   templateUrl: './work-space-dialog.component.html',
   styleUrls: ['./work-space-dialog.component.css'],
 })
+
 export class WorkSpaceDialogComponent implements OnInit {
   workspaceForm: FormGroup;
   loading = false;
@@ -34,7 +35,7 @@ export class WorkSpaceDialogComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.ownerId = this.authService.getUserFromToken()._id; // get owner id from auth service
+    this.ownerId = this.authService.getUserFromToken()._id;
     console.log(this.ownerId)
 
     if (this.data.mode === 'edit' && this.data.workspace) {

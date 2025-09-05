@@ -6,7 +6,6 @@
 
   <mat-dialog-content class="dialog-content">
     <form [formGroup]="projectForm" class="project-form">
-      <!-- Project Name -->
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Project Name</mat-label>
         <input
@@ -22,7 +21,6 @@
         <mat-error>{{ getFieldError("name") }}</mat-error>
       </mat-form-field>
 
-      <!-- Project Description -->
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Description</mat-label>
         <textarea
@@ -41,7 +39,6 @@
         <mat-error>{{ getFieldError("description") }}</mat-error>
       </mat-form-field>
 
-      <!-- Project Status -->
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Project Status</mat-label>
         <mat-select formControlName="status">
@@ -61,7 +58,6 @@
         <mat-icon matSuffix>flag</mat-icon>
       </mat-form-field>
 
-      <!-- Project Members -->
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Project Members</mat-label>
         <mat-select

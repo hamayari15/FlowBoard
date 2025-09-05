@@ -6,7 +6,6 @@
 
   <mat-dialog-content class="dialog-content">
     <form [formGroup]="workspaceForm" class="workspace-form">
-      <!-- Workspace Name -->
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Workspace Name</mat-label>
         <input
@@ -20,7 +19,6 @@
         <mat-error>{{ getFieldError("name") }}</mat-error>
       </mat-form-field>
 
-      <!-- Workspace Description -->
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Description</mat-label>
         <textarea

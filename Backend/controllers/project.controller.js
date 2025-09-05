@@ -2,7 +2,6 @@ const Project = require("../models/Project");
 
 
 exports.Add = async (req, res) => {
-
   try {
     const { name, description, workspace, owner, members, status } = req.body;
 
@@ -25,12 +24,10 @@ exports.Add = async (req, res) => {
   } catch (err) {
     res.status(500).json({ message: "Error creating project", error: err.message });
   }
-  
 };
 
 
 exports.getAll = async (req, res) => {
-  
   try {
     const projects = await Project.find({ isArchived: false })
       .populate("owner", "name email")
@@ -40,12 +37,10 @@ exports.getAll = async (req, res) => {
   } catch (err) {
     res.status(500).json({ message: "Error fetching projects", error: err.message });
   }
-
 };
 
 
 exports.getById = async (req, res) => {
-
   try {
     const id = req.params.id;
     const project = await Project.findById(id)
@@ -61,7 +56,6 @@ exports.getById = async (req, res) => {
   } catch (err) {
     res.status(500).json({ message: "Error fetching project", error: err.message });
   }
-
 };
 
 
@@ -80,12 +74,10 @@ exports.getByWorkspace = async (req, res) => {
   } catch (err) {
     res.status(500).json({message: "Error fetching projects by workspace", error: err.message});
   }
-
 };
 
 
 exports.Update = async (req, res) => {
-
   try {
     const id = req.params.id;
     const newData = req.body;
@@ -100,12 +92,10 @@ exports.Update = async (req, res) => {
   } catch (err) {
     res.status(500).json({ message: "Error updating project", error: err.message });
   }
-
 };
 
 
 exports.Archive = async (req, res) => {
-
   try {
     const id = req.params.id;
 
@@ -119,12 +109,10 @@ exports.Archive = async (req, res) => {
   } catch (err) {
     res.status(500).json({ message: "Error archiving project", error: err.message });
   }
-
 };
 
 
 exports.Delete = async (req, res) => {
-
   try {
     const id = req.params.id;
     const deletedProject = await Project.findByIdAndDelete(id);
@@ -137,5 +125,4 @@ exports.Delete = async (req, res) => {
   } catch (err) {
     res.status(500).json({ message: "Error deleting project", error: err.message });
   }
-
 };
