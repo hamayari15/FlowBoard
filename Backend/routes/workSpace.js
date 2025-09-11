@@ -6,6 +6,8 @@ const workSpaceController = require('../controllers/workSpace.controller');
 
 Router.post('/Add', workSpaceController.Add)
 
+Router.post('/:id/addMember', workSpaceController.addMember)
+
 Router.get('/getAll', workSpaceController.getAll)
 
 Router.get('/getById/:id', workSpaceController.getById)
