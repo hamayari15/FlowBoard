@@ -34,7 +34,7 @@ export class AuthService {
         this.currentUserSubject.next(user);
       } else {
         // Invalid token, remove it
-        this.logout();
+        // this.logout();
       }
     }
   }
