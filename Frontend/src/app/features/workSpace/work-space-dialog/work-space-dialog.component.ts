@@ -35,7 +35,7 @@ export class WorkSpaceDialogComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.initializeOwner();
+    // this.initializeOwner();
     
     if (this.data.mode === 'edit' && this.data.workspace) {
       this.populateForm(this.data.workspace);
