@@ -1,81 +1,202 @@
-import { Component, OnInit } from '@angular/core';
-import { WorkspaceService } from 'src/app/core/services/workspace.service';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-import { WorkSpaceDialogComponent } from '../work-space-dialog/work-space-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
+import { Subject, takeUntil } from 'rxjs';
 import Swal from 'sweetalert2';
+
+import { WorkspaceService } from 'src/app/core/services/workspace.service';
+import { WorkSpaceDialogComponent } from '../work-space-dialog/work-space-dialog.component';
+import { Workspace, ApiError } from 'src/app/core/models/workspace.model';
 
 @Component({
   selector: 'app-work-spaces-list',
   templateUrl: './work-spaces-list.component.html',
-  styleUrls: ['./work-spaces-list.component.css']
+  styleUrls: ['./work-spaces-list.component.css'],
 })
-export class WorkspaceListComponent implements OnInit {
+export class WorkspaceListComponent implements OnInit, OnDestroy {
+  workSpaces: Workspace[] = [];
+  loading = false;
+  error: string | null = null;
+  private destroy$ = new Subject<void>();
 
-  workSpaces: any = [];
+  constructor(
+    private wsService: WorkspaceService,
+    private router: Router,
+    private dialog: MatDialog
+  ) {}
 
-  constructor(private wsService: WorkspaceService, private router: Router, private dialog: MatDialog) {}
-
-  ngOnInit() {
+  ngOnInit(): void {
     this.getAllWorkSpaces();
   }
 
-  getAllWorkSpaces() {
-    this.wsService.getWorkSpaces().subscribe({
-      next: (res) => { this.workSpaces = res; },
-      error: (err) => { console.error('Error fetching workspaces', err); }
-    });
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
-  goToDetails(id: any) {
+  /**
+   * Fetch all workspaces with proper error handling
+   */
+  getAllWorkSpaces(): void {
+    this.loading = true;
+    this.error = null;
+    
+    this.wsService.getWorkSpaces()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (workspaces: Workspace[]) => {
+          this.workSpaces = workspaces || [];
+          this.loading = false;
+          console.log('Workspaces loaded successfully:', this.workSpaces.length);
+        },
+        error: (error: ApiError) => {
+          console.error('Error fetching workspaces:', error);
+          this.error = error.message || 'Failed to load workspaces';
+          this.loading = false;
+          this.showErrorAlert('Failed to Load', this.error);
+        },
+      });
+  }
+
+  /**
+   * Navigate to workspace details
+   */
+  goToDetails(id: string): void {
+    if (!id) {
+      console.error('Workspace ID is required');
+      return;
+    }
     this.router.navigate(['/workSpace-details', id]);
   }
 
-  openAddDialog() {
+  /**
+   * Open dialog for adding new workspace
+   */
+  openAddDialog(): void {
     const dialogRef = this.dialog.open(WorkSpaceDialogComponent, {
       width: '500px',
-      data: { mode: 'add', workspace: null }
+      maxWidth: '90vw',
+      data: { mode: 'add', workspace: null },
+      disableClose: true,
     });
 
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) this.getAllWorkSpaces();
-    });
+    dialogRef.afterClosed()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((result) => {
+        if (result) {
+          console.log('Workspace added successfully');
+          this.getAllWorkSpaces();
+        }
+      });
   }
 
-  openEditDialog(ws: any) {
+  /**
+   * Open dialog for editing workspace
+   */
+  openEditDialog(workspace: Workspace): void {
+    if (!workspace || !workspace._id) {
+      console.error('Valid workspace is required for editing');
+      return;
+    }
+
     const dialogRef = this.dialog.open(WorkSpaceDialogComponent, {
       width: '500px',
-      data: { mode: 'edit', workspace: ws }
+      maxWidth: '90vw',
+      data: { mode: 'edit', workspace },
+      disableClose: true,
     });
 
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) this.getAllWorkSpaces();
-    });
+    dialogRef.afterClosed()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((result) => {
+        if (result) {
+          console.log('Workspace updated successfully');
+          this.getAllWorkSpaces();
+        }
+      });
   }
 
-  delete(id: string) {
+  /**
+   * Delete workspace with confirmation
+   */
+  delete(id: string): void {
+    if (!id) {
+      console.error('Workspace ID is required for deletion');
+      return;
+    }
+
     Swal.fire({
       icon: 'warning',
       title: 'Are you sure?',
-      text: 'You wont be able to revert this !',
+      text: 'You won\'t be able to revert this action!',
       confirmButtonText: 'Yes, delete it!',
       showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      reverseButtons: true
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      reverseButtons: true,
+      showLoaderOnConfirm: true,
+      preConfirm: () => {
+        return this.wsService.deleteWorkSpace(id)
+          .pipe(takeUntil(this.destroy$))
+          .toPromise()
+          .catch((error: ApiError) => {
+            Swal.showValidationMessage(`Request failed: ${error.message}`);
+            throw error;
+          });
+      },
     }).then((result) => {
-      if(result.isConfirmed) {
-        this.wsService.deleteWorkSpace(id).subscribe({
-          next: () => {
-            Swal.fire('Deleted!', 'Workspace has been deleted.', 'success');
-            this.getAllWorkSpaces();
-          },
-          error: (err) => {
-            console.error('Error deleting workspace', err);
-            Swal.fire('Error', 'Failed to delete workspace', 'error');
-          }
+      if (result.isConfirmed) {
+        Swal.fire({
+          icon: 'success',
+          title: 'Deleted!',
+          text: 'Workspace has been deleted successfully.',
+          timer: 2000,
+          showConfirmButton: false,
         });
+        this.getAllWorkSpaces();
       }
+    }).catch((error: ApiError) => {
+      console.error('Error deleting workspace:', error);
+      this.showErrorAlert('Delete Failed', error.message || 'Failed to delete workspace');
     });
+  }
+
+  /**
+   * Refresh workspaces list
+   */
+  refresh(): void {
+    this.getAllWorkSpaces();
+  }
+
+  /**
+   * Show error alert
+   */
+  private showErrorAlert(title: string, message: string): void {
+    Swal.fire({
+      icon: 'error',
+      title,
+      text: message,
+      confirmButtonColor: '#3085d6',
+    });
+  }
+
+  /**
+   * Track workspaces for better performance
+   */
+  trackByWorkspaceId(index: number, workspace: Workspace): string {
+    return workspace._id || index.toString();
+  }
+
+  /**
+   * Get tooltip text for members count
+   */
+  getMembersTooltip(members: any[]): string {
+    if (!members || members.length === 0) {
+      return 'No members';
+    }
+    if (members.length === 1) {
+      return '1 member';
+    }
+    return `${members.length} members`;
   }
 }

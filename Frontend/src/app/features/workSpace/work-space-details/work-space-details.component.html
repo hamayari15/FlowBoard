@@ -15,15 +15,15 @@
             workSpaceData.description || "No description provided"
           }}</span>
         </div>
-        <div class="info-item">
+        <div class="info-item" *ngIf="workSpaceData.owner">
           <mat-icon>person</mat-icon>
           <span
-            >{{ workSpaceData.owner?.name }} ({{
+            >{{ workSpaceData.owner?.firstName }} {{ workSpaceData.owner?.lastName }} ({{
               workSpaceData.owner?.email
             }})</span
           >
         </div>
-        <div class="info-item">
+        <div class="info-item" *ngIf="workSpaceData.createdAt">
           <mat-icon>schedule</mat-icon>
           <span>Created: {{ workSpaceData.createdAt | date : "medium" }}</span>
         </div>

@@ -2,10 +2,19 @@
   <div class="navbar-container">
     <div class="navbar-brand">
       <div class="logo-placeholder"></div>
-      <span class="brand-text">flowBoard</span>
+      <span class="brand-text" routerLink="/" style="cursor: pointer;">flowBoard</span>
     </div>
 
-    <div class="navbar-actions">
+    <!-- Navigation links for authenticated users -->
+    <div class="navbar-nav" *ngIf="isLoggedIn">
+      <a routerLink="/workspaces" class="nav-link">
+        <i class="fas fa-folder"></i>
+        Workspaces
+      </a>
+    </div>
+
+    <!-- Actions for non-authenticated users -->
+    <div class="navbar-actions" *ngIf="!isLoggedIn">
       <button class="btn-secondary" routerLink="/login">
         <i class="fas fa-sign-in-alt"></i>
         Login
@@ -16,10 +25,48 @@
       </button>
     </div>
 
+    <!-- Actions for authenticated users -->
+    <div class="navbar-actions" *ngIf="isLoggedIn">
+      <div class="user-info" *ngIf="currentUser">
+        <span class="welcome-text">Welcome, {{ currentUser.name || currentUser.email }}!</span>
+      </div>
+      <button class="btn-secondary" (click)="logout()">
+        <i class="fas fa-sign-out-alt"></i>
+        Logout
+      </button>
+    </div>
+
     <button class="mobile-menu-toggle" (click)="toggleMobileMenu()" [class.active]="isMenuOpen">
       <span></span>
       <span></span>
       <span></span>
     </button>
+  </div>
+
+  <!-- Mobile menu -->
+  <div class="mobile-menu" [class.active]="isMenuOpen">
+    <div *ngIf="!isLoggedIn">
+      <a routerLink="/login" class="mobile-nav-item" (click)="toggleMobileMenu()">
+        <i class="fas fa-sign-in-alt"></i>
+        Login
+      </a>
+      <a routerLink="/register" class="mobile-nav-item" (click)="toggleMobileMenu()">
+        <i class="fas fa-user-plus"></i>
+        Get Started
+      </a>
+    </div>
+    <div *ngIf="isLoggedIn">
+      <div class="mobile-user-info" *ngIf="currentUser">
+        <span>Welcome, {{ currentUser.name || currentUser.email }}!</span>
+      </div>
+      <a routerLink="/workspaces" class="mobile-nav-item" (click)="toggleMobileMenu()">
+        <i class="fas fa-folder"></i>
+        Workspaces
+      </a>
+      <button class="mobile-nav-item logout-btn" (click)="logout(); toggleMobileMenu()">
+        <i class="fas fa-sign-out-alt"></i>
+        Logout
+      </button>
+    </div>
   </div>
 </nav>
