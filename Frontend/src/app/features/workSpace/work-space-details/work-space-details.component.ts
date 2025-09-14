@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { WorkspaceService } from 'src/app/core/services/workspace.service';
 import { ProjectService, Project } from 'src/app/core/services/project.service';
@@ -28,7 +28,7 @@ export class WorkSpaceDetailsComponent implements OnInit {
     'actions',
   ];
 
-  constructor(private route: ActivatedRoute, private wsService: WorkspaceService, private projectService: ProjectService, private dialog: MatDialog) {}
+  constructor(private route: ActivatedRoute, private router: Router, private wsService: WorkspaceService, private projectService: ProjectService, private dialog: MatDialog) {}
 
   ngOnInit(): void {
     this.workSpaceId = this.route.snapshot.paramMap.get('id') || '';
@@ -155,6 +155,15 @@ export class WorkSpaceDetailsComponent implements OnInit {
 
   refreshProjects() {
     this.getProjectsByWorkspace(this.workSpaceId);
+  }
+
+  goBackToWorkspaces() {
+    this.router.navigate(['/workspaces']);
+  }
+
+  refreshData() {
+    this.getWorkSpaceById(this.workSpaceId);
+    this.refreshProjects();
   }
 
   getStatusColor(status: string): string {

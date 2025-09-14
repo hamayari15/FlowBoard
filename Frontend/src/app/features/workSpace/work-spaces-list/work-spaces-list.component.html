@@ -1,25 +1,143 @@
-<div class="container">
-  <button class="btn-add" (click)="openAddDialog()">+ Add Workspace</button>
-
-  <div class="workspace-list">
-    <div *ngFor="let ws of workSpaces" class="workspace-card">
-      <h3>{{ ws.name }}</h3>
-      <p>{{ ws.description || 'No description' }}</p>
-
-      <div class="owner-info">
-        <img *ngIf="ws.owner.image" [src]="'http://127.0.0.1:3000/getImages/' + ws.owner.image" 
-             alt="{{ ws.owner.name }}" class="owner-img">
-        <span>{{ ws.owner.name }} ({{ ws.owner.email }})</span>
-      </div>
-
-      <p>Members: {{ ws.members.length }}</p>
-      <p>Created: {{ ws.createdAt | date:'mediumDate' }}</p>
-
-      <div class="btn-group">
-        <button class="btn-details" (click)="goToDetails(ws._id)">Details</button>
-        <button class="btn-edit" (click)="openEditDialog(ws)">Edit</button>
-        <button class="btn-delete" (click)="delete(ws._id)">Delete</button>
-      </div>
+<div class="workspace-container">
+  <!-- Header Section -->
+  <div class="header-section">
+    <div class="title-section">
+      <mat-icon class="header-icon">workspaces</mat-icon>
+      <h1>Workspaces</h1>
+      <span class="workspace-count" *ngIf="!loading && workSpaces.length > 0">
+        ({{ workSpaces.length }})
+      </span>
     </div>
+    <div class="header-actions">
+      <button 
+        mat-icon-button 
+        color="primary" 
+        matTooltip="Refresh workspaces"
+        (click)="refresh()"
+        [disabled]="loading">
+        <mat-icon>refresh</mat-icon>
+      </button>
+      <button
+        mat-raised-button
+        color="primary"
+        class="add-button"
+        (click)="openAddDialog()"
+        [disabled]="loading">
+        <mat-icon>add</mat-icon>
+        Add Workspace
+      </button>
+    </div>
+  </div>
+
+  <!-- Loading Spinner -->
+  <div *ngIf="loading" class="loading-container">
+    <mat-spinner diameter="50"></mat-spinner>
+    <p>Loading workspaces...</p>
+  </div>
+
+  <!-- Error Message -->
+  <div *ngIf="error && !loading" class="error-container">
+    <mat-icon class="error-icon">error_outline</mat-icon>
+    <h2>Error Loading Workspaces</h2>
+    <p>{{ error }}</p>
+    <button mat-raised-button color="primary" (click)="refresh()">
+      <mat-icon>refresh</mat-icon>
+      Try Again
+    </button>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!loading && !error && workSpaces.length === 0" class="empty-state">
+    <mat-icon class="empty-icon">workspace_premium</mat-icon>
+    <h2>No workspaces found</h2>
+    <p>Create your first workspace to get started with your projects</p>
+    <button mat-raised-button color="primary" (click)="openAddDialog()">
+      <mat-icon>add</mat-icon>
+      Create Workspace
+    </button>
+  </div>
+
+  <!-- Workspaces Grid -->
+  <div *ngIf="!loading && !error && workSpaces.length > 0" class="workspaces-grid">
+    <mat-card
+      *ngFor="let ws of workSpaces; trackBy: trackByWorkspaceId"
+      class="workspace-card"
+      [class.mat-elevation-z2]="true">
+      
+      <!-- Card Header -->
+      <mat-card-header class="card-header">
+        <div mat-card-avatar class="workspace-avatar">
+          <mat-icon>folder</mat-icon>
+        </div>
+        <mat-card-title [title]="ws.name">
+          {{ ws.name }}
+        </mat-card-title>
+        <mat-card-subtitle [title]="ws.description || 'No description available'">
+          {{ ws.description || "No description available" }}
+        </mat-card-subtitle>
+      </mat-card-header>
+
+      <!-- Card Content -->
+      <mat-card-content class="card-content">
+        <!-- Owner Information -->
+        <div class="owner-section" *ngIf="ws.owner">
+          <mat-icon class="info-icon">person</mat-icon>
+          <div class="owner-details">
+            <span class="owner-name" [title]="ws.owner.firstName + ' ' + ws.owner.lastName">
+              {{ ws.owner.firstName }} {{ ws.owner.lastName }}
+            </span>
+            <span class="owner-email" [title]="ws.owner.email">
+              {{ ws.owner.email }}
+            </span>
+          </div>
+        </div>
+
+        <!-- Workspace Stats -->
+        <div class="stats-section">
+          <mat-chip-set aria-label="Workspace statistics">
+            <mat-chip class="stat-chip" [matTooltip]="getMembersTooltip(ws.members)">
+              <mat-icon matChipAvatar>group</mat-icon>
+              {{ ws.members.length || 0 }}
+              {{ (ws.members.length || 0) === 1 ? "Member" : "Members" }}
+            </mat-chip>
+            <mat-chip class="stat-chip" *ngIf="ws.createdAt" [matTooltip]="'Created on ' + (ws.createdAt | date:'fullDate')">
+              <mat-icon matChipAvatar>schedule</mat-icon>
+              {{ ws.createdAt | date : "shortDate" }}
+            </mat-chip>
+          </mat-chip-set>
+        </div>
+      </mat-card-content>
+
+      <!-- Card Actions -->
+      <mat-card-actions class="card-actions">
+        <button 
+          mat-button 
+          color="primary" 
+          (click)="goToDetails(ws._id!)"
+          [disabled]="!ws._id"
+          matTooltip="View workspace details">
+          <mat-icon>visibility</mat-icon>
+          Details
+        </button>
+        <button 
+          mat-button 
+          color="accent" 
+          (click)="openEditDialog(ws)"
+          [disabled]="!ws._id"
+          matTooltip="Edit workspace">
+          <mat-icon>edit</mat-icon>
+          Edit
+        </button>
+        <button 
+          mat-button 
+          color="warn" 
+          (click)="delete(ws._id!)"
+          [disabled]="!ws._id"
+          matTooltip="Delete workspace">
+          <mat-icon>delete</mat-icon>
+          Delete
+        </button>
+      </mat-card-actions>
+    </mat-card>
   </div>
 </div>

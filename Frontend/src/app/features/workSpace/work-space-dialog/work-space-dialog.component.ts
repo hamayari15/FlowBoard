@@ -1,13 +1,16 @@
-import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component, Inject, OnInit, OnDestroy } from '@angular/core';
+import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { WorkspaceService } from 'src/app/core/services/workspace.service';
+import { Subject, takeUntil } from 'rxjs';
 import Swal from 'sweetalert2';
+
+import { WorkspaceService } from 'src/app/core/services/workspace.service';
 import { AuthService } from 'src/app/core/services/auth.service';
+import { Workspace, WorkspaceCreateRequest, WorkspaceUpdateRequest, ApiError } from 'src/app/core/models/workspace.model';
 
 export interface DialogData {
   mode: 'add' | 'edit';
-  workspace: any | null;
+  workspace: Workspace | null;
 }
 
 @Component({
@@ -15,11 +18,11 @@ export interface DialogData {
   templateUrl: './work-space-dialog.component.html',
   styleUrls: ['./work-space-dialog.component.css'],
 })
-
-export class WorkSpaceDialogComponent implements OnInit {
+export class WorkSpaceDialogComponent implements OnInit, OnDestroy {
   workspaceForm: FormGroup;
   loading = false;
   ownerId: string = '';
+  private destroy$ = new Subject<void>();
 
   constructor(
     private fb: FormBuilder,
@@ -28,103 +31,251 @@ export class WorkSpaceDialogComponent implements OnInit {
     public dialogRef: MatDialogRef<WorkSpaceDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DialogData
   ) {
-    this.workspaceForm = this.fb.group({
-      name: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(100)]],
-      description: ['', Validators.maxLength(500)],
-    });
+    this.workspaceForm = this.createForm();
   }
 
   ngOnInit(): void {
-    this.ownerId = this.authService.getUserFromToken()._id;
-    console.log(this.ownerId)
-
+    this.initializeOwner();
+    
     if (this.data.mode === 'edit' && this.data.workspace) {
       this.populateForm(this.data.workspace);
     }
   }
 
-  populateForm(workspace: any) {
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  /**
+   * Create reactive form with validation
+   */
+  private createForm(): FormGroup {
+    return this.fb.group({
+      name: [
+        '', 
+        [
+          Validators.required, 
+          Validators.minLength(2), 
+          Validators.maxLength(100),
+          this.noWhitespaceValidator
+        ]
+      ],
+      description: ['', [Validators.maxLength(500)]],
+    });
+  }
+
+  /**
+   * Custom validator to prevent whitespace-only input
+   */
+  private noWhitespaceValidator(control: AbstractControl): { [key: string]: any } | null {
+    if (control.value && control.value.trim().length === 0) {
+      return { whitespace: true };
+    }
+    return null;
+  }
+
+  /**
+   * Initialize owner ID from auth service
+   */
+  private initializeOwner(): void {
+    const user = this.authService.getUserFromToken();
+    if (user?._id) {
+      this.ownerId = user._id;
+    } else {
+      console.error('No authenticated user found');
+      this.showErrorAlert('Authentication Error', 'Please log in to continue');
+      this.onCancel();
+    }
+  }
+
+  /**
+   * Populate form with existing workspace data
+   */
+  populateForm(workspace: Workspace): void {
+    if (!workspace) return;
+    
     this.workspaceForm.patchValue({
-      name: workspace.name,
+      name: workspace.name || '',
       description: workspace.description || '',
     });
   }
 
-  onSubmit() {
+  /**
+   * Submit form data
+   */
+  onSubmit(): void {
     if (!this.workspaceForm.valid) {
       this.markFormGroupTouched();
       return;
     }
 
+    if (!this.ownerId) {
+      this.showErrorAlert('Authentication Error', 'Unable to identify user. Please log in again.');
+      return;
+    }
+
     this.loading = true;
     const formData = this.workspaceForm.value;
-    const workspaceData: any = {
-      ...formData,
-      owner: this.ownerId,
-    };
-
+    
     if (this.data.mode === 'add') {
-      this.wsService.addWorkSpace(workspaceData).subscribe({
-        next: (res) => {
-          this.loading = false;
-          Swal.fire('Success!', 'Workspace created successfully', 'success');
-          this.dialogRef.close(res);
-        },
-        error: (err) => {
-          this.loading = false;
-          console.error('Error creating workspace:', err);
-          Swal.fire('Error', 'Failed to create workspace', 'error');
-        },
-      });
+      this.createWorkspace(formData);
     } else if (this.data.mode === 'edit' && this.data.workspace?._id) {
-      this.wsService.updateWorkSpace(this.data.workspace._id, workspaceData).subscribe({
-        next: (res) => {
-          this.loading = false;
-          Swal.fire('Success!', 'Workspace updated successfully', 'success');
-          this.dialogRef.close(res);
-        },
-        error: (err) => {
-          this.loading = false;
-          console.error('Error updating workspace:', err);
-          Swal.fire('Error', 'Failed to update workspace', 'error');
-        },
-      });
+      this.updateWorkspace(formData);
     }
   }
 
-  markFormGroupTouched() {
-    Object.keys(this.workspaceForm.controls).forEach((key) => {
+  /**
+   * Create new workspace
+   */
+  private createWorkspace(formData: any): void {
+    const workspaceData: WorkspaceCreateRequest = {
+      name: formData.name.trim(),
+      description: formData.description?.trim() || undefined,
+      owner: this.ownerId,
+    };
+
+    this.wsService.addWorkSpace(workspaceData)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (workspace: Workspace) => {
+          this.loading = false;
+          Swal.fire({
+            icon: 'success',
+            title: 'Success!',
+            text: 'Workspace created successfully',
+            timer: 2000,
+            showConfirmButton: false,
+          });
+          this.dialogRef.close(workspace);
+        },
+        error: (error: ApiError) => {
+          this.loading = false;
+          console.error('Error creating workspace:', error);
+          this.showErrorAlert('Creation Failed', error.message || 'Failed to create workspace');
+        },
+      });
+  }
+
+  /**
+   * Update existing workspace
+   */
+  private updateWorkspace(formData: any): void {
+    if (!this.data.workspace?._id) return;
+
+    const workspaceData: WorkspaceUpdateRequest = {
+      name: formData.name.trim(),
+      description: formData.description?.trim() || undefined,
+    };
+
+    this.wsService.updateWorkSpace(this.data.workspace._id, workspaceData)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (workspace: Workspace) => {
+          this.loading = false;
+          Swal.fire({
+            icon: 'success',
+            title: 'Success!',
+            text: 'Workspace updated successfully',
+            timer: 2000,
+            showConfirmButton: false,
+          });
+          this.dialogRef.close(workspace);
+        },
+        error: (error: ApiError) => {
+          this.loading = false;
+          console.error('Error updating workspace:', error);
+          this.showErrorAlert('Update Failed', error.message || 'Failed to update workspace');
+        },
+      });
+  }
+
+  /**
+   * Mark all form fields as touched for validation display
+   */
+  markFormGroupTouched(): void {
+    Object.keys(this.workspaceForm.controls).forEach(key => {
       const control = this.workspaceForm.get(key);
       control?.markAsTouched();
     });
   }
 
-  onCancel() {
+  /**
+   * Cancel and close dialog
+   */
+  onCancel(): void {
     this.dialogRef.close();
   }
 
+  /**
+   * Get validation error message for field
+   */
   getFieldError(fieldName: string): string {
-    const field = this.workspaceForm.get(fieldName);
-    if (field?.errors && field.touched) {
-      if (field.errors['required']) return `${fieldName} is required`;
-      if (field.errors['minlength'])
-        return `${fieldName} must be at least ${field.errors['minlength'].requiredLength} characters`;
-      if (field.errors['maxlength'])
-        return `${fieldName} must be at most ${field.errors['maxlength'].requiredLength} characters`;
+    const control = this.workspaceForm.get(fieldName);
+    
+    if (!control || !control.errors || !control.touched) {
+      return '';
     }
-    return '';
+
+    const errors = control.errors;
+    
+    if (errors['required']) {
+      return `${this.getFieldDisplayName(fieldName)} is required`;
+    }
+    if (errors['minlength']) {
+      return `${this.getFieldDisplayName(fieldName)} must be at least ${errors['minlength'].requiredLength} characters`;
+    }
+    if (errors['maxlength']) {
+      return `${this.getFieldDisplayName(fieldName)} cannot exceed ${errors['maxlength'].requiredLength} characters`;
+    }
+    if (errors['whitespace']) {
+      return `${this.getFieldDisplayName(fieldName)} cannot be empty or contain only spaces`;
+    }
+
+    return 'Invalid input';
   }
 
+  /**
+   * Get display name for field
+   */
+  private getFieldDisplayName(fieldName: string): string {
+    const fieldNames: { [key: string]: string } = {
+      name: 'Name',
+      description: 'Description',
+    };
+    return fieldNames[fieldName] || fieldName;
+  }
+
+  /**
+   * Check if form is valid
+   */
   get isFormValid(): boolean {
-    return this.workspaceForm.valid;
+    return this.workspaceForm.valid && !this.loading;
   }
 
+  /**
+   * Get dialog title based on mode
+   */
   get dialogTitle(): string {
     return this.data.mode === 'add' ? 'Create New Workspace' : 'Edit Workspace';
   }
 
+  /**
+   * Get submit button text based on mode
+   */
   get submitButtonText(): string {
     return this.data.mode === 'add' ? 'Create Workspace' : 'Update Workspace';
   }
 
-};
+  /**
+   * Show error alert
+   */
+  private showErrorAlert(title: string, message: string): void {
+    Swal.fire({
+      icon: 'error',
+      title,
+      text: message,
+      confirmButtonColor: '#3085d6',
+    });
+  }
+}
