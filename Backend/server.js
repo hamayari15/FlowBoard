@@ -14,13 +14,10 @@ require('dotenv').config()
 const userRouter = require('./routes/user')
 const workSpaceRouter = require('./routes/workSpace')
 const projectRouter = require('./routes/project')
-const testEmailRouter = require('./routes/testEmail');
 
 app.use('/userRouter', userRouter)
 app.use('/workSpaceRouter', workSpaceRouter)
 app.use('/projectRouter', projectRouter)
-app.use('/testEmail', testEmailRouter);
-
 
 app.use('/getImages', express.static('uploads'))
 

@@ -1,6 +1,8 @@
 const workSpace = require("../models/Workspace");
 const User = require("../models/User");
 
+const { sendEmail } = require("../services/email");
+
 
 exports.Add = async (req, res) => {
   try {
@@ -36,6 +38,48 @@ exports.Add = async (req, res) => {
 };
 
 
+exports.addMember = async (req, res) => {
+  try {
+    const workspaceId = req.params.id;
+    const { email } = req.body;
+
+    const wSpace = await workSpace.findById(workspaceId).populate("members");
+    if (!wSpace) {
+      return res.status(404).json({ message: "Workspace not found" });
+    }
+
+    const user = await User.findOne({ email });
+
+    if (user) {
+      if (!wSpace.members.some(m => m._id.equals(user._id))) {
+        wSpace.members.push(user._id);
+        await wSpace.save();
+      }
+
+      await sendEmail(
+        email,
+        `Added to workspace ${wSpace.name}`,
+        `<p style="color: green;">You were added to <b>${wSpace.name}</b>. <a href="http://localhost:4200/login">Login here</a></p>`
+      );
+
+      return res.status(200).json({ message: "User added to workspace and notified." });
+    } else {
+      await sendEmail(
+        email,
+        `Invitation to workspace ${wSpace.name}`,
+        `<p>You’ve been invited to <b>${wSpace.name}</b>. <a href="http://localhost:4200/register">Sign up here</a></p>`
+      );
+
+      return res.status(200).json({ message: "Invitation sent. User must sign up first." });
+    }
+
+  } catch (err) {
+    console.error("Error inviting user:", err);
+    res.status(500).json({ message: "Error inviting user", err });
+  }
+};
+
+
 exports.getAll = async (req, res) => {
   try {
     const workSpaces = await workSpace.find().populate("owner").populate("members");
@@ -44,7 +88,7 @@ exports.getAll = async (req, res) => {
   } catch (err) {
     res.status(500).json({ message: "Error fetching workSpaces", err });
   }
-};
+};  
 
 
 exports.getById = async (req, res) => {
