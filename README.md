@@ -25,14 +25,13 @@
 ### 1. `POST /api/workspaces/:id/invite`
 
 * **Who can call**: Workspace owner.
-* **Body**: `{ email: "invitee@example.com", projectId?: "..." }`.
+* **Body**: `{ email: "invitee@example.com"}`.
 * **Flow**:
 
   1. Check if user with that email exists in `User` collection.
   2. If exists:
 
      * Add their `_id` to workspace’s `members`.
-     * If `projectId` present, also add to that project’s `members`.
      * Send email: “You were added to workspace X” with a link to log in.
   3. If not exists:
 

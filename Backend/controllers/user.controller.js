@@ -1,4 +1,5 @@
 const User = require("../models/User");
+const workSpace = require("../models/Workspace");
 
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
@@ -8,14 +9,20 @@ const jwt = require("jsonwebtoken");
 exports.register = async (req, res) => {
 
   try {
-    const data = req.body;
-    const usr = new User(data);
+    const { userName, firstName, lastName, email, password, wsId } = req.body;
+    const usr = new User({userName, firstName, lastName, email, password});
 
     const salt = await bcrypt.genSalt(10);
     const cryptedPassword = await bcrypt.hash(usr.password, salt);
     usr.password = cryptedPassword;
-
+    
     const registredUser = await usr.save();
+
+    if (wsId) {
+      const wSpace = await workSpace.findById(wsId);
+      wSpace.members.push(registredUser._id);
+      await wSpace.save();
+    }
 
     res.status(201).json(registredUser);
 
