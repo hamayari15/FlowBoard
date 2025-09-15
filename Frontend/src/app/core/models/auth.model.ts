@@ -1,8 +1,10 @@
 export interface User {
   _id: string;
+  userName: string;
   firstName: string;
   lastName: string;
   email: string;
+  exp?: number; // JWT expiration timestamp
   createdAt?: Date;
   updatedAt?: Date;
 }

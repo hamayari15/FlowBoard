@@ -28,14 +28,25 @@ export class AuthService {
   private initializeAuth(): void {
     const token = this.getToken();
     if (token) {
+      // Check if token is expired
+      if (this.isTokenExpired()) {
+        console.log('🚨 Token expired on initialization, logging out');
+        this.logout();
+        return;
+      }
+
       const user = this.getUserFromToken();
       if (user) {
         this.isLoggedInSubject.next(true);
         this.currentUserSubject.next(user);
+        console.log('✅ User session restored from valid token:', user.email);
       } else {
         // Invalid token, remove it
-        // this.logout();
+        console.log('🚨 Invalid token format on initialization, logging out');
+        this.logout();
       }
+    } else {
+      console.log('ℹ️ No token found on initialization');
     }
   }
 
@@ -106,12 +117,19 @@ export class AuthService {
       const decodedPayload = JSON.parse(atob(payload));
       
       // Validate required user fields
-      if (!decodedPayload._id || !decodedPayload.email) {
+      if (!decodedPayload._id || !decodedPayload.email || !decodedPayload.firstName || !decodedPayload.lastName) {
         console.error('❌ Token missing required user fields');
         return null;
       }
       
-      return decodedPayload as User;
+      return {
+        _id: decodedPayload._id,
+        userName: decodedPayload.userName || '',
+        email: decodedPayload.email,
+        firstName: decodedPayload.firstName,
+        lastName: decodedPayload.lastName,
+        exp: decodedPayload.exp
+      } as User;
     } catch (error) {
       console.error('❌ Failed to decode token:', error);
       return null;
@@ -119,10 +137,37 @@ export class AuthService {
   }
 
   /**
-   * Check if user is logged in
+   * Check if user is logged in and token is valid
    */
   isLoggedIn(): boolean {
-    return !!this.getToken();
+    const token = this.getToken();
+    if (!token) {
+      return false;
+    }
+
+    // Check if token is expired
+    if (this.isTokenExpired()) {
+      // Token is expired, clean up and return false
+      this.logout();
+      return false;
+    }
+
+    // Check if we can get valid user data from token
+    const user = this.getUserFromToken();
+    if (!user) {
+      // Invalid token structure, clean up and return false
+      this.logout();
+      return false;
+    }
+
+    return true;
+  }
+
+  /**
+   * Check if user is authenticated (more comprehensive check)
+   */
+  isAuthenticated(): boolean {
+    return this.isLoggedIn();
   }
 
   /**
@@ -137,9 +182,23 @@ export class AuthService {
    */
   logout(): void {
     localStorage.removeItem(this.tokenKey);
+    // Clear any stored redirect URL
+    localStorage.removeItem('redirectUrl');
     this.isLoggedInSubject.next(false);
     this.currentUserSubject.next(null);
     console.log('✅ User logged out successfully');
+  }
+
+  /**
+   * Get and clear redirect URL
+   */
+  getAndClearRedirectUrl(): string | null {
+    const redirectUrl = localStorage.getItem('redirectUrl');
+    if (redirectUrl) {
+      localStorage.removeItem('redirectUrl');
+      return redirectUrl;
+    }
+    return null;
   }
 
   /**
@@ -182,6 +241,29 @@ export class AuthService {
         this.logout();
       }
     }
+  }
+
+  /**
+   * Debug method to verify authentication state
+   */
+  debugAuthState(): void {
+    console.log('🔍 Authentication Debug Info:');
+    const token = this.getToken();
+    console.log('Token exists:', !!token);
+    
+    if (token) {
+      console.log('Token expired:', this.isTokenExpired());
+      const user = this.getUserFromToken();
+      console.log('Valid user from token:', !!user);
+      if (user) {
+        console.log('User data:', user);
+      }
+    }
+    
+    console.log('isLoggedIn():', this.isLoggedIn());
+    console.log('isAuthenticated():', this.isAuthenticated());
+    console.log('Current user:', this.getCurrentUser());
+    console.log('BehaviorSubject state:', this.isLoggedInSubject.value);
   }
 
   /**

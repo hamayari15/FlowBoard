@@ -31,11 +31,20 @@ export class LoginComponent {
     this.authService.login(this.loginForm.value).subscribe({
       next: (res) => {
         console.log('✅ Login successful:', res);
-        this.router.navigate(['/workSpaces-list']); 
+        
+        // Check for redirect URL
+        const redirectUrl = this.authService.getAndClearRedirectUrl();
+        if (redirectUrl) {
+          console.log('🔄 Redirecting to stored URL:', redirectUrl);
+          this.router.navigateByUrl(redirectUrl);
+        } else {
+          // Default redirect
+          this.router.navigate(['/workSpaces-list']); 
+        }
       },
       error: (err) => {
         console.error('❌ Login failed:', err);
-        this.serverError = err.error?.message || 'Login failed, please try again later.';
+        this.serverError = err.message || 'Login failed, please try again later.';
       }
     });
   }
