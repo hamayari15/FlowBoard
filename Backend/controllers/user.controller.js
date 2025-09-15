@@ -11,7 +11,6 @@ exports.register = async (req, res) => {
   try {
     const { userName, firstName, lastName, email, password, wsId } = req.body;
     const usr = new User({userName, firstName, lastName, email, password});
-
     const salt = await bcrypt.genSalt(10);
     const cryptedPassword = await bcrypt.hash(usr.password, salt);
     usr.password = cryptedPassword;
@@ -54,7 +53,15 @@ exports.login = async (req, res) => {
       return res.status(401).json({ message: "Invalid email or password" });
     }
 
-    const payload = { _id: user._id };
+    // Include more user data in the token payload for frontend validation
+    const payload = { 
+      _id: user._id,
+      email: user.email,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      userName: user.userName,
+      exp: Math.floor(Date.now() / 1000) + (7 * 24 * 60 * 60) // 7 days expiration
+    };
     const token = jwt.sign(payload, process.env.JWT_SECRET);
 
     res.status(200).json({ myToken: token });
