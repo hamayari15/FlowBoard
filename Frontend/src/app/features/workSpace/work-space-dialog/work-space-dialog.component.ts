@@ -268,23 +268,14 @@ export class WorkSpaceDialogComponent implements OnInit, OnDestroy {
     return this.workspaceForm.valid && !this.loading;
   }
 
-  /**
-   * Get dialog title based on mode
-   */
   get dialogTitle(): string {
     return this.data.mode === 'add' ? 'Create New Workspace' : 'Edit Workspace';
   }
 
-  /**
-   * Get submit button text based on mode
-   */
   get submitButtonText(): string {
     return this.data.mode === 'add' ? 'Create Workspace' : 'Update Workspace';
   }
 
-  /**
-   * Show error alert
-   */
   private showErrorAlert(title: string, message: string): void {
     Swal.fire({
       icon: 'error',

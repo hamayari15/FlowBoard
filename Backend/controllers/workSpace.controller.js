@@ -38,7 +38,7 @@ exports.Add = async (req, res) => {
 };
 
 
-exports.addMember = async (req, res) => {
+exports.inviteMember = async (req, res) => {
   try {
     const workspaceId = req.params.id;
     const { email } = req.body;

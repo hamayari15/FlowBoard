@@ -3,12 +3,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
-import {
-  Workspace,
-  WorkspaceCreateRequest,
-  WorkspaceUpdateRequest,
-  ApiError,
-} from '../models/workspace.model';
+import { Workspace, WorkspaceCreateRequest, WorkspaceUpdateRequest, ApiError } from '../models/workspace.model';
 
 @Injectable({
   providedIn: 'root',
@@ -17,6 +12,21 @@ export class WorkspaceService {
   private readonly apiUrl = `${environment.apiUrl}/workSpaceRouter`;
 
   constructor(private http: HttpClient) {}
+
+  addWorkSpace(workSpaceData: WorkspaceCreateRequest): Observable<Workspace> {
+    if (!workSpaceData.name || !workSpaceData.owner) {
+      return throwError(() => new Error('Name and owner are required'));
+    }
+
+    return this.http.post<Workspace>(`${this.apiUrl}/Add`, workSpaceData).pipe(
+      map((response: any) => response as Workspace),
+      catchError(this.handleError)
+    );
+  }
+
+  inviteMember(workspaceId: string, email: string) {
+    return this.http.post(`${workspaceId}/addMember`, { email });
+  }
 
   /**
    * Get all workspaces
@@ -37,20 +47,6 @@ export class WorkspaceService {
     }
 
     return this.http.get<Workspace>(`${this.apiUrl}/getById/${id}`).pipe(
-      map((response: any) => response as Workspace),
-      catchError(this.handleError)
-    );
-  }
-
-  /**
-   * Create new workspace
-   */
-  addWorkSpace(workSpaceData: WorkspaceCreateRequest): Observable<Workspace> {
-    if (!workSpaceData.name || !workSpaceData.owner) {
-      return throwError(() => new Error('Name and owner are required'));
-    }
-
-    return this.http.post<Workspace>(`${this.apiUrl}/Add`, workSpaceData).pipe(
       map((response: any) => response as Workspace),
       catchError(this.handleError)
     );
