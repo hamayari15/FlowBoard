@@ -158,7 +158,7 @@ export class WorkSpaceDetailsComponent implements OnInit {
   }
 
   goBackToWorkspaces() {
-    this.router.navigate(['/workspaces']);
+    this.router.navigate(['/workSpaces-list']);
   }
 
   refreshData() {

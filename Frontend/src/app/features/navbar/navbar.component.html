@@ -7,7 +7,7 @@
 
     <!-- Navigation links for authenticated users -->
     <div class="navbar-nav" *ngIf="isLoggedIn">
-      <a routerLink="/workspaces" class="nav-link">
+      <a routerLink="/workSpaces-list" class="nav-link">
         <i class="fas fa-folder"></i>
         Workspaces
       </a>
@@ -59,7 +59,7 @@
       <div class="mobile-user-info" *ngIf="currentUser">
         <span>Welcome, {{ currentUser.name || currentUser.email }}!</span>
       </div>
-      <a routerLink="/workspaces" class="mobile-nav-item" (click)="toggleMobileMenu()">
+      <a routerLink="/workSpaces-list" class="mobile-nav-item" (click)="toggleMobileMenu()">
         <i class="fas fa-folder"></i>
         Workspaces
       </a>
