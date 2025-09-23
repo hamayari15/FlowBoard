@@ -67,7 +67,7 @@ exports.inviteMember = async (req, res) => {
       await sendEmail(
         email,
         `Invitation to workspace ${wSpace.name}`,
-        `<p>You’ve been invited to <b>${wSpace.name}</b>. <a href="http://localhost:4200/register">Sign up here</a></p>`
+        `<p>You’ve been invited to <b>${wSpace.name}</b>. <a href="http://localhost:4200/register?wsId=${wSpace._id}">Sign up here</a></p>`
       );
 
       return res.status(200).json({ message: "Invitation sent. User must sign up first." });

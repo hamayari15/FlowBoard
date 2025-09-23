@@ -25,7 +25,7 @@ export class WorkspaceService {
   }
 
   inviteMember(workspaceId: string, email: string) {
-    return this.http.post(`${workspaceId}/addMember`, { email });
+    return this.http.post(`${this.apiUrl}/${workspaceId}/addMember`, {email})
   }
 
   /**

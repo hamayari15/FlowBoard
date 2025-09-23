@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/core/services/auth.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-register',
@@ -12,11 +13,21 @@ export class RegisterComponent implements OnInit {
 
   registerForm!: FormGroup
   serverError: String = ''
+  wsId: string | null = null;
   
-  constructor (private fb: FormBuilder, private authService: AuthService, private router: Router) {}
+  constructor (private fb: FormBuilder, private authService: AuthService, private router: Router, private route: ActivatedRoute) {}
 
   ngOnInit(): void {
     this.buildForm()
+    this.wsId = this.route.snapshot.queryParamMap.get('wsId');
+    console.log('wsId (snapshot):', this.wsId);
+
+    this.route.queryParamMap.subscribe(params => {
+      this.wsId = params.get('wsId');
+      console.log('wsId (observable):', this.wsId);
+
+      this.registerForm.patchValue({ wsId: this.wsId });
+    });
   }
 
   buildForm(): void {
@@ -26,7 +37,8 @@ export class RegisterComponent implements OnInit {
       password: ['', [Validators.required, Validators.minLength(6)]],
       confirmPassword: ['', Validators.required],
       firstName: ['', Validators.required],
-      lastName: ['', Validators.required]
+      lastName: ['', Validators.required],
+      wsId: this.wsId
     }, {
         validators: this.passwordsMatchValidator
     })
