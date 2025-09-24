@@ -19,13 +19,8 @@ export class RegisterComponent implements OnInit {
 
   ngOnInit(): void {
     this.buildForm()
-    this.wsId = this.route.snapshot.queryParamMap.get('wsId');
-    console.log('wsId (snapshot):', this.wsId);
-
     this.route.queryParamMap.subscribe(params => {
       this.wsId = params.get('wsId');
-      console.log('wsId (observable):', this.wsId);
-
       this.registerForm.patchValue({ wsId: this.wsId });
     });
   }
