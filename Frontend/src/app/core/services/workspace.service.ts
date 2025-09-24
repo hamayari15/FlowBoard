@@ -25,12 +25,9 @@ export class WorkspaceService {
   }
 
   inviteMember(workspaceId: string, email: string) {
-    return this.http.post(`${workspaceId}/addMember`, { email });
+    return this.http.post(`${this.apiUrl}/${workspaceId}/addMember`, {email})
   }
 
-  /**
-   * Get all workspaces
-   */
   getWorkSpaces(): Observable<Workspace[]> {
     return this.http.get<Workspace[]>(`${this.apiUrl}/getAll`).pipe(
       map((response: any) => response as Workspace[]),
@@ -38,9 +35,6 @@ export class WorkspaceService {
     );
   }
 
-  /**
-   * Get workspace by ID
-   */
   getWorkSpaceById(id: string): Observable<Workspace> {
     if (!id) {
       return throwError(() => new Error('Workspace ID is required'));
@@ -52,28 +46,17 @@ export class WorkspaceService {
     );
   }
 
-  /**
-   * Update workspace
-   */
-  updateWorkSpace(
-    id: string,
-    newData: WorkspaceUpdateRequest
-  ): Observable<Workspace> {
+  updateWorkSpace(id: string, newData: WorkspaceUpdateRequest): Observable<Workspace> {
     if (!id) {
       return throwError(() => new Error('Workspace ID is required'));
     }
-
-    return this.http
-      .put<Workspace>(`${this.apiUrl}/Update/${id}`, newData)
+    return this.http.put<Workspace>(`${this.apiUrl}/Update/${id}`, newData)
       .pipe(
         map((response: any) => response as Workspace),
         catchError(this.handleError)
       );
   }
 
-  /**
-   * Delete workspace
-   */
   deleteWorkSpace(id: string): Observable<boolean> {
     if (!id) {
       return throwError(() => new Error('Workspace ID is required'));
@@ -85,18 +68,13 @@ export class WorkspaceService {
     );
   }
 
-  /**
-   * Handle HTTP errors
-   */
   private handleError = (error: HttpErrorResponse): Observable<never> => {
     let errorMessage = 'An unknown error occurred';
     let errorStatus = 500;
 
     if (error.error instanceof ErrorEvent) {
-      // Client-side error
       errorMessage = `Error: ${error.error.message}`;
     } else {
-      // Server-side error
       errorStatus = error.status;
       if (error.error?.message) {
         errorMessage = error.error.message;

@@ -8,12 +8,7 @@
     <form [formGroup]="workspaceForm" class="workspace-form">
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Workspace Name</mat-label>
-        <input
-          matInput
-          formControlName="name"
-          placeholder="Enter workspace name"
-          maxlength="100"
-        />
+        <input matInput formControlName="name" placeholder="Enter workspace name" maxlength="100" />
         <mat-icon matSuffix>work</mat-icon>
         <mat-hint>{{ workspaceForm.get("name")?.value?.length || 0 }}/100</mat-hint>
         <mat-error>{{ getFieldError("name") }}</mat-error>
@@ -21,28 +16,31 @@
 
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Description</mat-label>
-        <textarea
-          matInput
-          formControlName="description"
-          placeholder="Enter workspace description (optional)"
-          rows="4"
-          maxlength="500"
-        ></textarea>
+        <textarea matInput formControlName="description" placeholder="Enter workspace description (optional)" rows="4" maxlength="500"></textarea>
         <mat-icon matSuffix>description</mat-icon>
         <mat-hint>{{ workspaceForm.get("description")?.value?.length || 0 }}/500</mat-hint>
         <mat-error>{{ getFieldError("description") }}</mat-error>
       </mat-form-field>
     </form>
+
+    <div *ngIf="data.mode === 'edit'" class="invite-section">
+      <h3>Invite Member</h3>
+      <form [formGroup]="inviteForm" (ngSubmit)="inviteMember()" class="invite-form">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Email</mat-label>
+          <input matInput formControlName="email" placeholder="Enter member email" />
+          <mat-icon matSuffix>person_add</mat-icon>
+          <mat-error *ngIf="inviteForm.get('email')?.hasError('required')">Email is required</mat-error>
+          <mat-error *ngIf="inviteForm.get('email')?.hasError('email')">Enter a valid email</mat-error>
+        </mat-form-field>
+        <button mat-raised-button color="accent" type="submit" [disabled]="!inviteForm.valid">Invite</button>
+      </form>
+    </div>
   </mat-dialog-content>
 
   <mat-dialog-actions align="end" class="dialog-actions">
     <button mat-button (click)="onCancel()" [disabled]="loading">Cancel</button>
-    <button
-      mat-raised-button
-      color="primary"
-      (click)="onSubmit()"
-      [disabled]="!isFormValid || loading"
-    >
+    <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="!isFormValid || loading">
       <mat-spinner diameter="16" *ngIf="loading"></mat-spinner>
       <mat-icon *ngIf="!loading">{{ data.mode === "add" ? "add" : "save" }}</mat-icon>
       {{ submitButtonText }}
