@@ -6,7 +6,7 @@ import Swal from 'sweetalert2';
 
 import { WorkspaceService } from 'src/app/core/services/workspace.service';
 import { WorkSpaceDialogComponent } from '../work-space-dialog/work-space-dialog.component';
-import { Workspace, ApiError } from 'src/app/core/models/workspace.model';
+import { Workspace, WorkspacePopulated, ApiError } from 'src/app/core/models';
 
 @Component({
   selector: 'app-work-spaces-list',
@@ -14,7 +14,7 @@ import { Workspace, ApiError } from 'src/app/core/models/workspace.model';
   styleUrls: ['./work-spaces-list.component.css'],
 })
 export class WorkspaceListComponent implements OnInit, OnDestroy {
-  workSpaces: Workspace[] = [];
+  workSpaces: WorkspacePopulated[] = [];
   loading = false;
   error: string | null = null;
   private destroy$ = new Subject<void>();
@@ -44,7 +44,7 @@ export class WorkspaceListComponent implements OnInit, OnDestroy {
     this.wsService.getWorkSpaces()
       .pipe(takeUntil(this.destroy$))
       .subscribe({
-        next: (workspaces: Workspace[]) => {
+        next: (workspaces: WorkspacePopulated[]) => {
           this.workSpaces = workspaces || [];
           this.loading = false;
           console.log('Workspaces loaded successfully:', this.workSpaces.length);
@@ -93,7 +93,7 @@ export class WorkspaceListComponent implements OnInit, OnDestroy {
   /**
    * Open dialog for editing workspace
    */
-  openEditDialog(workspace: Workspace): void {
+  openEditDialog(workspace: WorkspacePopulated): void {
     if (!workspace || !workspace._id) {
       console.error('Valid workspace is required for editing');
       return;
@@ -183,7 +183,7 @@ export class WorkspaceListComponent implements OnInit, OnDestroy {
   /**
    * Track workspaces for better performance
    */
-  trackByWorkspaceId(index: number, workspace: Workspace): string {
+  trackByWorkspaceId(index: number, workspace: WorkspacePopulated): string {
     return workspace._id || index.toString();
   }
 

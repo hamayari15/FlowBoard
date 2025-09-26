@@ -5,11 +5,11 @@ import { Subject, takeUntil } from 'rxjs';
 import Swal from 'sweetalert2';
 import { WorkspaceService } from 'src/app/core/services/workspace.service';
 import { AuthService } from 'src/app/core/services/auth.service';
-import { Workspace, WorkspaceCreateRequest, WorkspaceUpdateRequest, ApiError } from 'src/app/core/models/workspace.model';
+import { Workspace, WorkspacePopulated, WorkspaceCreateRequest, WorkspaceUpdateRequest, ApiError } from 'src/app/core/models';
 
 export interface DialogData {
   mode: 'add' | 'edit';
-  workspace: Workspace | null;
+  workspace: Workspace | WorkspacePopulated | null;
 }
 
 @Component({

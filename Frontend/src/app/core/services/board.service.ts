@@ -3,63 +3,66 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
-import { Workspace, WorkspacePopulated, WorkspaceCreateRequest, WorkspaceUpdateRequest, ApiError } from '../models';
+import { Board, BoardCreateRequest, BoardUpdateRequest, ApiError } from '../models';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
-export class WorkspaceService {
-  private readonly apiUrl = `${environment.apiUrl}/workSpaceRouter`;
+export class BoardService {
+  private readonly apiUrl = `${environment.apiUrl}/boardRouter`;
 
   constructor(private http: HttpClient) {}
 
-  addWorkSpace(workSpaceData: WorkspaceCreateRequest): Observable<Workspace> {
-    if (!workSpaceData.name || !workSpaceData.owner) {
-      return throwError(() => new Error('Name and owner are required'));
-    }
-
-    return this.http.post<Workspace>(`${this.apiUrl}/Add`, workSpaceData).pipe(
-      map((response: any) => response as Workspace),
+  createBoard(boardData: BoardCreateRequest): Observable<Board> {
+    return this.http.post<Board>(`${this.apiUrl}/Add`, boardData).pipe(
+      map((response: any) => response as Board),
       catchError(this.handleError)
     );
   }
 
-  inviteMember(workspaceId: string, email: string) {
-    return this.http.post(`${this.apiUrl}/${workspaceId}/addMember`, {email})
-  }
-
-  getWorkSpaces(): Observable<WorkspacePopulated[]> {
-    return this.http.get<WorkspacePopulated[]>(`${this.apiUrl}/getAll`).pipe(
-      map((response: any) => response as WorkspacePopulated[]),
+  getBoards(): Observable<Board[]> {
+    return this.http.get<Board[]>(`${this.apiUrl}/getAll`).pipe(
+      map((response: any) => response as Board[]),
       catchError(this.handleError)
     );
   }
 
-  getWorkSpaceById(id: string): Observable<WorkspacePopulated> {
+  getBoardById(id: string): Observable<Board> {
     if (!id) {
-      return throwError(() => new Error('Workspace ID is required'));
+      return throwError(() => new Error('Board ID is required'));
     }
 
-    return this.http.get<WorkspacePopulated>(`${this.apiUrl}/getById/${id}`).pipe(
-      map((response: any) => response as WorkspacePopulated),
+    return this.http.get<Board>(`${this.apiUrl}/getById/${id}`).pipe(
+      map((response: any) => response as Board),
       catchError(this.handleError)
     );
   }
 
-  updateWorkSpace(id: string, newData: WorkspaceUpdateRequest): Observable<Workspace> {
-    if (!id) {
-      return throwError(() => new Error('Workspace ID is required'));
+  getBoardsByProject(projectId: string): Observable<Board[]> {
+    if (!projectId) {
+      return throwError(() => new Error('Project ID is required'));
     }
-    return this.http.put<Workspace>(`${this.apiUrl}/Update/${id}`, newData)
-      .pipe(
-        map((response: any) => response as Workspace),
-        catchError(this.handleError)
-      );
+
+    return this.http.get<Board[]>(`${this.apiUrl}/getByProject/${projectId}`).pipe(
+      map((response: any) => response as Board[]),
+      catchError(this.handleError)
+    );
   }
 
-  deleteWorkSpace(id: string): Observable<boolean> {
+  updateBoard(id: string, boardData: BoardUpdateRequest): Observable<Board> {
     if (!id) {
-      return throwError(() => new Error('Workspace ID is required'));
+      return throwError(() => new Error('Board ID is required'));
+    }
+
+    return this.http.put<Board>(`${this.apiUrl}/Update/${id}`, boardData).pipe(
+      map((response: any) => response as Board),
+      catchError(this.handleError)
+    );
+  }
+
+  deleteBoard(id: string): Observable<boolean> {
+    if (!id) {
+      return throwError(() => new Error('Board ID is required'));
     }
 
     return this.http.delete(`${this.apiUrl}/Delete/${id}`).pipe(
@@ -90,10 +93,10 @@ export class WorkspaceService {
             errorMessage = "Forbidden. You don't have permission.";
             break;
           case 404:
-            errorMessage = 'Workspace not found.';
+            errorMessage = 'Board not found.';
             break;
           case 409:
-            errorMessage = 'Workspace name already exists.';
+            errorMessage = 'Board name already exists.';
             break;
           case 500:
             errorMessage = 'Internal server error. Please try again later.';
@@ -110,7 +113,7 @@ export class WorkspaceService {
       error: error.error,
     };
 
-    console.error('WorkspaceService Error:', apiError);
+    console.error('BoardService Error:', apiError);
     return throwError(() => apiError);
   };
 }

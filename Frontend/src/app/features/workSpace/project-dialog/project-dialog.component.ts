@@ -1,14 +1,15 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { ProjectService, Project } from 'src/app/core/services/project.service';
+import { ProjectService } from 'src/app/core/services/project.service';
 import { WorkspaceService } from 'src/app/core/services/workspace.service';
+import { Project, ProjectPopulated, ProjectCreateRequest } from 'src/app/core/models';
 import Swal from 'sweetalert2';
 
 export interface DialogData {
   mode: 'add' | 'edit';
   workspaceId: string;
-  project: Project | null;
+  project: Project | ProjectPopulated | null;
 }
 
 @Component({
@@ -85,14 +86,18 @@ export class ProjectDialogComponent implements OnInit {
     });
   }
 
-  populateForm(project: Project) {
+  populateForm(project: Project | ProjectPopulated) {
     this.projectForm.patchValue({
       name: project.name,
       description: project.description || '',
       status: project.status,
-      members: project.members || [],
+      members: Array.isArray(project.members) ? project.members.map(member => 
+        typeof member === 'string' ? member : member._id
+      ) : [],
     });
-    this.selectedMembers = project.members || [];
+    this.selectedMembers = Array.isArray(project.members) ? project.members.map(member => 
+      typeof member === 'string' ? member : member._id
+    ) : [];
   }
 
   onMemberSelectionChange(members: string[]) {
@@ -139,8 +144,16 @@ export class ProjectDialogComponent implements OnInit {
           },
         });
       } else if (this.data.mode === 'edit' && this.data.project?._id) {
+        // For update, only send the fields that can be updated
+        const updateData = {
+          name: formData.name,
+          description: formData.description,
+          status: formData.status,
+          members: this.selectedMembers,
+        };
+        
         this.projectService
-          .updateProject(projectData, this.data.project._id)
+          .updateProject(this.data.project._id, updateData)
           .subscribe({
             next: (res) => {
               this.loading = false;
