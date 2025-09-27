@@ -1,5 +1,7 @@
 const User = require("../models/User");
+
 const workSpace = require("../models/Workspace");
+const Project = require("../models/Project");
 
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
@@ -7,7 +9,7 @@ const jwt = require("jsonwebtoken");
 
 exports.register = async (req, res) => {
   try {
-    const { userName, firstName, lastName, email, password, wsId } = req.body;
+    const { userName, firstName, lastName, email, password, wsId, projectId } = req.body;
     
     const usr = new User({
       userName, 
@@ -29,6 +31,18 @@ exports.register = async (req, res) => {
       await wSpace.save();
     }
 
+    if (projectId) {
+      const project = await Project.findById(projectId);
+      project.members.push(registredUser._id);
+      await project.save();
+      
+      if(project.workspace && !project.workspace.members.includes(registredUser._id)) {
+        const workSpace = await workSpace.findById(project.workspace);
+        workSpace.members.push(registredUser._id);
+        await workSpace.save();
+      }
+    }
+    
     res.status(201).json(registredUser);
 
   } catch (err) {

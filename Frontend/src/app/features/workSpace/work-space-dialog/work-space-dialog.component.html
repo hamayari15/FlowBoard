@@ -23,7 +23,7 @@
       </mat-form-field>
     </form>
 
-    <div *ngIf="data.mode === 'edit'" class="invite-section">
+    <div class="invite-section">
       <h3>Invite Member</h3>
       <form [formGroup]="inviteForm" (ngSubmit)="inviteMember()" class="invite-form">
         <mat-form-field appearance="outline" class="full-width">
