@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { WorkspaceService } from 'src/app/core/services/workspace.service';
-import { ProjectService, Project } from 'src/app/core/services/project.service';
+import { ProjectService } from 'src/app/core/services/project.service';
+import { Project, ProjectPopulated, Workspace } from 'src/app/core/models';
 import Swal from 'sweetalert2';
 import { ProjectDialogComponent } from '../project-dialog/project-dialog.component';
 
@@ -15,7 +16,7 @@ export class WorkSpaceDetailsComponent implements OnInit {
 
   workSpaceId: string = '';
   workSpaceData: any = {};
-  projects: Project[] = [];
+  projects: ProjectPopulated[] = [];
   loading = true;
   loadingProjects = true;
 
@@ -56,7 +57,7 @@ export class WorkSpaceDetailsComponent implements OnInit {
   getProjectsByWorkspace(workspaceId: string) {
     this.loadingProjects = true;
     this.projectService.getProjectsByWorkspace(workspaceId).subscribe({
-      next: (projects: Project[]) => {
+      next: (projects: ProjectPopulated[]) => {
         this.projects = projects;
         this.loadingProjects = false;
       },
@@ -85,7 +86,7 @@ export class WorkSpaceDetailsComponent implements OnInit {
     });
   }
 
-  openEditProjectDialog(project: Project) {
+  openEditProjectDialog(project: ProjectPopulated) {
     const dialogRef = this.dialog.open(ProjectDialogComponent, {
       width: '600px',
       data: {
@@ -102,7 +103,7 @@ export class WorkSpaceDetailsComponent implements OnInit {
     });
   }
 
-  archiveProject(project: Project) {
+  archiveProject(project: ProjectPopulated) {
     Swal.fire({
       title: 'Archive Project',
       text: `Are you sure you want to archive "${project.name}"?`,
@@ -127,7 +128,7 @@ export class WorkSpaceDetailsComponent implements OnInit {
     });
   }
 
-    deleteProject(project: Project) {
+    deleteProject(project: ProjectPopulated) {
     Swal.fire({
       icon: 'warning',
       title: 'Are you sure?',
@@ -179,7 +180,7 @@ export class WorkSpaceDetailsComponent implements OnInit {
     }
   }
 
-  getMembersCount(project: Project): number {
+  getMembersCount(project: ProjectPopulated): number {
     return project.members ? project.members.length : 0;
   }
 }

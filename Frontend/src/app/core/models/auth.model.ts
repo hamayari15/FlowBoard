@@ -1,13 +1,4 @@
-export interface User {
-  _id: string;
-  userName: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  exp?: number;
-  createdAt?: Date;
-  updatedAt?: Date;
-}
+import { User } from './user.model';
 
 export interface LoginRequest {
   email: string;

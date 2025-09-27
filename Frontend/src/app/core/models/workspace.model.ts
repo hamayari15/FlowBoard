@@ -1,18 +1,23 @@
+import { User } from './user.model';
+import { ApiResponse, ApiError } from './api-response.model';
+
 export interface Workspace {
+  _id?: string;
+  name: string;
+  description?: string;
+  owner: string; // Always use string ID to avoid circular dependencies
+  members: string[]; // Always use string IDs to avoid circular dependencies
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+// For populated responses from backend
+export interface WorkspacePopulated {
   _id?: string;
   name: string;
   description?: string;
   owner: User;
   members: User[];
-  createdAt?: Date;
-  updatedAt?: Date;
-}
-
-export interface User {
-  _id: string;
-  firstName: string;
-  lastName: string;
-  email: string;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -30,14 +35,5 @@ export interface WorkspaceUpdateRequest {
   members?: string[];
 }
 
-export interface ApiResponse<T> {
-  data?: T;
-  message: string;
-  status: number;
-}
-
-export interface ApiError {
-  message: string;
-  error?: any;
-  status?: number;
-}
+// Re-export for backward compatibility
+export { ApiResponse, ApiError };
