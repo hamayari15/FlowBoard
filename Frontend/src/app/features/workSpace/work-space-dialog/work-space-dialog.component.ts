@@ -86,11 +86,18 @@ export class WorkSpaceDialogComponent implements OnInit, OnDestroy {
       description: formData.description?.trim() || undefined,
       owner: this.ownerId,
     };
+
+    this.loading = true;
     this.wsService.addWorkSpace(workspaceData).pipe(takeUntil(this.destroy$)).subscribe({
       next: (workspace: Workspace) => {
         this.loading = false;
-        Swal.fire({ icon: 'success', title: 'Success!', text: 'Workspace created successfully', timer: 2000, showConfirmButton: false });
-        this.dialogRef.close(workspace);
+        this.data.workspace = workspace;
+        Swal.fire({
+          icon: 'success',
+          title: 'Workspace Created!',
+          text: 'You can now invite members.',
+          showConfirmButton: true
+        });
       },
       error: (error: ApiError) => {
         this.loading = false;
@@ -108,7 +115,7 @@ export class WorkSpaceDialogComponent implements OnInit, OnDestroy {
     this.wsService.updateWorkSpace(this.data.workspace._id, workspaceData).pipe(takeUntil(this.destroy$)).subscribe({
       next: (workspace: Workspace) => {
         this.loading = false;
-        Swal.fire({ icon: 'success', title: 'Success!', text: 'Workspace updated successfully', timer: 2000, showConfirmButton: false });
+        Swal.fire({ icon: 'success', title: 'Success!', text: 'Workspace updated successfully', timer: 2000, showConfirmButton: true });
         this.dialogRef.close(workspace);
       },
       error: (error: ApiError) => {
@@ -119,15 +126,26 @@ export class WorkSpaceDialogComponent implements OnInit, OnDestroy {
   }
 
   inviteMember(): void {
-    if (!this.inviteForm.valid || !this.data.workspace?._id) return;
-    const email = this.inviteForm.value.email.trim();
-    this.wsService.inviteMember(this.data.workspace._id, email).pipe(takeUntil(this.destroy$)).subscribe({
-      next: () => {
-        Swal.fire({ icon: 'success', title: 'Invitation Sent!', text: `${email} has been invited.`, timer: 2000, showConfirmButton: false });
-        this.inviteForm.reset();
-      },
-      error: (error: ApiError) => {
-        this.showErrorAlert('Invitation Failed', error.message || 'Failed to invite member');
+  const wsId = this.data.workspace?._id;
+  if (!this.inviteForm.valid || !wsId) return;
+
+  const email = this.inviteForm.value.email.trim();
+  this.loading = true;
+
+  this.wsService.inviteMember(wsId, email).pipe(takeUntil(this.destroy$)).subscribe({
+    next: () => {
+      this.loading = false;
+      Swal.fire({
+        icon: 'success',
+        title: 'Invitation Sent!',
+        text: `${email} has been invited.`,
+        showConfirmButton: true
+      });
+      this.inviteForm.reset();
+    },
+    error: (error: ApiError) => {
+      this.loading = false;
+      this.showErrorAlert('Invitation Failed', error.message || 'Failed to invite member');
       },
     });
   }
