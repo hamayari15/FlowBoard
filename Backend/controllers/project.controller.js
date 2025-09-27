@@ -2,7 +2,7 @@ const Project = require("../models/Project");
 const User = require("../models/User");
 const Workspace = require("../models/Workspace");
 
-const { sendEmail } = require("../services/email");
+const { sendEmail, sendInvitationEmail } = require("../services/email");
 
 
 exports.Add = async (req, res) => {
@@ -36,43 +36,258 @@ exports.inviteMember = async (req, res) => {
     const projectId = req.params.id;
     const { email } = req.body;
 
-    const project = await Project.findById(projectId).populate("members workspace");
-    if (!project) return res.status(404).json({ message: "Project not found" });
+    // Input validation
+    if (!email || !email.trim()) {
+      return res.status(400).json({ message: "Email is required" });
+    }
 
-    const user = await User.findOne({ email });
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email.trim())) {
+      return res.status(400).json({ message: "Please provide a valid email address" });
+    }
+
+    // Find project with populated data for better email context
+    const project = await Project.findById(projectId)
+      .populate("members", "_id email firstName lastName")
+      .populate("workspace", "_id name members")
+      .populate("owner", "_id email firstName lastName");
+      
+    if (!project) {
+      return res.status(404).json({ message: "Project not found" });
+    }
+
+    const normalizedEmail = email.trim().toLowerCase();
+    const user = await User.findOne({ email: normalizedEmail });
+
+    // Check if user is already a project member
+    const isAlreadyProjectMember = project.members.some(m => 
+      m.email.toLowerCase() === normalizedEmail
+    );
+
+    // Check if user is the project owner
+    const isOwner = project.owner.email.toLowerCase() === normalizedEmail;
+
+    if (isOwner) {
+      return res.status(400).json({ 
+        message: "Cannot invite project owner - they already have full access" 
+      });
+    }
+
+    if (isAlreadyProjectMember) {
+      return res.status(400).json({ 
+        message: "User is already a member of this project" 
+      });
+    }
+
+    const emailData = {
+      email: normalizedEmail,
+      projectName: project.name,
+      projectId: project._id,
+      workspaceName: project.workspace.name,
+      projectStatus: project.status,
+      inviterName: `${project.owner.firstName} ${project.owner.lastName}`
+    };
 
     if (user) {
+      // User exists - add to project and workspace, then send notification
+      
+      // Add to project if not already a member
       if (!project.members.some(m => m._id.equals(user._id))) {
         project.members.push(user._id);
         await project.save();
       }
 
+      // Add to workspace if not already a member
       const workspace = await Workspace.findById(project.workspace._id);
       if (!workspace.members.some(m => m.equals(user._id))) {
         workspace.members.push(user._id);
         await workspace.save();
       }
 
-      await sendEmail(
-        email,
-        `Added to project ${project.name}`,
-        `<p style="color: green;">You were added to <b>${project.name}</b>. <a href="http://localhost:4200/login">Login here</a></p>`
-      );
+      await sendInvitationEmail('PROJECT_ADD_EXISTING', emailData);
 
-      return res.status(200).json({ message: "User added to project and workspace, notification sent." });
+      return res.status(200).json({ 
+        message: "User successfully added to project and workspace, notification sent",
+        userExists: true,
+        memberAdded: true,
+        addedToWorkspace: true
+      });
     } else {
-      await sendEmail(
-        email,
-        `Invitation to project ${project.name}`,
-        `<p>You’ve been invited to <b>${project.name}</b>. <a href="http://localhost:4200/register?projectId=${project._id}">Sign up here</a></p>`
-      );
+      // User doesn't exist - send invitation email
+      await sendInvitationEmail('PROJECT_INVITE_NEW', emailData);
 
-      return res.status(200).json({ message: "Invitation sent. User must sign up first." });
+      return res.status(200).json({ 
+        message: "Invitation sent successfully. User must create an account to join",
+        userExists: false,
+        invitationSent: true
+      });
     }
 
   } catch (err) {
-    console.error("Error inviting user:", err);
-    res.status(500).json({ message: "Error inviting user", err });
+    console.error("Error inviting user to project:", err);
+    
+    if (err.name === 'ValidationError') {
+      return res.status(400).json({ 
+        message: "Validation error", 
+        details: err.message 
+      });
+    }
+    
+    if (err.name === 'CastError') {
+      return res.status(400).json({ 
+        message: "Invalid project ID format" 
+      });
+    }
+
+    res.status(500).json({ 
+      message: "Failed to process invitation. Please try again later",
+      error: process.env.NODE_ENV === 'development' ? err.message : undefined
+    });
+  }
+};
+
+// NEW: Bulk invite members to project
+exports.bulkInviteMembers = async (req, res) => {
+  try {
+    const projectId = req.params.id;
+    const { emails } = req.body;
+
+    // Input validation
+    if (!emails || !Array.isArray(emails) || emails.length === 0) {
+      return res.status(400).json({ message: "Emails array is required and must not be empty" });
+    }
+
+    if (emails.length > 50) {
+      return res.status(400).json({ message: "Maximum 50 emails allowed per bulk invitation" });
+    }
+
+    // Find project with populated data
+    const project = await Project.findById(projectId)
+      .populate("members", "_id email firstName lastName")
+      .populate("workspace", "_id name members")
+      .populate("owner", "_id email firstName lastName");
+      
+    if (!project) {
+      return res.status(404).json({ message: "Project not found" });
+    }
+
+    const results = {
+      successful: [],
+      failed: [],
+      skipped: []
+    };
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    for (let email of emails) {
+      try {
+        const normalizedEmail = email.trim().toLowerCase();
+
+        // Validate email format
+        if (!emailRegex.test(normalizedEmail)) {
+          results.failed.push({
+            email: normalizedEmail,
+            reason: "Invalid email format"
+          });
+          continue;
+        }
+
+        // Check if user is the project owner
+        const isOwner = project.owner.email.toLowerCase() === normalizedEmail;
+        if (isOwner) {
+          results.skipped.push({
+            email: normalizedEmail,
+            reason: "Cannot invite project owner"
+          });
+          continue;
+        }
+
+        // Check if user is already a project member
+        const isAlreadyProjectMember = project.members.some(m => 
+          m.email.toLowerCase() === normalizedEmail
+        );
+        if (isAlreadyProjectMember) {
+          results.skipped.push({
+            email: normalizedEmail,
+            reason: "Already a project member"
+          });
+          continue;
+        }
+
+        const user = await User.findOne({ email: normalizedEmail });
+        const emailData = {
+          email: normalizedEmail,
+          projectName: project.name,
+          projectId: project._id,
+          workspaceName: project.workspace.name,
+          projectStatus: project.status,
+          inviterName: `${project.owner.firstName} ${project.owner.lastName}`
+        };
+
+        if (user) {
+          // User exists - add to project and workspace
+          if (!project.members.some(m => m._id.equals(user._id))) {
+            project.members.push(user._id);
+          }
+
+          // Add to workspace if not already a member
+          const workspace = await Workspace.findById(project.workspace._id);
+          if (!workspace.members.some(m => m.equals(user._id))) {
+            workspace.members.push(user._id);
+            await workspace.save();
+          }
+
+          await sendInvitationEmail('PROJECT_ADD_EXISTING', emailData);
+          
+          results.successful.push({
+            email: normalizedEmail,
+            status: "added",
+            userExists: true
+          });
+        } else {
+          // User doesn't exist - send invitation
+          await sendInvitationEmail('PROJECT_INVITE_NEW', emailData);
+          
+          results.successful.push({
+            email: normalizedEmail,
+            status: "invited",
+            userExists: false
+          });
+        }
+
+      } catch (emailError) {
+        console.error(`Error processing email ${email}:`, emailError);
+        results.failed.push({
+          email: email,
+          reason: "Processing error"
+        });
+      }
+    }
+
+    // Save project if members were added
+    if (results.successful.some(r => r.userExists)) {
+      await project.save();
+    }
+
+    const summary = {
+      total: emails.length,
+      successful: results.successful.length,
+      failed: results.failed.length,
+      skipped: results.skipped.length
+    };
+
+    return res.status(200).json({
+      message: `Bulk invitation completed. ${summary.successful} successful, ${summary.failed} failed, ${summary.skipped} skipped.`,
+      summary,
+      results
+    });
+
+  } catch (err) {
+    console.error("Error in bulk invite:", err);
+    res.status(500).json({ 
+      message: "Failed to process bulk invitations. Please try again later",
+      error: process.env.NODE_ENV === 'development' ? err.message : undefined
+    });
   }
 };
 

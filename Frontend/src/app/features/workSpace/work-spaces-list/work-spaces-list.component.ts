@@ -6,6 +6,7 @@ import Swal from 'sweetalert2';
 
 import { WorkspaceService } from 'src/app/core/services/workspace.service';
 import { WorkSpaceDialogComponent } from '../work-space-dialog/work-space-dialog.component';
+import { WorkspaceInviteDialogComponent } from '../workspace-invite-dialog/workspace-invite-dialog.component';
 import { Workspace, WorkspacePopulated, ApiError } from 'src/app/core/models';
 
 @Component({
@@ -198,5 +199,26 @@ export class WorkspaceListComponent implements OnInit, OnDestroy {
       return '1 member';
     }
     return `${members.length} members`;
+  }
+
+  /**
+   * Open workspace invitation dialog
+   */
+  openWorkspaceInviteDialog(workspace: WorkspacePopulated): void {
+    const dialogRef = this.dialog.open(WorkspaceInviteDialogComponent, {
+      width: '600px',
+      data: {
+        workspaceId: workspace._id,
+        workspaceName: workspace.name,
+        type: 'workspace'
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result?.success) {
+        // Refresh workspaces to update member count
+        this.refresh();
+      }
+    });
   }
 }

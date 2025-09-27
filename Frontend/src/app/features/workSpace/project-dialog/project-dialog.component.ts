@@ -1,9 +1,10 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ProjectService } from 'src/app/core/services/project.service';
 import { WorkspaceService } from 'src/app/core/services/workspace.service';
-import { Project, ProjectPopulated, ProjectCreateRequest } from 'src/app/core/models';
+import { Project, ProjectPopulated, ProjectCreateRequest, ApiError } from 'src/app/core/models';
+import { Subject, takeUntil } from 'rxjs';
 import Swal from 'sweetalert2';
 
 export interface DialogData {
@@ -17,11 +18,12 @@ export interface DialogData {
   templateUrl: './project-dialog.component.html',
   styleUrls: ['./project-dialog.component.css'],
 })
-export class ProjectDialogComponent implements OnInit {
+export class ProjectDialogComponent implements OnInit, OnDestroy {
   projectForm: FormGroup;
   loading = false;
   availableMembers: any[] = [];
   selectedMembers: string[] = [];
+  private destroy$ = new Subject<void>();
 
   statusOptions = [
     { value: 'active', label: 'Active', icon: 'play_circle', color: '#4caf50' },
@@ -67,6 +69,11 @@ export class ProjectDialogComponent implements OnInit {
     if (this.data.mode === 'edit' && this.data.project) {
       this.populateForm(this.data.project);
     }
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   loadWorkspaceMembers() {

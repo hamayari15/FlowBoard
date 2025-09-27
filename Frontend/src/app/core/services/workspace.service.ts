@@ -28,6 +28,10 @@ export class WorkspaceService {
     return this.http.post(`${this.apiUrl}/${workspaceId}/addMember`, {email})
   }
 
+  bulkInviteMembers(workspaceId: string, emails: string[]) {
+    return this.http.post(`${this.apiUrl}/${workspaceId}/bulkInvite`, {emails})
+  }
+
   getWorkSpaces(): Observable<WorkspacePopulated[]> {
     return this.http.get<WorkspacePopulated[]>(`${this.apiUrl}/getAll`).pipe(
       map((response: any) => response as WorkspacePopulated[]),

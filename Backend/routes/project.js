@@ -8,6 +8,8 @@ Router.post('/Add', projectController.Add);
 
 Router.post('/:id/addMember', projectController.inviteMember)
 
+Router.post('/:id/bulkInvite', projectController.bulkInviteMembers)
+
 Router.get('/getAll', projectController.getAll);
 
 Router.get('/getById/:id', projectController.getById);

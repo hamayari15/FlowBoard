@@ -1,0 +1,106 @@
+<div class="invite-dialog-container">
+  <h2 mat-dialog-title class="dialog-title">
+    <mat-icon>group_add</mat-icon>
+    Invite Members to {{ data.workspaceName }}
+  </h2>
+
+  <mat-dialog-content class="dialog-content">
+    <div class="intro-text">
+      <p>Send invitations to join this workspace. New members will have access to all workspace projects and can collaborate immediately.</p>
+    </div>
+
+    <form [formGroup]="inviteForm" class="invite-form">
+      <div class="emails-section">
+        <h3>📧 Email Addresses</h3>
+        <div formArrayName="emails" class="emails-container">
+          <div 
+            *ngFor="let emailControl of emailsArray.controls; let i = index" 
+            [formGroupName]="i" 
+            class="email-row"
+          >
+            <mat-form-field appearance="outline" class="email-field">
+              <mat-label>Email {{ i + 1 }}</mat-label>
+              <input 
+                matInput 
+                formControlName="email" 
+                placeholder="Enter email address"
+                type="email"
+              />
+              <mat-icon matSuffix>email</mat-icon>
+              <mat-error>{{ getFieldError('email', i) }}</mat-error>
+            </mat-form-field>
+            
+            <button 
+              mat-icon-button 
+              type="button" 
+              color="warn" 
+              (click)="removeEmailField(i)"
+              [disabled]="emailsArray.length === 1"
+              class="remove-btn"
+              matTooltip="Remove email"
+            >
+              <mat-icon>remove_circle</mat-icon>
+            </button>
+          </div>
+        </div>
+        
+        <button 
+          mat-stroked-button 
+          type="button" 
+          (click)="addEmailField()"
+          [disabled]="emailsArray.length >= 10"
+          class="add-email-btn"
+        >
+          <mat-icon>add</mat-icon>
+          Add Another Email ({{ emailsArray.length }}/10)
+        </button>
+      </div>
+
+      <div class="message-section">
+        <h3>💬 Optional Message</h3>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Personal message (optional)</mat-label>
+          <textarea 
+            matInput 
+            formControlName="message" 
+            placeholder="Add a personal note to the invitation..."
+            rows="3"
+            maxlength="500"
+          ></textarea>
+          <mat-icon matSuffix>message</mat-icon>
+          <mat-hint>{{ inviteForm.get('message')?.value?.length || 0 }}/500</mat-hint>
+          <mat-error>{{ getFieldError('message') }}</mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="preview-section" *ngIf="getValidEmails().length > 0">
+        <h4>📋 Ready to invite {{ getValidEmails().length }} member(s):</h4>
+        <div class="email-chips">
+          <mat-chip-set>
+            <mat-chip *ngFor="let email of getValidEmails()" class="email-chip">
+              <mat-icon matChipAvatar>person</mat-icon>
+              {{ email }}
+            </mat-chip>
+          </mat-chip-set>
+        </div>
+      </div>
+    </form>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end" class="dialog-actions">
+    <button mat-button (click)="onCancel()" [disabled]="loading">
+      Cancel
+    </button>
+    <button 
+      mat-raised-button 
+      color="primary" 
+      (click)="onSubmit()" 
+      [disabled]="getValidEmails().length === 0 || loading"
+      class="invite-button"
+    >
+      <mat-spinner diameter="16" *ngIf="loading"></mat-spinner>
+      <mat-icon *ngIf="!loading">send</mat-icon>
+      {{ loading ? 'Sending...' : 'Send Invitation' + (getValidEmails().length > 1 ? 's' : '') }}
+    </button>
+  </mat-dialog-actions>
+</div>

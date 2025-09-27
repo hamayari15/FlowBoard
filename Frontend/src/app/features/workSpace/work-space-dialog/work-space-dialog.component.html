@@ -22,20 +22,6 @@
         <mat-error>{{ getFieldError("description") }}</mat-error>
       </mat-form-field>
     </form>
-
-    <div class="invite-section">
-      <h3>Invite Member</h3>
-      <form [formGroup]="inviteForm" (ngSubmit)="inviteMember()" class="invite-form">
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Email</mat-label>
-          <input matInput formControlName="email" placeholder="Enter member email" />
-          <mat-icon matSuffix>person_add</mat-icon>
-          <mat-error *ngIf="inviteForm.get('email')?.hasError('required')">Email is required</mat-error>
-          <mat-error *ngIf="inviteForm.get('email')?.hasError('email')">Enter a valid email</mat-error>
-        </mat-form-field>
-        <button mat-raised-button color="accent" type="submit" [disabled]="!inviteForm.valid">Invite</button>
-      </form>
-    </div>
   </mat-dialog-content>
 
   <mat-dialog-actions align="end" class="dialog-actions">
