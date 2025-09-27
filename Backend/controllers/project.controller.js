@@ -1,4 +1,8 @@
 const Project = require("../models/Project");
+const User = require("../models/User");
+const Workspace = require("../models/Workspace");
+
+const { sendEmail } = require("../services/email");
 
 
 exports.Add = async (req, res) => {
@@ -23,6 +27,52 @@ exports.Add = async (req, res) => {
 
   } catch (err) {
     res.status(500).json({ message: "Error creating project", error: err.message });
+  }
+};
+
+
+exports.inviteMember = async (req, res) => {
+  try {
+    const projectId = req.params.id;
+    const { email } = req.body;
+
+    const project = await Project.findById(projectId).populate("members workspace");
+    if (!project) return res.status(404).json({ message: "Project not found" });
+
+    const user = await User.findOne({ email });
+
+    if (user) {
+      if (!project.members.some(m => m._id.equals(user._id))) {
+        project.members.push(user._id);
+        await project.save();
+      }
+
+      const workspace = await Workspace.findById(project.workspace._id);
+      if (!workspace.members.some(m => m.equals(user._id))) {
+        workspace.members.push(user._id);
+        await workspace.save();
+      }
+
+      await sendEmail(
+        email,
+        `Added to project ${project.name}`,
+        `<p style="color: green;">You were added to <b>${project.name}</b>. <a href="http://localhost:4200/login">Login here</a></p>`
+      );
+
+      return res.status(200).json({ message: "User added to project and workspace, notification sent." });
+    } else {
+      await sendEmail(
+        email,
+        `Invitation to project ${project.name}`,
+        `<p>You’ve been invited to <b>${project.name}</b>. <a href="http://localhost:4200/register?projectId=${project._id}">Sign up here</a></p>`
+      );
+
+      return res.status(200).json({ message: "Invitation sent. User must sign up first." });
+    }
+
+  } catch (err) {
+    console.error("Error inviting user:", err);
+    res.status(500).json({ message: "Error inviting user", err });
   }
 };
 

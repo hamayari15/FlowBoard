@@ -6,6 +6,8 @@ const projectController = require('../controllers/project.controller');
 
 Router.post('/Add', projectController.Add);
 
+Router.post('/:id/addMember', projectController.inviteMember)
+
 Router.get('/getAll', projectController.getAll);
 
 Router.get('/getById/:id', projectController.getById);

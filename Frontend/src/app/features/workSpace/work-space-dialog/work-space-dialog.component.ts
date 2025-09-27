@@ -11,7 +11,6 @@ export interface DialogData {
   mode: 'add' | 'edit';
   workspace: Workspace | WorkspacePopulated | null;
 }
-
 @Component({
   selector: 'app-work-space-dialog',
   templateUrl: './work-space-dialog.component.html',

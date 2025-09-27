@@ -59,6 +59,7 @@ export class WorkSpaceDetailsComponent implements OnInit {
     this.projectService.getProjectsByWorkspace(workspaceId).subscribe({
       next: (projects: ProjectPopulated[]) => {
         this.projects = projects;
+        console.log(this.projects)
         this.loadingProjects = false;
       },
       error: (error) => {
