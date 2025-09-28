@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
 import { AuthService } from 'src/app/core/services/auth.service';
+import { Router } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
@@ -14,14 +14,20 @@ export class RegisterComponent implements OnInit {
   registerForm!: FormGroup
   serverError: String = ''
   wsId: string | null = null;
+  projectId: string | null = null;
   
   constructor (private fb: FormBuilder, private authService: AuthService, private router: Router, private route: ActivatedRoute) {}
 
   ngOnInit(): void {
     this.buildForm()
+
     this.route.queryParamMap.subscribe(params => {
       this.wsId = params.get('wsId');
       this.registerForm.patchValue({ wsId: this.wsId });
+    });
+    this.route.queryParamMap.subscribe(params => {
+      this.projectId = params.get('projectId');
+      this.registerForm.patchValue({ projectId: this.projectId });
     });
   }
 
@@ -33,10 +39,11 @@ export class RegisterComponent implements OnInit {
       confirmPassword: ['', Validators.required],
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
-      wsId: this.wsId
+      wsId: this.wsId,
+      projectId: this.projectId,
     }, {
         validators: this.passwordsMatchValidator
-    })
+    });
   }
 
   passwordsMatchValidator(form: FormGroup) {
