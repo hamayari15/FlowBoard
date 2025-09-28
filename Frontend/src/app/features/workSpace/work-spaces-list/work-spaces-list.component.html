@@ -111,6 +111,14 @@
       <!-- Card Actions -->
       <mat-card-actions class="card-actions">
         <button 
+          mat-icon-button 
+          color="primary" 
+          (click)="openWorkspaceInviteDialog(ws)"
+          [disabled]="!ws._id"
+          matTooltip="Invite members to workspace">
+          <mat-icon>person_add</mat-icon>
+        </button>
+        <button 
           mat-button 
           color="primary" 
           (click)="goToDetails(ws._id!)"

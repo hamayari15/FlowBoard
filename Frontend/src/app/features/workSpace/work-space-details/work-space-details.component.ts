@@ -6,6 +6,8 @@ import { ProjectService } from 'src/app/core/services/project.service';
 import { Project, ProjectPopulated, Workspace } from 'src/app/core/models';
 import Swal from 'sweetalert2';
 import { ProjectDialogComponent } from '../project-dialog/project-dialog.component';
+import { WorkspaceInviteDialogComponent } from '../workspace-invite-dialog/workspace-invite-dialog.component';
+import { ProjectInviteDialogComponent } from '../project-invite-dialog/project-invite-dialog.component';
 
 @Component({
   selector: 'app-work-space-details',
@@ -183,5 +185,42 @@ export class WorkSpaceDetailsComponent implements OnInit {
 
   getMembersCount(project: ProjectPopulated): number {
     return project.members ? project.members.length : 0;
+  }
+
+  openWorkspaceInviteDialog() {
+    const dialogRef = this.dialog.open(WorkspaceInviteDialogComponent, {
+      width: '600px',
+      data: {
+        workspaceId: this.workSpaceId,
+        workspaceName: this.workSpaceData.name,
+        type: 'workspace'
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result?.success) {
+        // Refresh workspace data to update member count
+        this.getWorkSpaceById(this.workSpaceId);
+      }
+    });
+  }
+
+  openProjectInviteDialog(project: ProjectPopulated) {
+    const dialogRef = this.dialog.open(ProjectInviteDialogComponent, {
+      width: '600px',
+      data: {
+        projectId: project._id,
+        projectName: project.name,
+        workspaceName: this.workSpaceData.name,
+        type: 'project'
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result?.success) {
+        // Refresh projects to update member count
+        this.refreshProjects();
+      }
+    });
   }
 }

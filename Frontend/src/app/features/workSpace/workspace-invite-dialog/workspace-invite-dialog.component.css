@@ -1,0 +1,186 @@
+.invite-dialog-container {
+  padding: 0;
+  margin: 0;
+  min-width: 500px;
+  max-width: 600px;
+}
+
+.dialog-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 24px 24px 16px;
+  margin: 0;
+  font-size: 24px;
+  font-weight: 600;
+  color: #333;
+  border-bottom: 1px solid #e0e0e0;
+  background: linear-gradient(135deg, #f8f9ff 0%, #e6f2ff 100%);
+}
+
+.dialog-title mat-icon {
+  color: #667eea;
+  font-size: 28px;
+  height: 28px;
+  width: 28px;
+}
+
+.dialog-content {
+  padding: 24px;
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+.intro-text {
+  background: #f0f4ff;
+  padding: 16px;
+  border-radius: 8px;
+  margin-bottom: 24px;
+  border-left: 4px solid #667eea;
+}
+
+.intro-text p {
+  margin: 0;
+  color: #555;
+  line-height: 1.5;
+}
+
+.invite-form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.emails-section h3,
+.message-section h3 {
+  color: #333;
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 16px 0;
+}
+
+.emails-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.email-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.email-field {
+  flex: 1;
+}
+
+.remove-btn {
+  margin-top: 8px;
+  width: 40px;
+  height: 40px;
+}
+
+.add-email-btn {
+  align-self: flex-start;
+  margin-top: 8px;
+  color: #667eea;
+  border-color: #667eea;
+}
+
+.add-email-btn:hover {
+  background: #f0f4ff;
+}
+
+.message-section {
+  border-top: 1px solid #e0e0e0;
+  padding-top: 16px;
+}
+
+.preview-section {
+  background: #f8fff8;
+  padding: 16px;
+  border-radius: 8px;
+  border-left: 4px solid #46A049;
+}
+
+.preview-section h4 {
+  color: #46A049;
+  margin: 0 0 12px 0;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.email-chips {
+  max-height: 120px;
+  overflow-y: auto;
+}
+
+.email-chip {
+  margin: 4px;
+  background: #e3f2fd !important;
+  color: #1976d2;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.dialog-actions {
+  padding: 16px 24px 24px;
+  border-top: 1px solid #e0e0e0;
+  margin: 0;
+  gap: 12px;
+}
+
+.dialog-actions button {
+  min-width: 100px;
+  height: 40px;
+}
+
+.invite-button {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  color: white !important;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.invite-button:hover {
+  box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);
+  transform: translateY(-1px);
+}
+
+.invite-button[disabled] {
+  background: #ccc !important;
+  color: #999 !important;
+  box-shadow: none !important;
+}
+
+.mat-mdc-form-field-outline {
+  border-radius: 8px;
+}
+
+@media (max-width: 600px) {
+  .invite-dialog-container {
+    min-width: unset;
+    width: 100%;
+  }
+  
+  .dialog-content {
+    padding: 16px;
+  }
+  
+  .dialog-title {
+    font-size: 20px;
+    padding: 20px 16px 12px;
+  }
+  
+  .email-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .remove-btn {
+    align-self: flex-end;
+    margin-top: 4px;
+  }
+}

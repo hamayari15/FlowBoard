@@ -1,4 +1,5 @@
 const nodemailer = require("nodemailer");
+const { getEmailTemplate } = require("./emailTemplates");
 
 const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST,
@@ -13,7 +14,7 @@ const transporter = nodemailer.createTransport({
 async function sendEmail(to, subject, html) {
   try {
     await transporter.sendMail({
-      from: `"Workspace App" <${process.env.SMTP_USER}>`,
+      from: `"FlowBoard Team" <${process.env.SMTP_USER}>`,
       to,
       subject,
       html,
@@ -24,4 +25,20 @@ async function sendEmail(to, subject, html) {
   }
 }
 
-module.exports = { sendEmail };
+// Enhanced email sending function with templates
+async function sendInvitationEmail(type, emailData) {
+  const emailTemplate = getEmailTemplate(type, emailData);
+  
+  const subjects = {
+    WORKSPACE_ADD_EXISTING: `Welcome to ${emailData.workspaceName}! 🎉`,
+    WORKSPACE_INVITE_NEW: `You're invited to join ${emailData.workspaceName}! 📧`,
+    PROJECT_ADD_EXISTING: `Added to project: ${emailData.projectName} 🚀`,
+    PROJECT_INVITE_NEW: `Project invitation: ${emailData.projectName} 🎯`
+  };
+
+  const subject = subjects[type] || `Invitation from FlowBoard`;
+  
+  await sendEmail(emailData.email, subject, emailTemplate);
+}
+
+module.exports = { sendEmail, sendInvitationEmail };

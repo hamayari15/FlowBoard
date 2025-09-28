@@ -14,6 +14,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
+import { MatOptionModule } from '@angular/material/core';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -39,6 +40,8 @@ import { WorkspaceListComponent } from './features/workSpace/work-spaces-list/wo
 import { WorkSpaceDetailsComponent } from './features/workSpace/work-space-details/work-space-details.component';
 import { WorkSpaceDialogComponent } from './features/workSpace/work-space-dialog/work-space-dialog.component';
 import { ProjectDialogComponent } from './features/workSpace/project-dialog/project-dialog.component';
+import { WorkspaceInviteDialogComponent } from './features/workSpace/workspace-invite-dialog/workspace-invite-dialog.component';
+import { ProjectInviteDialogComponent } from './features/workSpace/project-invite-dialog/project-invite-dialog.component';
 
 @NgModule({
   declarations: [
@@ -52,6 +55,8 @@ import { ProjectDialogComponent } from './features/workSpace/project-dialog/proj
     WorkSpaceDetailsComponent,
     WorkSpaceDialogComponent,
     ProjectDialogComponent,
+    WorkspaceInviteDialogComponent,
+    ProjectInviteDialogComponent,
   ],
   imports: [
     // Angular Core Modules
@@ -72,6 +77,7 @@ import { ProjectDialogComponent } from './features/workSpace/project-dialog/proj
     MatIconModule,
     MatFormFieldModule,
     MatSelectModule,
+    MatOptionModule,
     MatChipsModule,
     MatProgressSpinnerModule,
     MatTooltipModule,

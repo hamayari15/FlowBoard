@@ -18,7 +18,6 @@ export interface DialogData {
 })
 export class WorkSpaceDialogComponent implements OnInit, OnDestroy {
   workspaceForm: FormGroup;
-  inviteForm: FormGroup;
   loading = false;
   ownerId: string = '';
   private destroy$ = new Subject<void>();
@@ -33,9 +32,6 @@ export class WorkSpaceDialogComponent implements OnInit, OnDestroy {
     this.workspaceForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(100), this.noWhitespaceValidator]],
       description: ['', [Validators.maxLength(500)]],
-    });
-    this.inviteForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
     });
   }
 
@@ -94,9 +90,10 @@ export class WorkSpaceDialogComponent implements OnInit, OnDestroy {
         Swal.fire({
           icon: 'success',
           title: 'Workspace Created!',
-          text: 'You can now invite members.',
+          text: 'Your workspace has been created successfully. You can now invite members using the invite button.',
           showConfirmButton: true
         });
+        this.dialogRef.close(workspace);
       },
       error: (error: ApiError) => {
         this.loading = false;
@@ -120,31 +117,6 @@ export class WorkSpaceDialogComponent implements OnInit, OnDestroy {
       error: (error: ApiError) => {
         this.loading = false;
         this.showErrorAlert('Update Failed', error.message || 'Failed to update workspace');
-      },
-    });
-  }
-
-  inviteMember(): void {
-  const wsId = this.data.workspace?._id;
-  if (!this.inviteForm.valid || !wsId) return;
-
-  const email = this.inviteForm.value.email.trim();
-  this.loading = true;
-
-  this.wsService.inviteMember(wsId, email).pipe(takeUntil(this.destroy$)).subscribe({
-    next: () => {
-      this.loading = false;
-      Swal.fire({
-        icon: 'success',
-        title: 'Invitation Sent!',
-        text: `${email} has been invited.`,
-        showConfirmButton: true
-      });
-      this.inviteForm.reset();
-    },
-    error: (error: ApiError) => {
-      this.loading = false;
-      this.showErrorAlert('Invitation Failed', error.message || 'Failed to invite member');
       },
     });
   }
