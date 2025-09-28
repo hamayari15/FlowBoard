@@ -34,3 +34,30 @@ exports.createBoard = async (req, res) => {
     res.status(500).json({ message: "Failed to create board" });
   }
 };
+
+
+exports.getAll = async (req, res) => {
+  try {
+    const Boards = Board.find().populate('project', 'name description');
+    res.status(200).json(Boards);
+
+  } catch (err) {
+    res.status(500).json({ message: "Error fetching boards", err });
+  }
+};
+
+
+exports.getById = async (req, res) => {
+  try {
+    const boardId = req.params.id;
+    const board = await Board.findById(boardId).populate('project', 'name description');
+    
+    if (!board) {
+      return res.status(404).json({ message: "Board not found" });
+    }
+    res.status(200).json(board);
+
+  } catch (err) {
+    res.status(500).json({ message: "Error fetching board", err });
+  }
+};
