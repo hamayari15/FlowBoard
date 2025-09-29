@@ -4,7 +4,7 @@ const Router = express.Router();
 const workSpaceController = require('../controllers/workSpace.controller');
 
 
-Router.post('/Add', workSpaceController.Add)
+Router.post('/Add', workSpaceController.createWorkSpace)
 
 Router.post('/:id/addMember', workSpaceController.inviteMember)
 

@@ -8,14 +8,13 @@ Router.post('/Add', boardController.addBoard);
 
 Router.get('/getAll', boardController.getAll);
 
-Router.get('/getById', boardController.getById);
+Router.get('/getById/:id', boardController.getById);
 
-// Router.post('/Add', boardController.addBoard);
+Router.get('/getByProject/:id', boardController.getByProject);
 
-// Router.post('/Add', boardController.addBoard);
+Router.Update('/Update/:id', boardController.Update);
 
-// Router.post('/Add', boardController.addBoard);
-
+Router.delete('/Delete/:id', boardController.Delete);
 
 
 module.exports = Router;
