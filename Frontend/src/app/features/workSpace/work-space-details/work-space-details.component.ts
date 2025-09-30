@@ -199,7 +199,6 @@ export class WorkSpaceDetailsComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result?.success) {
-        // Refresh workspace data to update member count
         this.getWorkSpaceById(this.workSpaceId);
       }
     });
@@ -218,7 +217,6 @@ export class WorkSpaceDetailsComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result?.success) {
-        // Refresh projects to update member count
         this.refreshProjects();
       }
     });

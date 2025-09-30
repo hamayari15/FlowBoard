@@ -26,21 +26,19 @@ exports.register = async (req, res) => {
     const registredUser = await usr.save();
 
     if (wsId) {
-      const wSpace = await workSpace.findById(wsId);
-      wSpace.members.push(registredUser._id);
-      await wSpace.save();
+      const workspace = await workSpace.findById(wsId);
+      workspace.members.push(registredUser._id);
+      await workspace.save();
     }
 
     if (projectId) {
-      const project = await Project.findById(projectId);
+      const project = await Project.findById(projectId).populate('workspace');
       project.members.push(registredUser._id);
       await project.save();
       
-      if(project.workspace && !project.workspace.members.includes(registredUser._id)) {
-        const workSpace = await workSpace.findById(project.workspace);
-        workSpace.members.push(registredUser._id);
-        await workSpace.save();
-      }
+      const workspace = await workSpace.findById(project.workspace._id);
+      workspace.members.push(registredUser._id);
+      await workspace.save();
     }
     
     res.status(201).json(registredUser);

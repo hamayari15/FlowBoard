@@ -4,7 +4,7 @@ const User = require("../models/User");
 const { sendEmail, sendInvitationEmail } = require("../services/email");
 
 
-exports.Add = async (req, res) => {
+exports.createWorkSpace = async (req, res) => {
   try {
     const { name, description, owner, members } = req.body;
 
@@ -297,7 +297,13 @@ exports.getById = async (req, res) => {
 exports.Update = async (req, res) => {
   try {
     const id = req.params.id;
-    const updatedWorkSpace = await workSpace.findByIdAndUpdate(id, req.body, { new: true }).populate("owner").populate("members");
+    const newData = req.body;
+
+    const updatedWorkSpace = await workSpace.findByIdAndUpdate(id, newData, { new: true }).populate("owner").populate("members");
+    if (!updatedWorkSpace) {
+      return res.status(404).json({ message: "Workspace not found" });
+    }
+    
     res.status(200).json(updatedWorkSpace);
 
   } catch (err) {
@@ -313,6 +319,6 @@ exports.Delete = async (req, res) => {
     res.status(200).json(deletedWorkSpace);
 
   } catch (err) {
-    res.status(500).json({ message: "Error deleting workSpace", err });
+    res.status(500).json({ message: "Error Deleting Workspace", err });
   }
 };

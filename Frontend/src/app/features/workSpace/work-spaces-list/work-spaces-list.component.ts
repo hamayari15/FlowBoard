@@ -35,9 +35,6 @@ export class WorkspaceListComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  /**
-   * Fetch all workspaces with proper error handling
-   */
   getAllWorkSpaces(): void {
     this.loading = true;
     this.error = null;
@@ -59,9 +56,6 @@ export class WorkspaceListComponent implements OnInit, OnDestroy {
       });
   }
 
-  /**
-   * Navigate to workspace details
-   */
   goToDetails(id: string): void {
     if (!id) {
       console.error('Workspace ID is required');
@@ -70,9 +64,6 @@ export class WorkspaceListComponent implements OnInit, OnDestroy {
     this.router.navigate(['/workSpace-details', id]);
   }
 
-  /**
-   * Open dialog for adding new workspace
-   */
   openAddDialog(): void {
     const dialogRef = this.dialog.open(WorkSpaceDialogComponent, {
       width: '500px',
@@ -91,9 +82,6 @@ export class WorkspaceListComponent implements OnInit, OnDestroy {
       });
   }
 
-  /**
-   * Open dialog for editing workspace
-   */
   openEditDialog(workspace: WorkspacePopulated): void {
     if (!workspace || !workspace._id) {
       console.error('Valid workspace is required for editing');
@@ -117,9 +105,6 @@ export class WorkspaceListComponent implements OnInit, OnDestroy {
       });
   }
 
-  /**
-   * Delete workspace with confirmation
-   */
   delete(id: string): void {
     if (!id) {
       console.error('Workspace ID is required for deletion');
@@ -162,16 +147,10 @@ export class WorkspaceListComponent implements OnInit, OnDestroy {
     });
   }
 
-  /**
-   * Refresh workspaces list
-   */
   refresh(): void {
     this.getAllWorkSpaces();
   }
 
-  /**
-   * Show error alert
-   */
   private showErrorAlert(title: string, message: string): void {
     Swal.fire({
       icon: 'error',
@@ -181,16 +160,10 @@ export class WorkspaceListComponent implements OnInit, OnDestroy {
     });
   }
 
-  /**
-   * Track workspaces for better performance
-   */
   trackByWorkspaceId(index: number, workspace: WorkspacePopulated): string {
     return workspace._id || index.toString();
   }
 
-  /**
-   * Get tooltip text for members count
-   */
   getMembersTooltip(members: any[]): string {
     if (!members || members.length === 0) {
       return 'No members';
@@ -201,9 +174,6 @@ export class WorkspaceListComponent implements OnInit, OnDestroy {
     return `${members.length} members`;
   }
 
-  /**
-   * Open workspace invitation dialog
-   */
   openWorkspaceInviteDialog(workspace: WorkspacePopulated): void {
     const dialogRef = this.dialog.open(WorkspaceInviteDialogComponent, {
       width: '600px',
@@ -216,7 +186,6 @@ export class WorkspaceListComponent implements OnInit, OnDestroy {
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result?.success) {
-        // Refresh workspaces to update member count
         this.refresh();
       }
     });
