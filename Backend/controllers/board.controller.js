@@ -37,7 +37,7 @@ exports.createBoard = async (req, res) => {
 
 exports.getAll = async (req, res) => {
   try {
-    const Boards = Board.find().populate('project', 'name description');
+    const Boards = await Board.find().populate('project', 'name description');
     res.status(200).json(Boards);
 
   } catch (err) {
@@ -95,7 +95,7 @@ exports.Update = async (req, res) => {
 exports.Delete = async (req, res) => {
   try {
     const id = req.params.id;
-    const deletedBoard = await workSpace.findByIdAndDelete(id);
+    const deletedBoard = await Board.findByIdAndDelete(id);
     res.status(200).json(deletedBoard);
 
   } catch (err) {
