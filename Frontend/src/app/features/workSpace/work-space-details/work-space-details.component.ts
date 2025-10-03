@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { WorkspaceService } from 'src/app/core/services/workspace.service';
 import { ProjectService } from 'src/app/core/services/project.service';
-import { Project, ProjectPopulated, Workspace } from 'src/app/core/models';
+import { ProjectPopulated } from 'src/app/core/models';
 import Swal from 'sweetalert2';
 import { ProjectDialogComponent } from '../project-dialog/project-dialog.component';
 import { WorkspaceInviteDialogComponent } from '../workspace-invite-dialog/workspace-invite-dialog.component';
@@ -46,6 +46,7 @@ export class WorkSpaceDetailsComponent implements OnInit {
     this.wsService.getWorkSpaceById(workSpaceId).subscribe({
       next: (data: any) => {
         this.workSpaceData = data;
+        console.log('Workspace data:', this.workSpaceData);
         this.loading = false;
       },
       error: (error) => {
@@ -70,6 +71,14 @@ export class WorkSpaceDetailsComponent implements OnInit {
         Swal.fire('Error', 'Failed to load projects', 'error');
       },
     });
+  }
+
+  goToDetails(id: string): void {
+    if (!id) {
+      console.error('Project ID is required');
+      return;
+    }
+    this.router.navigate(['/project-details', id]);
   }
 
   openAddProjectDialog() {
@@ -131,7 +140,7 @@ export class WorkSpaceDetailsComponent implements OnInit {
     });
   }
 
-    deleteProject(project: ProjectPopulated) {
+  deleteProject(project: ProjectPopulated) {
     Swal.fire({
       icon: 'warning',
       title: 'Are you sure?',

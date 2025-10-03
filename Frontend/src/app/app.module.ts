@@ -43,6 +43,8 @@ import { ProjectDialogComponent } from './features/workSpace/project-dialog/proj
 import { WorkspaceInviteDialogComponent } from './features/workSpace/workspace-invite-dialog/workspace-invite-dialog.component';
 import { ProjectInviteDialogComponent } from './features/workSpace/project-invite-dialog/project-invite-dialog.component';
 import { BoardComponent } from './features/board/board.component';
+import { ProjectDetailsComponent } from './features/workSpace/project-details/project-details.component';
+import { BoardDialogComponent } from './features/workSpace/board-dialog/board-dialog.component';
 
 @NgModule({
   declarations: [
@@ -59,6 +61,8 @@ import { BoardComponent } from './features/board/board.component';
     WorkspaceInviteDialogComponent,
     ProjectInviteDialogComponent,
     BoardComponent,
+    ProjectDetailsComponent,
+    BoardDialogComponent,
   ],
   imports: [
     // Angular Core Modules

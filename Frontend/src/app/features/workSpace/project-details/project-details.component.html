@@ -1,0 +1,130 @@
+<div class="project-details-container">
+  <mat-card class="project-header-card" *ngIf="!loading">
+    <mat-card-header>
+      <div mat-card-avatar class="project-avatar">
+        <mat-icon>assignment</mat-icon>
+      </div>
+      <mat-card-title>{{ projectData.name }}</mat-card-title>
+      <mat-card-subtitle>Project Details</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="project-info">
+        <div class="info-item">
+          <mat-icon>description</mat-icon>
+          <span>{{ projectData.description || "No description provided" }}</span>
+        </div>
+        <div class="info-item" *ngIf="projectData.owner">
+          <mat-icon>person</mat-icon>
+          <span>
+            {{ projectData.owner?.firstName }} {{ projectData.owner?.lastName }}
+            ({{ projectData.owner?.email }})
+          </span>
+        </div>
+        <div class="info-item" *ngIf="projectData.createdAt">
+          <mat-icon>schedule</mat-icon>
+          <span>Created: {{ projectData.createdAt | date : "medium" }}</span>
+        </div>
+        <div class="info-item">
+          <mat-icon>group</mat-icon>
+          <span>{{ getMembersCount() }} Members</span>
+          <button 
+            mat-icon-button 
+            color="primary" 
+            matTooltip="Invite members to project"
+            (click)="openProjectInviteDialog()"
+            class="invite-button">
+            <mat-icon>person_add</mat-icon>
+          </button>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Skeleton loader -->
+  <mat-card class="project-header-card" *ngIf="loading">
+    <mat-card-header>
+      <div mat-card-avatar class="skeleton-avatar"></div>
+      <mat-card-title class="skeleton-text skeleton-title"></mat-card-title>
+      <mat-card-subtitle class="skeleton-text skeleton-subtitle"></mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="skeleton-text"></div>
+      <div class="skeleton-text"></div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Boards Section -->
+  <mat-card class="boards-section-card">
+    <mat-card-header>
+      <mat-card-title class="boards-header">
+        <mat-icon>view_kanban</mat-icon>
+        Boards
+        <span class="board-count" *ngIf="!loadingBoards">({{ boards.length }})</span>
+      </mat-card-title>
+      <div class="header-actions">
+        <button mat-raised-button color="primary" (click)="openAddBoardDialog()">
+          <mat-icon>add</mat-icon>
+          New Board
+        </button>
+      </div>
+    </mat-card-header>
+
+    <mat-card-content>
+      <div *ngIf="loadingBoards" class="loading-container">
+        <mat-spinner diameter="50"></mat-spinner>
+        <p>Loading boards...</p>
+      </div>
+
+      <div *ngIf="!loadingBoards && boards.length === 0" class="empty-state">
+        <mat-icon class="empty-icon">view_kanban</mat-icon>
+        <h3>No Boards Yet</h3>
+        <p>Create your first board to organize tasks inside this project.</p>
+        <button mat-raised-button color="primary" (click)="openAddBoardDialog()">
+          <mat-icon>add</mat-icon>
+          Create First Board
+        </button>
+      </div>
+
+      <div *ngIf="!loadingBoards && boards.length > 0" class="boards-grid">
+        <mat-card class="board-card" *ngFor="let board of boards">
+          <mat-card-header>
+            <div mat-card-avatar class="board-avatar">
+              <mat-icon>view_kanban</mat-icon>
+            </div>
+            <mat-card-title>{{ board.name }}</mat-card-title>
+            <mat-card-subtitle>
+              {{ board.description || "No description provided" }}
+            </mat-card-subtitle>
+          </mat-card-header>
+
+          <mat-card-content>
+            <div class="board-meta">
+              <div class="meta-item">
+                <mat-icon>schedule</mat-icon>
+                <span>{{ board.createdAt | date : "shortDate" }}</span>
+              </div>
+            </div>
+          </mat-card-content>
+
+          <mat-card-actions align="end">
+            <button
+              mat-icon-button
+              matTooltip="Edit Board"
+              (click)="openEditBoardDialog(board)"
+            >
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button
+              mat-icon-button
+              matTooltip="Delete Board"
+              color="warn"
+              (click)="deleteBoard(board)"
+            >
+              <mat-icon>delete</mat-icon>
+            </button>
+          </mat-card-actions>
+        </mat-card>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>
