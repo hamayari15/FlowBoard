@@ -8,6 +8,7 @@ import { RegisterComponent } from './features/auth/register/register.component';
 import { LoginComponent } from './features/auth/login/login.component';
 import { WorkspaceListComponent } from './features/workSpace/work-spaces-list/work-spaces-list.component';
 import { WorkSpaceDetailsComponent } from './features/workSpace/work-space-details/work-space-details.component';
+import { ProjectDetailsComponent } from './features/workSpace/project-details/project-details.component';
 
 const routes: Routes = [
 
@@ -20,6 +21,7 @@ const routes: Routes = [
     { path: 'login', component: LoginComponent},
     { path: 'workSpaces-list', component: WorkspaceListComponent, canActivate:[UserGuard]},
     { path: 'workSpace-details/:id', component: WorkSpaceDetailsComponent, canActivate:[UserGuard]},
+    { path: 'project-details/:id', component: ProjectDetailsComponent, canActivate:[UserGuard]},
     
 ];
 

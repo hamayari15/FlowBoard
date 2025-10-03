@@ -151,6 +151,15 @@
               <mat-icon>person_add</mat-icon>
             </button>
             <button
+            mat-button 
+            color="primary" 
+            (click)="goToDetails(project._id!)"
+            [disabled]="!project._id"
+            matTooltip="View workspace details">
+            <mat-icon>visibility</mat-icon>
+            Details
+            </button>
+            <button
               mat-icon-button
               matTooltip="Edit Project"
               (click)="openEditProjectDialog(project)"
