@@ -4,7 +4,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import Swal from 'sweetalert2';
 
 import { BoardService } from 'src/app/core/services/board.service';
-import { Board, BoardCreateRequest, BoardUpdateRequest } from 'src/app/core/models';
+import { BoardCreateRequest, BoardUpdateRequest } from 'src/app/core/models';
 
 @Component({
   selector: 'app-board-dialog',
@@ -105,4 +105,5 @@ export class BoardDialogComponent implements OnInit {
   onCancel(): void {
     this.dialogRef.close();
   }
-}
+  
+};
