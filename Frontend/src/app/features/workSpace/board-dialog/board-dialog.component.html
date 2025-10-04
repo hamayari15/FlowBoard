@@ -1,1 +1,51 @@
-<p>board-dialog works!</p>
+<div class="board-dialog">
+  <h2 mat-dialog-title>
+    <mat-icon>view_kanban</mat-icon>
+    {{ mode === 'add' ? 'Create New Board' : 'Edit Board' }}
+  </h2>
+
+  <mat-dialog-content>
+    <form [formGroup]="boardForm" class="board-form">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Board Name</mat-label>
+        <input matInput formControlName="name" placeholder="Enter board name" required>
+        <mat-error *ngIf="boardForm.get('name')?.hasError('required')">
+          Board name is required
+        </mat-error>
+        <mat-error *ngIf="boardForm.get('name')?.hasError('minlength')">
+          Board name must be at least 3 characters
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Description</mat-label>
+        <textarea 
+          matInput 
+          formControlName="description" 
+          placeholder="Add a description..."
+          rows="4"
+        ></textarea>
+      </mat-form-field>
+
+      <div class="info-note" *ngIf="mode === 'add'">
+        <mat-icon>info</mat-icon>
+        <span>The board will be created with three default columns: To Do, In Progress, and Done</span>
+      </div>
+    </form>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button (click)="onCancel()" [disabled]="loading">
+      Cancel
+    </button>
+    <button 
+      mat-raised-button 
+      color="primary" 
+      (click)="onSubmit()"
+      [disabled]="loading || boardForm.invalid"
+    >
+      <mat-spinner *ngIf="loading" diameter="20"></mat-spinner>
+      <span *ngIf="!loading">{{ mode === 'add' ? 'Create Board' : 'Update Board' }}</span>
+    </button>
+  </mat-dialog-actions>
+</div>

@@ -93,6 +93,12 @@ export class TaskService {
     );
   }
 
+  bulkUpdatePositions(tasks: Array<{ id: string; position: number; status?: string }>): Observable<any> {
+    return this.http.post(`${this.apiUrl}/bulkUpdatePositions`, { tasks }).pipe(
+      catchError(this.handleError)
+    );
+  }
+
   private handleError = (error: HttpErrorResponse): Observable<never> => {
     let errorMessage = 'An unknown error occurred';
     let errorStatus = 500;

@@ -108,6 +108,15 @@
 
           <mat-card-actions align="end">
             <button
+              mat-raised-button
+              color="primary"
+              (click)="viewBoard(board)"
+              class="view-board-button"
+            >
+              <mat-icon>visibility</mat-icon>
+              View Board
+            </button>
+            <button
               mat-icon-button
               matTooltip="Edit Board"
               (click)="openEditBoardDialog(board)"

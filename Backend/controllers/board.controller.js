@@ -1,36 +1,43 @@
-const Board = require('../models/Board');
+const Board = require('../models/board');
 const Project = require('../models/Project');
 
 
 exports.createBoard = async (req, res) => {
   try {
-    const { name, description, projectId } = req.body;
+    const { name, description, project, projectId, columns } = req.body;
+    
+    // Accept both 'project' and 'projectId' for flexibility
+    const actualProjectId = projectId || project;
 
-    if (!name || !projectId) {
+    if (!name || !actualProjectId) {
       return res.status(400).json({ message: "Board name and project are required" });
     }
 
-    const project = await Project.findById(projectId);
-    if (!project) {
+    const projectDoc = await Project.findById(actualProjectId);
+    if (!projectDoc) {
       return res.status(404).json({ message: "Project not found" });
     }
+
+    // Default columns if not provided
+    const defaultColumns = columns || [
+      { name: "To Do", order: 0 },
+      { name: "In Progress", order: 1 },
+      { name: "Done", order: 2 }
+    ];
 
     const board = new Board({
       name: name.trim(),
       description,
-      project: projectId,
-      columns: [
-        { name: "To Do", order: 1 },
-        { name: "In Progress", order: 2 },
-        { name: "Done", order: 3 }
-      ]
+      project: actualProjectId,
+      columns: defaultColumns
     });
 
     const savedBoard = await board.save();
     res.status(201).json(savedBoard);
 
   } catch (err) {
-    res.status(500).json({ message: "Failed to create board" });
+    console.error('Error creating board:', err);
+    res.status(500).json({ message: "Failed to create board", error: err.message });
   }
 };
 

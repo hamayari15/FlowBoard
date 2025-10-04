@@ -3,6 +3,7 @@ export interface Task {
   title: string;
   description?: string;
   board: string; // Always use string ID to avoid circular dependencies
+  status: string; // Column ID where the task belongs (e.g., 'to-do', 'in-progress', 'done')
   position: number;
   assignee?: string; // Always use string ID to avoid circular dependencies
   createdBy: string; // Always use string ID to avoid circular dependencies
@@ -24,18 +25,27 @@ export interface TaskPopulated {
     name: string;
     description?: string;
   };
+  status: string; // Column ID where the task belongs
   position: number;
   assignee?: {
     _id: string;
     firstName: string;
     lastName: string;
     email: string;
+    avatar?: {
+      url: string;
+      publicId: string;
+    };
   };
   createdBy: {
     _id: string;
     firstName: string;
     lastName: string;
     email: string;
+    avatar?: {
+      url: string;
+      publicId: string;
+    };
   };
   priority: 'low' | 'medium' | 'high';
   labels: string[];
@@ -54,8 +64,10 @@ export interface TaskCreateRequest {
   title: string;
   description?: string;
   board: string;
+  status?: string;
   position?: number;
   assignee?: string;
+  createdBy?: string;
   priority?: 'low' | 'medium' | 'high';
   labels?: string[];
   dueDate?: Date;
@@ -65,6 +77,7 @@ export interface TaskCreateRequest {
 export interface TaskUpdateRequest {
   title?: string;
   description?: string;
+  status?: string;
   position?: number;
   assignee?: string;
   priority?: 'low' | 'medium' | 'high';

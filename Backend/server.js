@@ -15,11 +15,13 @@ const userRouter = require('./routes/user')
 const workSpaceRouter = require('./routes/workSpace')
 const projectRouter = require('./routes/project')
 const boardRouter = require('./routes/board')
+const taskRouter = require('./routes/task')
 
 app.use('/userRouter', userRouter)
 app.use('/workSpaceRouter', workSpaceRouter)
 app.use('/projectRouter', projectRouter)
 app.use('/boardRouter', boardRouter)
+app.use('/taskRouter', taskRouter)
 
 app.use('/getImages', express.static('uploads'))
 
