@@ -27,6 +27,9 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 // Application Components
 import { AppComponent } from './app.component';
@@ -45,6 +48,9 @@ import { ProjectInviteDialogComponent } from './features/workSpace/project-invit
 import { BoardComponent } from './features/board/board.component';
 import { ProjectDetailsComponent } from './features/workSpace/project-details/project-details.component';
 import { BoardDialogComponent } from './features/workSpace/board-dialog/board-dialog.component';
+import { BoardViewComponent } from './features/board/board-view.component';
+import { TaskDialogComponent } from './features/board/task-dialog/task-dialog.component';
+import { TaskDetailDialogComponent } from './features/board/task-detail-dialog/task-detail-dialog.component';
 
 @NgModule({
   declarations: [
@@ -63,6 +69,9 @@ import { BoardDialogComponent } from './features/workSpace/board-dialog/board-di
     BoardComponent,
     ProjectDetailsComponent,
     BoardDialogComponent,
+    BoardViewComponent,
+    TaskDialogComponent,
+    TaskDetailDialogComponent,
   ],
   imports: [
     // Angular Core Modules
@@ -96,6 +105,9 @@ import { BoardDialogComponent } from './features/workSpace/board-dialog/board-di
     MatToolbarModule,
     MatSidenavModule,
     MatListModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    DragDropModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

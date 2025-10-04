@@ -1,0 +1,136 @@
+<div class="board-view-container">
+  <!-- Header -->
+  <div class="board-header">
+    <div class="board-info">
+      <button mat-icon-button (click)="goBack()" class="back-button">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      <div class="board-title-section">
+        <h1 class="board-title">
+          <mat-icon>view_kanban</mat-icon>
+          {{ board?.name || 'Loading...' }}
+        </h1>
+        <p class="board-description" *ngIf="board && board.description">
+          {{ board.description }}
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading-container">
+    <mat-spinner diameter="60"></mat-spinner>
+    <p>Loading board...</p>
+  </div>
+
+  <!-- Board Content -->
+  <div *ngIf="!loading" class="board-content">
+    <div class="columns-container">
+      <div 
+        *ngFor="let column of columnsWithTasks" 
+        class="column"
+        [attr.data-column-id]="getColumnId(column)"
+      >
+        <div class="column-header">
+          <div class="column-title">
+            <h3>{{ column.name }}</h3>
+            <span class="task-count">{{ column.tasks.length }}</span>
+          </div>
+          <button 
+            mat-icon-button 
+            class="add-task-button"
+            (click)="openCreateTaskDialog(getColumnId(column))"
+            matTooltip="Add task"
+          >
+            <mat-icon>add</mat-icon>
+          </button>
+        </div>
+
+        <div 
+          class="tasks-container"
+          cdkDropList
+          [id]="getColumnId(column)"
+          [cdkDropListData]="column.tasks"
+          [cdkDropListConnectedTo]="connectedDropLists"
+          (cdkDropListDropped)="onDrop($event, getColumnId(column))"
+        >
+          <div 
+            *ngFor="let task of column.tasks" 
+            class="task-card"
+            cdkDrag
+            (click)="openTaskDetail(task)"
+          >
+            <div class="task-header">
+              <div class="task-title">{{ task.title }}</div>
+              <button 
+                mat-icon-button 
+                class="task-delete-button"
+                (click)="deleteTask(task, $event)"
+                matTooltip="Delete task"
+              >
+                <mat-icon>close</mat-icon>
+              </button>
+            </div>
+
+            <div class="task-description" *ngIf="task.description">
+              {{ task.description }}
+            </div>
+
+            <div class="task-metadata">
+              <div class="task-meta-left">
+                <div class="task-priority" [ngClass]="getPriorityClass(task.priority)">
+                  <mat-icon class="priority-icon">{{ getPriorityIcon(task.priority) }}</mat-icon>
+                  <span>{{ task.priority }}</span>
+                </div>
+
+                <div class="task-labels" *ngIf="task.labels && task.labels.length > 0">
+                  <ng-container *ngFor="let label of task.labels; let i = index">
+                    <span *ngIf="i < 2" class="task-label">{{ label }}</span>
+                  </ng-container>
+                  <span *ngIf="task.labels.length > 2" class="more-labels">
+                    +{{ task.labels.length - 2 }}
+                  </span>
+                </div>
+              </div>
+
+              <div class="task-meta-right">
+                <div class="task-due-date" *ngIf="task.dueDate">
+                  <mat-icon class="due-date-icon">schedule</mat-icon>
+                  <span>{{ task.dueDate | date: 'MMM d' }}</span>
+                </div>
+
+                <div class="task-assignee" *ngIf="task.assignee">
+                  <div 
+                    class="assignee-avatar"
+                    [matTooltip]="getAssigneeTooltip(task.assignee)"
+                  >
+                    <img 
+                      *ngIf="task.assignee.avatar && task.assignee.avatar.url" 
+                      [src]="task.assignee.avatar.url" 
+                      [alt]="task.assignee.firstName"
+                    />
+                    <span *ngIf="!task.assignee.avatar || !task.assignee.avatar.url">
+                      {{ getInitials(task.assignee.firstName, task.assignee.lastName) }}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="empty-column" *ngIf="column.tasks.length === 0">
+            <mat-icon>inbox</mat-icon>
+            <p>No tasks yet</p>
+            <button 
+              mat-stroked-button 
+              color="primary"
+              (click)="openCreateTaskDialog(getColumnId(column))"
+            >
+              Create Task
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

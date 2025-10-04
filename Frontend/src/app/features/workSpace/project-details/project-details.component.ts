@@ -170,4 +170,10 @@ export class ProjectDetailsComponent implements OnInit {
       }
     });
   }
+
+  viewBoard(board: Board) {
+    if (board._id) {
+      this.router.navigate(['/board', board._id]);
+    }
+  }
 }

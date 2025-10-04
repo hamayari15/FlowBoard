@@ -1,0 +1,138 @@
+.task-dialog {
+  min-width: 550px;
+  max-width: 650px;
+}
+
+h2[mat-dialog-title] {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #fff;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  margin: 0;
+  padding: 24px;
+  font-weight: 600;
+}
+
+h2[mat-dialog-title] mat-icon {
+  font-size: 28px;
+  width: 28px;
+  height: 28px;
+}
+
+mat-dialog-content {
+  padding: 24px;
+  max-height: 70vh;
+  background: #fafafa;
+}
+
+.task-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.priority-option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0;
+}
+
+.priority-option mat-icon {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+}
+
+.priority-option span {
+  font-weight: 500;
+}
+
+.priority-icon-high {
+  color: #e53935;
+}
+
+.priority-icon-medium {
+  color: #fb8c00;
+}
+
+.priority-icon-low {
+  color: #43a047;
+}
+
+.assignee-option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0;
+}
+
+.assignee-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.assignee-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+}
+
+.assignee-name {
+  font-weight: 500;
+  color: #333;
+  font-size: 14px;
+}
+
+.assignee-email {
+  font-size: 12px;
+  color: #666;
+}
+
+.unassigned-option {
+  color: #999;
+  font-style: italic;
+}
+
+mat-dialog-actions {
+  padding: 20px 24px;
+  border-top: 1px solid #e0e0e0;
+  gap: 12px;
+  background: #fff;
+}
+
+mat-dialog-actions button {
+  min-width: 100px;
+  height: 42px;
+  font-weight: 500;
+  border-radius: 6px;
+}
+
+mat-spinner {
+  display: inline-block;
+  margin: 0 auto;
+}
+
+::ng-deep .task-dialog .mat-mdc-form-field {
+  background: white;
+  border-radius: 8px;
+}
+
+::ng-deep .task-dialog .mat-mdc-form-field .mat-mdc-text-field-wrapper {
+  background: white;
+}

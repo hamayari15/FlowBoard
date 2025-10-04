@@ -28,6 +28,10 @@ export interface BoardColumn {
   order: number;
 }
 
+export function getColumnId(column: BoardColumn): string {
+  return column.name.toLowerCase().replace(/\s+/g, '-');
+}
+
 export interface BoardCreateRequest {
   name: string;
   description?: string;

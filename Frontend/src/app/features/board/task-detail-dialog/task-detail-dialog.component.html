@@ -1,0 +1,198 @@
+<div class="task-detail-dialog">
+  <div class="dialog-header">
+    <h2>
+      <mat-icon>assignment</mat-icon>
+      Task Details
+    </h2>
+    <div class="header-actions">
+      <button 
+        mat-icon-button 
+        *ngIf="!isEditing"
+        (click)="toggleEdit()"
+        matTooltip="Edit task"
+      >
+        <mat-icon>edit</mat-icon>
+      </button>
+      <button 
+        mat-icon-button 
+        color="warn"
+        (click)="deleteTask()"
+        matTooltip="Delete task"
+      >
+        <mat-icon>delete</mat-icon>
+      </button>
+      <button mat-icon-button (click)="close()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <mat-dialog-content>
+    <div class="task-content">
+      <!-- View Mode -->
+      <div *ngIf="!isEditing" class="view-mode">
+        <div class="task-section">
+          <h3 class="task-title-display">{{ task.title }}</h3>
+        </div>
+
+        <div class="task-section" *ngIf="task.description">
+          <label class="section-label">Description</label>
+          <p class="task-description-display">{{ task.description }}</p>
+        </div>
+
+        <div class="task-metadata-grid">
+          <div class="metadata-item">
+            <label class="section-label">Priority</label>
+            <div class="task-priority-display" [ngClass]="getPriorityClass(task.priority)">
+              <mat-icon>{{ getPriorityIcon(task.priority) }}</mat-icon>
+              <span>{{ task.priority | titlecase }}</span>
+            </div>
+          </div>
+
+          <div class="metadata-item" *ngIf="task.dueDate">
+            <label class="section-label">Due Date</label>
+            <div class="task-due-date-display">
+              <mat-icon>schedule</mat-icon>
+              <span>{{ task.dueDate | date: 'medium' }}</span>
+            </div>
+          </div>
+
+          <div class="metadata-item" *ngIf="task.assignee">
+            <label class="section-label">Assignee</label>
+            <div class="task-assignee-display">
+              <div class="assignee-avatar-large">
+                <img 
+                  *ngIf="task.assignee.avatar && task.assignee.avatar.url" 
+                  [src]="task.assignee.avatar.url" 
+                  [alt]="task.assignee.firstName"
+                />
+                <span *ngIf="!task.assignee.avatar || !task.assignee.avatar.url">
+                  {{ getInitials(task.assignee.firstName, task.assignee.lastName) }}
+                </span>
+              </div>
+              <div class="assignee-info">
+                <div class="assignee-name">
+                  {{ task.assignee.firstName }} {{ task.assignee.lastName }}
+                </div>
+                <div class="assignee-email">{{ task.assignee.email }}</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="metadata-item" *ngIf="task.createdBy">
+            <label class="section-label">Created By</label>
+            <div class="task-assignee-display">
+              <div class="assignee-avatar-large">
+                <img 
+                  *ngIf="task.createdBy.avatar && task.createdBy.avatar.url" 
+                  [src]="task.createdBy.avatar.url" 
+                  [alt]="task.createdBy.firstName"
+                />
+                <span *ngIf="!task.createdBy.avatar || !task.createdBy.avatar.url">
+                  {{ getInitials(task.createdBy.firstName, task.createdBy.lastName) }}
+                </span>
+              </div>
+              <div class="assignee-info">
+                <div class="assignee-name">
+                  {{ task.createdBy.firstName }} {{ task.createdBy.lastName }}
+                </div>
+                <div class="assignee-email">{{ task.createdBy.email }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="task-section" *ngIf="task.labels && task.labels.length > 0">
+          <label class="section-label">Labels</label>
+          <div class="task-labels-display">
+            <span *ngFor="let label of task.labels" class="task-label">
+              {{ label }}
+            </span>
+          </div>
+        </div>
+
+        <div class="task-section task-timestamps">
+          <div class="timestamp-item">
+            <mat-icon>add_circle_outline</mat-icon>
+            <span>Created: {{ task.createdAt | date: 'medium' }}</span>
+          </div>
+          <div class="timestamp-item" *ngIf="task.updatedAt">
+            <mat-icon>update</mat-icon>
+            <span>Updated: {{ task.updatedAt | date: 'medium' }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Edit Mode -->
+      <div *ngIf="isEditing" class="edit-mode">
+        <form [formGroup]="taskForm" class="task-edit-form">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Task Title</mat-label>
+            <input matInput formControlName="title" required>
+            <mat-error *ngIf="taskForm.get('title')?.hasError('required')">
+              Title is required
+            </mat-error>
+            <mat-error *ngIf="taskForm.get('title')?.hasError('minlength')">
+              Title must be at least 3 characters
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Description</mat-label>
+            <textarea 
+              matInput 
+              formControlName="description" 
+              rows="4"
+            ></textarea>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Priority</mat-label>
+            <mat-select formControlName="priority">
+              <mat-option *ngFor="let priority of priorities" [value]="priority">
+                <div class="priority-option">
+                  <mat-icon [class]="'priority-icon-' + priority">
+                    {{ getPriorityIcon(priority) }}
+                  </mat-icon>
+                  <span>{{ priority | titlecase }}</span>
+                </div>
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Labels (comma separated)</mat-label>
+            <input matInput formControlName="labels">
+            <mat-hint>Separate multiple labels with commas</mat-hint>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Due Date</mat-label>
+            <input 
+              matInput 
+              [matDatepicker]="picker" 
+              formControlName="dueDate"
+            >
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+        </form>
+      </div>
+    </div>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end" *ngIf="isEditing">
+    <button mat-button (click)="toggleEdit()" [disabled]="loading">
+      Cancel
+    </button>
+    <button 
+      mat-raised-button 
+      color="primary" 
+      (click)="saveChanges()"
+      [disabled]="loading || taskForm.invalid"
+    >
+      <mat-spinner *ngIf="loading" diameter="20"></mat-spinner>
+      <span *ngIf="!loading">Save Changes</span>
+    </button>
+  </mat-dialog-actions>
+</div>
