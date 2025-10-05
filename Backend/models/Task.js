@@ -19,4 +19,6 @@ const taskSchema = new Schema({
 }, { timestamps: true });
 
 // Prevent model overwrite error
-module.exports = mongoose.models.Task || mongoose.model('Task', taskSchema);
+const Task = mongoose.model('Task', taskSchema);
+
+module.exports = Task;
