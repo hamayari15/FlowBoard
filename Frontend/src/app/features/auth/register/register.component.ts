@@ -56,16 +56,16 @@ export class RegisterComponent implements OnInit {
   }
 
   onSubmit(): void {
+    this.serverError = '';
     this.authService.register(this.registerForm.value).subscribe({
-      next: (res) => {
-        console.log('✅ Registration successful:', res);
+      next: () => {
         this.router.navigate(['/login']);
       },
       error: (err) => {
-        console.log('❌ Login failed:', err)
-        this.serverError = err.error?.message || 'Register failed, please try again later.';
+        console.error('❌ Login failed:', err);
+        this.serverError = err.message || 'Register failed, please try again later.';
       }
-    })
+    });
   }
 
 }; 

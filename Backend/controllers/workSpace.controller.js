@@ -1,7 +1,7 @@
 const workSpace = require("../models/Workspace");
 const User = require("../models/User");
 
-const { sendEmail, sendInvitationEmail } = require("../services/email");
+const { sendInvitationEmail } = require("../services/email");
 
 
 exports.createWorkSpace = async (req, res) => {
@@ -43,7 +43,6 @@ exports.inviteMember = async (req, res) => {
     const workspaceId = req.params.id;
     const { email } = req.body;
 
-    // Input validation
     if (!email || !email.trim()) {
       return res.status(400).json({ message: "Email is required" });
     }
@@ -53,7 +52,6 @@ exports.inviteMember = async (req, res) => {
       return res.status(400).json({ message: "Please provide a valid email address" });
     }
 
-    // Find workspace with populated owner for better email context
     const wSpace = await workSpace.findById(workspaceId)
       .populate("members", "_id email firstName lastName")
       .populate("owner", "_id email firstName lastName");
@@ -65,12 +63,10 @@ exports.inviteMember = async (req, res) => {
     const normalizedEmail = email.trim().toLowerCase();
     const user = await User.findOne({ email: normalizedEmail });
 
-    // Check if user is already a member
     const isAlreadyMember = wSpace.members.some(m => 
       m.email.toLowerCase() === normalizedEmail
     );
 
-    // Check if user is the owner
     const isOwner = wSpace.owner.email.toLowerCase() === normalizedEmail;
 
     if (isOwner) {
@@ -93,7 +89,6 @@ exports.inviteMember = async (req, res) => {
     };
 
     if (user) {
-      // User exists - add to workspace and send welcome email
       wSpace.members.push(user._id);
       await wSpace.save();
 
@@ -105,7 +100,6 @@ exports.inviteMember = async (req, res) => {
         memberAdded: true
       });
     } else {
-      // User doesn't exist - send invitation email
       await sendInvitationEmail('WORKSPACE_INVITE_NEW', emailData);
 
       return res.status(200).json({ 
@@ -138,13 +132,12 @@ exports.inviteMember = async (req, res) => {
   }
 };
 
-// NEW: Bulk invite members to workspace
+
 exports.bulkInviteMembers = async (req, res) => {
   try {
     const workspaceId = req.params.id;
     const { emails } = req.body;
 
-    // Input validation
     if (!emails || !Array.isArray(emails) || emails.length === 0) {
       return res.status(400).json({ message: "Emails array is required and must not be empty" });
     }
@@ -153,7 +146,6 @@ exports.bulkInviteMembers = async (req, res) => {
       return res.status(400).json({ message: "Maximum 50 emails allowed per bulk invitation" });
     }
 
-    // Find workspace with populated data
     const wSpace = await workSpace.findById(workspaceId)
       .populate("members", "_id email firstName lastName")
       .populate("owner", "_id email firstName lastName");
@@ -174,7 +166,6 @@ exports.bulkInviteMembers = async (req, res) => {
       try {
         const normalizedEmail = email.trim().toLowerCase();
 
-        // Validate email format
         if (!emailRegex.test(normalizedEmail)) {
           results.failed.push({
             email: normalizedEmail,
@@ -183,7 +174,6 @@ exports.bulkInviteMembers = async (req, res) => {
           continue;
         }
 
-        // Check if user is the owner
         const isOwner = wSpace.owner.email.toLowerCase() === normalizedEmail;
         if (isOwner) {
           results.skipped.push({
@@ -193,7 +183,6 @@ exports.bulkInviteMembers = async (req, res) => {
           continue;
         }
 
-        // Check if user is already a member
         const isAlreadyMember = wSpace.members.some(m => 
           m.email.toLowerCase() === normalizedEmail
         );
@@ -214,7 +203,6 @@ exports.bulkInviteMembers = async (req, res) => {
         };
 
         if (user) {
-          // User exists - add to workspace
           wSpace.members.push(user._id);
           await sendInvitationEmail('WORKSPACE_ADD_EXISTING', emailData);
           
@@ -224,7 +212,6 @@ exports.bulkInviteMembers = async (req, res) => {
             userExists: true
           });
         } else {
-          // User doesn't exist - send invitation
           await sendInvitationEmail('WORKSPACE_INVITE_NEW', emailData);
           
           results.successful.push({
@@ -243,7 +230,6 @@ exports.bulkInviteMembers = async (req, res) => {
       }
     }
 
-    // Save workspace if members were added
     if (results.successful.some(r => r.userExists)) {
       await wSpace.save();
     }

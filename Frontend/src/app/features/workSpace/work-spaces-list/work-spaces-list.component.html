@@ -1,5 +1,4 @@
 <div class="workspace-container">
-  <!-- Header Section -->
   <div class="header-section">
     <div class="title-section">
       <mat-icon class="header-icon">workspaces</mat-icon>
@@ -29,13 +28,11 @@
     </div>
   </div>
 
-  <!-- Loading Spinner -->
   <div *ngIf="loading" class="loading-container">
     <mat-spinner diameter="50"></mat-spinner>
     <p>Loading workspaces...</p>
   </div>
 
-  <!-- Error Message -->
   <div *ngIf="error && !loading" class="error-container">
     <mat-icon class="error-icon">error_outline</mat-icon>
     <h2>Error Loading Workspaces</h2>
@@ -46,7 +43,6 @@
     </button>
   </div>
 
-  <!-- Empty State -->
   <div *ngIf="!loading && !error && workSpaces.length === 0" class="empty-state">
     <mat-icon class="empty-icon">workspace_premium</mat-icon>
     <h2>No workspaces found</h2>
@@ -57,14 +53,12 @@
     </button>
   </div>
 
-  <!-- Workspaces Grid -->
   <div *ngIf="!loading && !error && workSpaces.length > 0" class="workspaces-grid">
     <mat-card
       *ngFor="let ws of workSpaces; trackBy: trackByWorkspaceId"
       class="workspace-card"
       [class.mat-elevation-z2]="true">
       
-      <!-- Card Header -->
       <mat-card-header class="card-header">
         <div mat-card-avatar class="workspace-avatar">
           <mat-icon>folder</mat-icon>
@@ -77,9 +71,7 @@
         </mat-card-subtitle>
       </mat-card-header>
 
-      <!-- Card Content -->
       <mat-card-content class="card-content">
-        <!-- Owner Information -->
         <div class="owner-section" *ngIf="ws.owner">
           <mat-icon class="info-icon">person</mat-icon>
           <div class="owner-details">
@@ -92,7 +84,6 @@
           </div>
         </div>
 
-        <!-- Workspace Stats -->
         <div class="stats-section">
           <mat-chip-set aria-label="Workspace statistics">
             <mat-chip class="stat-chip" [matTooltip]="getMembersTooltip(ws.members)">
@@ -108,7 +99,6 @@
         </div>
       </mat-card-content>
 
-      <!-- Card Actions -->
       <mat-card-actions class="card-actions">
         <button 
           mat-icon-button 

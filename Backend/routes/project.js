@@ -4,7 +4,7 @@ const Router = express.Router();
 const projectController = require('../controllers/project.controller');
 
 
-Router.post('/Add', projectController.Add);
+Router.post('/Add', projectController.createProject);
 
 Router.post('/:id/addMember', projectController.inviteMember)
 

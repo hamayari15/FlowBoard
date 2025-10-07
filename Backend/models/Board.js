@@ -12,5 +12,6 @@ const boardSchema = new Schema({
   }],
 }, { timestamps: true });
 
-// Prevent model overwrite error
-module.exports = mongoose.models.Board || mongoose.model('Board', boardSchema);
+const Board = mongoose.model('Board', boardSchema);
+
+module.exports = Board;

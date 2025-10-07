@@ -15,10 +15,7 @@
         </div>
         <div class="info-item" *ngIf="projectData.owner">
           <mat-icon>person</mat-icon>
-          <span>
-            {{ projectData.owner?.firstName }} {{ projectData.owner?.lastName }}
-            ({{ projectData.owner?.email }})
-          </span>
+          <span>{{ projectData.owner?.firstName }} {{ projectData.owner?.lastName }} ({{ projectData.owner?.email }})</span>
         </div>
         <div class="info-item" *ngIf="projectData.createdAt">
           <mat-icon>schedule</mat-icon>
@@ -27,12 +24,7 @@
         <div class="info-item">
           <mat-icon>group</mat-icon>
           <span>{{ getMembersCount() }} Members</span>
-          <button 
-            mat-icon-button 
-            color="primary" 
-            matTooltip="Invite members to project"
-            (click)="openProjectInviteDialog()"
-            class="invite-button">
+          <button mat-icon-button color="primary" matTooltip="Invite members to project" (click)="openProjectInviteDialog()" class="invite-button">
             <mat-icon>person_add</mat-icon>
           </button>
         </div>
@@ -40,7 +32,6 @@
     </mat-card-content>
   </mat-card>
 
-  <!-- Skeleton loader -->
   <mat-card class="project-header-card" *ngIf="loading">
     <mat-card-header>
       <div mat-card-avatar class="skeleton-avatar"></div>
@@ -53,7 +44,6 @@
     </mat-card-content>
   </mat-card>
 
-  <!-- Boards Section -->
   <mat-card class="boards-section-card">
     <mat-card-header>
       <mat-card-title class="boards-header">
@@ -92,9 +82,7 @@
               <mat-icon>view_kanban</mat-icon>
             </div>
             <mat-card-title>{{ board.name }}</mat-card-title>
-            <mat-card-subtitle>
-              {{ board.description || "No description provided" }}
-            </mat-card-subtitle>
+            <mat-card-subtitle>{{ board.description || "No description provided" }}</mat-card-subtitle>
           </mat-card-header>
 
           <mat-card-content>
@@ -108,27 +96,18 @@
 
           <mat-card-actions align="end">
             <button
-              mat-raised-button
-              color="primary"
-              (click)="viewBoard(board)"
-              class="view-board-button"
-            >
-              <mat-icon>visibility</mat-icon>
-              View Board
+            mat-button 
+            color="primary" 
+            (click)="viewBoard(board)"
+            [disabled]="!board._id"
+            matTooltip="View board details">
+            <mat-icon>visibility</mat-icon>
+            Details
             </button>
-            <button
-              mat-icon-button
-              matTooltip="Edit Board"
-              (click)="openEditBoardDialog(board)"
-            >
+            <button mat-icon-button matTooltip="Edit Board" (click)="openEditBoardDialog(board)">
               <mat-icon>edit</mat-icon>
             </button>
-            <button
-              mat-icon-button
-              matTooltip="Delete Board"
-              color="warn"
-              (click)="deleteBoard(board)"
-            >
+            <button mat-icon-button matTooltip="Delete Board" color="warn" (click)="deleteBoard(board)">
               <mat-icon>delete</mat-icon>
             </button>
           </mat-card-actions>

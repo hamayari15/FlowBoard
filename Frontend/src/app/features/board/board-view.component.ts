@@ -257,4 +257,5 @@ export class BoardViewComponent implements OnInit, OnDestroy {
   getColumnId(column: ColumnWithTasks): string {
     return column.id;
   }
-}
+
+};

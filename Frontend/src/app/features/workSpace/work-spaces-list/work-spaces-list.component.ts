@@ -190,4 +190,5 @@ export class WorkspaceListComponent implements OnInit, OnDestroy {
       }
     });
   }
-}
+
+};

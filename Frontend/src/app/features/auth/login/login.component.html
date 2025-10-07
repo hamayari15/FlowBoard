@@ -1,11 +1,13 @@
 <div class="container">
   <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-    <h2 class="form-title">Log into Workspace</h2>
+    <h2 class="form-title">Access Your Account</h2>
 
     <div class="form-group">
       <label> Email <span class="required">*</span></label>
-      <input type="email" placeholder="Enter email" formControlName="email"/>
-
+      <div class="input-icon-wrapper">
+        <i class="fas fa-envelope input-icon-left"></i>
+        <input type="email" placeholder="Enter email" formControlName="email"/>
+      </div>
       <div class="error-text" *ngIf="loginForm.get('email')?.touched && loginForm.get('email')?.invalid">
         <small *ngIf="loginForm.get('email')?.errors?.['required']">❌ Email is required.</small>
         <small *ngIf="loginForm.get('email')?.errors?.['email']">📧 Invalid email address.</small>
@@ -14,11 +16,12 @@
 
     <div class="form-group password-wrapper">
       <label> Password <span class="required">*</span></label>
-      <input [type]="showPassword ? 'text' : 'password'" placeholder="Enter password" formControlName="password"/>
-      <span class="toggle-password" (click)="showPassword = !showPassword">
-        {{ showPassword ? '🙈' : '👁️' }}
-      </span>
-
+      <div class="input-icon-wrapper">
+        <i class="fas fa-lock input-icon-left"></i>
+        <input [type]="showPassword ? 'text' : 'password'" placeholder="Enter password" formControlName="password"/>
+        <i class="fas toggle-password" (click)="showPassword = !showPassword" 
+           [ngClass]="showPassword ? 'fa-eye-slash' : 'fa-eye'"></i>
+      </div>
       <div class="error-text" *ngIf="loginForm.get('password')?.touched && loginForm.get('password')?.invalid">
         <small *ngIf="loginForm.get('password')?.errors?.['required']">❌ Password is required.</small>
         <small *ngIf="loginForm.get('password')?.errors?.['minlength']">🔒 Password must contain at least 6 characters.</small>

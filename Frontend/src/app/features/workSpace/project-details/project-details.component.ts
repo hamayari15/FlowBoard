@@ -176,4 +176,5 @@ export class ProjectDetailsComponent implements OnInit {
       this.router.navigate(['/board', board._id]);
     }
   }
-}
+  
+};

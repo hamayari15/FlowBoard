@@ -1,39 +1,37 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
-const userSchema = new Schema(
-  {
-    userName: {
-      type: String,
-      required: true,
-      unique: true,
-      trim: true,
-      minlength: 3,
-      maxlength: 30,
-    },
-    email: {
-      type: String,
-      required: true,
-      unique: true,
-      lowercase: true,
-      match: [
-        /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,})+$/,
-        "Please enter a valid email",
-      ],
-    },
-    password: {
-      type: String,
-      required: true,
-      minlength: 6,
-    },
-    firstName: { type: String, required: true, trim: true },
-    lastName: { type: String, required: true, trim: true },
-    avatar: {
-      url: String,
-      publicId: String,
-    },
-    isActive: { type: Boolean, default: true },
-    lastLogin: Date,
+const userSchema = new Schema({
+  firstName: { type: String, required: true, trim: true },
+  lastName: { type: String, required: true, trim: true },
+  userName: {
+    type: String,
+    required: true,
+    unique: true,
+    trim: true,
+    minlength: 3,
+    maxlength: 30,
+  },
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+    lowercase: true,
+    match: [
+      /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,})+$/,
+      "Please enter a valid email",
+    ],
+  },
+  password: {
+    type: String,
+    required: true,
+    minlength: 6,
+  },
+  avatar: {
+    url: String,
+    publicId: String,
+  },
+  isActive: { type: Boolean, default: true }, lastLogin: Date,
   },
   { timestamps: true }
 );
