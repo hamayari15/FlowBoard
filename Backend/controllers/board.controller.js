@@ -1,4 +1,4 @@
-const Board = require('../models/board');
+const Board = require('../models/Board');
 const Project = require('../models/Project');
 
 

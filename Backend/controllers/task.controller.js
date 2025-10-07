@@ -1,5 +1,5 @@
-const Task = require('../models/task');
-const Board = require('../models/board');
+const Task = require('../models/Task');
+const Board = require('../models/Board');
 const User = require('../models/User');
 
 exports.createTask = async (req, res) => {
