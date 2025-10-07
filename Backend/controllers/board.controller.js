@@ -6,7 +6,6 @@ exports.createBoard = async (req, res) => {
   try {
     const { name, description, project, projectId, columns } = req.body;
     
-    // Accept both 'project' and 'projectId' for flexibility
     const actualProjectId = projectId || project;
 
     if (!name || !actualProjectId) {
@@ -18,7 +17,6 @@ exports.createBoard = async (req, res) => {
       return res.status(404).json({ message: "Project not found" });
     }
 
-    // Default columns if not provided
     const defaultColumns = columns || [
       { name: "To Do", order: 0 },
       { name: "In Progress", order: 1 },

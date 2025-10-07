@@ -2,6 +2,7 @@ const Task = require('../models/Task');
 const Board = require('../models/Board');
 const User = require('../models/User');
 
+
 exports.createTask = async (req, res) => {
   try {
     const { title, description, board, status, assignee, priority, labels, dueDate } = req.body;
@@ -16,7 +17,6 @@ exports.createTask = async (req, res) => {
       return res.status(404).json({ message: "Board not found" });
     }
 
-    // Get the highest position in the specific column to add the new task at the end
     const taskStatus = status || 'to-do';
     const highestPositionTask = await Task.findOne({ board, status: taskStatus }).sort({ position: -1 });
     const position = highestPositionTask ? highestPositionTask.position + 1 : 0;
@@ -47,6 +47,7 @@ exports.createTask = async (req, res) => {
   }
 };
 
+
 exports.getAll = async (req, res) => {
   try {
     const tasks = await Task.find()
@@ -61,6 +62,7 @@ exports.getAll = async (req, res) => {
     res.status(500).json({ message: "Error fetching tasks", error: err.message });
   }
 };
+
 
 exports.getById = async (req, res) => {
   try {
@@ -80,6 +82,7 @@ exports.getById = async (req, res) => {
     res.status(500).json({ message: "Error fetching task", error: err.message });
   }
 };
+
 
 exports.getByBoard = async (req, res) => {
   try {
@@ -102,12 +105,12 @@ exports.getByBoard = async (req, res) => {
   }
 };
 
+
 exports.Update = async (req, res) => {
   try {
     const id = req.params.id;
     const updateData = req.body;
 
-    // Remove fields that shouldn't be updated directly
     delete updateData._id;
     delete updateData.createdBy;
     delete updateData.createdAt;
@@ -129,6 +132,7 @@ exports.Update = async (req, res) => {
   }
 };
 
+
 exports.Delete = async (req, res) => {
   try {
     const id = req.params.id;
@@ -144,6 +148,7 @@ exports.Delete = async (req, res) => {
     res.status(500).json({ message: "Error deleting task", error: err.message });
   }
 };
+
 
 exports.updatePosition = async (req, res) => {
   try {
@@ -172,6 +177,7 @@ exports.updatePosition = async (req, res) => {
     res.status(500).json({ message: "Error updating task position", error: err.message });
   }
 };
+
 
 exports.assignTask = async (req, res) => {
   try {
@@ -205,10 +211,10 @@ exports.assignTask = async (req, res) => {
   }
 };
 
-// Bulk update task positions (useful for drag and drop)
+
 exports.bulkUpdatePositions = async (req, res) => {
   try {
-    const { tasks } = req.body; // Array of { id, position, status? }
+    const { tasks } = req.body;
 
     if (!Array.isArray(tasks) || tasks.length === 0) {
       return res.status(400).json({ message: "Tasks array is required" });

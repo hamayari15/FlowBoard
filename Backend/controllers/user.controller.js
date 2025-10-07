@@ -9,12 +9,12 @@ const jwt = require("jsonwebtoken");
 
 exports.register = async (req, res) => {
   try {
-    const { userName, firstName, lastName, email, password, wsId, projectId } = req.body;
+    const { firstName, lastName, userName, email, password, wsId, projectId } = req.body;
     
     const usr = new User({
-      userName, 
       firstName, 
       lastName, 
+      userName, 
       email, 
       password
     });
@@ -70,10 +70,10 @@ exports.login = async (req, res) => {
 
     const payload = { 
       _id: user._id,
-      email: user.email,
       firstName: user.firstName,
       lastName: user.lastName,
       userName: user.userName,
+      email: user.email,
       exp: Math.floor(Date.now() / 1000) + (7 * 24 * 60 * 60)
     };
     const token = jwt.sign(payload, process.env.JWT_SECRET);

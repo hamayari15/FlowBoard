@@ -3,6 +3,7 @@ const Router = express.Router();
 
 const taskController = require('../controllers/task.controller');
 
+
 Router.post('/Add', taskController.createTask);
 
 Router.get('/getAll', taskController.getAll);
@@ -20,5 +21,6 @@ Router.patch('/updatePosition/:id', taskController.updatePosition);
 Router.patch('/assign/:id', taskController.assignTask);
 
 Router.post('/bulkUpdatePositions', taskController.bulkUpdatePositions);
+
 
 module.exports = Router;

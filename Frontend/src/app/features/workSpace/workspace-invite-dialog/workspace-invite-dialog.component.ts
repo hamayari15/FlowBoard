@@ -88,7 +88,6 @@ export class WorkspaceInviteDialogComponent implements OnDestroy {
 
     this.loading = true;
 
-    // Use bulk invite if multiple emails, single invite if one email
     const inviteObservable = validEmails.length === 1 
       ? this.wsService.inviteMember(this.data.workspaceId, validEmails[0])
       : this.wsService.bulkInviteMembers(this.data.workspaceId, validEmails);
@@ -98,7 +97,6 @@ export class WorkspaceInviteDialogComponent implements OnDestroy {
         this.loading = false;
         
         if (validEmails.length === 1) {
-          // Single invite response
           const message = response.userExists 
             ? `${validEmails[0]} has been added to the workspace!`
             : `Invitation sent to ${validEmails[0]}. They'll need to create an account to join.`;
@@ -112,7 +110,6 @@ export class WorkspaceInviteDialogComponent implements OnDestroy {
             confirmButtonColor: '#667eea'
           });
         } else {
-          // Bulk invite response
           const { summary } = response;
           let message = `${summary.successful} invitations sent successfully.`;
           

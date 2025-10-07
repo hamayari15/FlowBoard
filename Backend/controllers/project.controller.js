@@ -2,10 +2,10 @@ const Project = require("../models/Project");
 const User = require("../models/User");
 const Workspace = require("../models/Workspace");
 
-const { sendEmail, sendInvitationEmail } = require("../services/email");
+const { sendInvitationEmail } = require("../services/email");
 
 
-exports.Add = async (req, res) => {
+exports.createProject = async (req, res) => {
   try {
     const { name, description, workspace, owner, members, status } = req.body;
 
@@ -36,7 +36,6 @@ exports.inviteMember = async (req, res) => {
     const projectId = req.params.id;
     const { email } = req.body;
 
-    // Input validation
     if (!email || !email.trim()) {
       return res.status(400).json({ message: "Email is required" });
     }
@@ -46,7 +45,6 @@ exports.inviteMember = async (req, res) => {
       return res.status(400).json({ message: "Please provide a valid email address" });
     }
 
-    // Find project with populated data for better email context
     const project = await Project.findById(projectId)
       .populate("members", "_id email firstName lastName")
       .populate("workspace", "_id name members")
@@ -59,12 +57,10 @@ exports.inviteMember = async (req, res) => {
     const normalizedEmail = email.trim().toLowerCase();
     const user = await User.findOne({ email: normalizedEmail });
 
-    // Check if user is already a project member
     const isAlreadyProjectMember = project.members.some(m => 
       m.email.toLowerCase() === normalizedEmail
     );
 
-    // Check if user is the project owner
     const isOwner = project.owner.email.toLowerCase() === normalizedEmail;
 
     if (isOwner) {
@@ -89,15 +85,12 @@ exports.inviteMember = async (req, res) => {
     };
 
     if (user) {
-      // User exists - add to project and workspace, then send notification
-      
-      // Add to project if not already a member
+
       if (!project.members.some(m => m._id.equals(user._id))) {
         project.members.push(user._id);
         await project.save();
       }
 
-      // Add to workspace if not already a member
       const workspace = await Workspace.findById(project.workspace._id);
       if (!workspace.members.some(m => m.equals(user._id))) {
         workspace.members.push(user._id);
@@ -113,7 +106,6 @@ exports.inviteMember = async (req, res) => {
         addedToWorkspace: true
       });
     } else {
-      // User doesn't exist - send invitation email
       await sendInvitationEmail('PROJECT_INVITE_NEW', emailData);
 
       return res.status(200).json({ 
@@ -146,13 +138,12 @@ exports.inviteMember = async (req, res) => {
   }
 };
 
-// NEW: Bulk invite members to project
+
 exports.bulkInviteMembers = async (req, res) => {
   try {
     const projectId = req.params.id;
     const { emails } = req.body;
 
-    // Input validation
     if (!emails || !Array.isArray(emails) || emails.length === 0) {
       return res.status(400).json({ message: "Emails array is required and must not be empty" });
     }
@@ -161,7 +152,6 @@ exports.bulkInviteMembers = async (req, res) => {
       return res.status(400).json({ message: "Maximum 50 emails allowed per bulk invitation" });
     }
 
-    // Find project with populated data
     const project = await Project.findById(projectId)
       .populate("members", "_id email firstName lastName")
       .populate("workspace", "_id name members")
@@ -183,7 +173,6 @@ exports.bulkInviteMembers = async (req, res) => {
       try {
         const normalizedEmail = email.trim().toLowerCase();
 
-        // Validate email format
         if (!emailRegex.test(normalizedEmail)) {
           results.failed.push({
             email: normalizedEmail,
@@ -192,7 +181,6 @@ exports.bulkInviteMembers = async (req, res) => {
           continue;
         }
 
-        // Check if user is the project owner
         const isOwner = project.owner.email.toLowerCase() === normalizedEmail;
         if (isOwner) {
           results.skipped.push({
@@ -202,7 +190,6 @@ exports.bulkInviteMembers = async (req, res) => {
           continue;
         }
 
-        // Check if user is already a project member
         const isAlreadyProjectMember = project.members.some(m => 
           m.email.toLowerCase() === normalizedEmail
         );
@@ -225,12 +212,10 @@ exports.bulkInviteMembers = async (req, res) => {
         };
 
         if (user) {
-          // User exists - add to project and workspace
           if (!project.members.some(m => m._id.equals(user._id))) {
             project.members.push(user._id);
           }
 
-          // Add to workspace if not already a member
           const workspace = await Workspace.findById(project.workspace._id);
           if (!workspace.members.some(m => m.equals(user._id))) {
             workspace.members.push(user._id);
@@ -245,7 +230,6 @@ exports.bulkInviteMembers = async (req, res) => {
             userExists: true
           });
         } else {
-          // User doesn't exist - send invitation
           await sendInvitationEmail('PROJECT_INVITE_NEW', emailData);
           
           results.successful.push({
@@ -264,7 +248,6 @@ exports.bulkInviteMembers = async (req, res) => {
       }
     }
 
-    // Save project if members were added
     if (results.successful.some(r => r.userExists)) {
       await project.save();
     }
