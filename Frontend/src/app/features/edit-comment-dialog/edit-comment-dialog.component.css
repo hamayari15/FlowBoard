@@ -1,0 +1,21 @@
+.full-width {
+  width: 100%;
+}
+
+.comment-edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+mat-dialog-content {
+  padding: 20px 0;
+}
+
+mat-dialog-actions {
+  margin-top: 10px;
+}
+
+mat-spinner {
+  margin-right: 5px;
+}

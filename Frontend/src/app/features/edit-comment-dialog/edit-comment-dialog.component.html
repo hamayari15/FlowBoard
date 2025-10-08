@@ -1,0 +1,20 @@
+<h2 mat-dialog-title>Edit Comment</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="commentForm" class="comment-edit-form">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Comment</mat-label>
+      <textarea matInput formControlName="content" rows="4"></textarea>
+      <mat-error *ngIf="commentForm.get('content')?.hasError('required')">Comment is required</mat-error>
+      <mat-error *ngIf="commentForm.get('content')?.hasError('minlength')">Comment must be at least 3 characters</mat-error>
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="close()" [disabled]="loading">Cancel</button>
+  <button mat-raised-button color="primary" (click)="saveComment()" [disabled]="loading || commentForm.invalid">
+    <mat-spinner *ngIf="loading" diameter="20"></mat-spinner>
+    <span *ngIf="!loading">Save</span>
+  </button>
+</mat-dialog-actions>

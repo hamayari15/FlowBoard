@@ -158,7 +158,7 @@ export class BoardViewComponent implements OnInit, OnDestroy {
 
   openCreateTaskDialog(columnId: string): void {
     const dialogRef = this.dialog.open(TaskDialogComponent, {
-      width: '700px',
+      width: '600px',
       data: {
         mode: 'create',
         boardId: this.boardId,
@@ -179,8 +179,7 @@ export class BoardViewComponent implements OnInit, OnDestroy {
 
   openTaskDetail(task: TaskPopulated): void {
     const dialogRef = this.dialog.open(TaskDetailDialogComponent, {
-      width: '900px',
-      maxHeight: '90vh',
+      width: '600px',
       data: {
         task,
         board: this.board

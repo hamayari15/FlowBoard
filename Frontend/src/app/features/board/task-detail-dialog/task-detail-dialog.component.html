@@ -5,16 +5,16 @@
       Task Details
     </h2>
     <div class="header-actions">
-      <button 
-        mat-icon-button 
+      <button
+        mat-icon-button
         *ngIf="!isEditing"
         (click)="toggleEdit()"
         matTooltip="Edit task"
       >
         <mat-icon>edit</mat-icon>
       </button>
-      <button 
-        mat-icon-button 
+      <button
+        mat-icon-button
         color="warn"
         (click)="deleteTask()"
         matTooltip="Delete task"
@@ -29,7 +29,6 @@
 
   <mat-dialog-content>
     <div class="task-content">
-      <!-- View Mode -->
       <div *ngIf="!isEditing" class="view-mode">
         <div class="task-section">
           <h3 class="task-title-display">{{ task.title }}</h3>
@@ -43,7 +42,10 @@
         <div class="task-metadata-grid">
           <div class="metadata-item">
             <label class="section-label">Priority</label>
-            <div class="task-priority-display" [ngClass]="getPriorityClass(task.priority)">
+            <div
+              class="task-priority-display"
+              [ngClass]="getPriorityClass(task.priority)"
+            >
               <mat-icon>{{ getPriorityIcon(task.priority) }}</mat-icon>
               <span>{{ task.priority | titlecase }}</span>
             </div>
@@ -53,7 +55,7 @@
             <label class="section-label">Due Date</label>
             <div class="task-due-date-display">
               <mat-icon>schedule</mat-icon>
-              <span>{{ task.dueDate | date: 'medium' }}</span>
+              <span>{{ task.dueDate | date : "medium" }}</span>
             </div>
           </div>
 
@@ -61,14 +63,17 @@
             <label class="section-label">Assignee</label>
             <div class="task-assignee-display">
               <div class="assignee-avatar-large">
-                <img 
-                  *ngIf="task.assignee.avatar && task.assignee.avatar.url" 
-                  [src]="task.assignee.avatar.url" 
+                <img
+                  *ngIf="task.assignee.avatar && task.assignee.avatar.url"
+                  [src]="task.assignee.avatar.url"
                   [alt]="task.assignee.firstName"
                 />
-                <span *ngIf="!task.assignee.avatar || !task.assignee.avatar.url">
-                  {{ getInitials(task.assignee.firstName, task.assignee.lastName) }}
-                </span>
+                <span
+                  *ngIf="!task.assignee.avatar || !task.assignee.avatar.url"
+                  >{{
+                    getInitials(task.assignee.firstName, task.assignee.lastName)
+                  }}</span
+                >
               </div>
               <div class="assignee-info">
                 <div class="assignee-name">
@@ -83,14 +88,20 @@
             <label class="section-label">Created By</label>
             <div class="task-assignee-display">
               <div class="assignee-avatar-large">
-                <img 
-                  *ngIf="task.createdBy.avatar && task.createdBy.avatar.url" 
-                  [src]="task.createdBy.avatar.url" 
+                <img
+                  *ngIf="task.createdBy.avatar && task.createdBy.avatar.url"
+                  [src]="task.createdBy.avatar.url"
                   [alt]="task.createdBy.firstName"
                 />
-                <span *ngIf="!task.createdBy.avatar || !task.createdBy.avatar.url">
-                  {{ getInitials(task.createdBy.firstName, task.createdBy.lastName) }}
-                </span>
+                <span
+                  *ngIf="!task.createdBy.avatar || !task.createdBy.avatar.url"
+                  >{{
+                    getInitials(
+                      task.createdBy.firstName,
+                      task.createdBy.lastName
+                    )
+                  }}</span
+                >
               </div>
               <div class="assignee-info">
                 <div class="assignee-name">
@@ -105,43 +116,118 @@
         <div class="task-section" *ngIf="task.labels && task.labels.length > 0">
           <label class="section-label">Labels</label>
           <div class="task-labels-display">
-            <span *ngFor="let label of task.labels" class="task-label">
-              {{ label }}
-            </span>
+            <span *ngFor="let label of task.labels" class="task-label">{{
+              label
+            }}</span>
           </div>
         </div>
 
         <div class="task-section task-timestamps">
           <div class="timestamp-item">
             <mat-icon>add_circle_outline</mat-icon>
-            <span>Created: {{ task.createdAt | date: 'medium' }}</span>
+            <span>Created: {{ task.createdAt | date : "medium" }}</span>
           </div>
           <div class="timestamp-item" *ngIf="task.updatedAt">
             <mat-icon>update</mat-icon>
-            <span>Updated: {{ task.updatedAt | date: 'medium' }}</span>
+            <span>Updated: {{ task.updatedAt | date : "medium" }}</span>
           </div>
         </div>
       </div>
 
-      <!-- Edit Mode -->
+      <!-- Add Comment Section -->
+      <div class="task-section add-comment">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Add a comment</mat-label>
+          <textarea
+            matInput
+            [(ngModel)]="newComment"
+            placeholder="Write a comment..."
+            rows="3"
+          ></textarea>
+        </mat-form-field>
+        <button
+          mat-raised-button
+          color="primary"
+          class="add-comment-btn"
+          (click)="addComment()"
+          [disabled]="!newComment.trim()"
+        >
+          <mat-icon>send</mat-icon>
+          <span>Add Comment</span>
+        </button>
+      </div>
+
+      <!-- Comments List -->
+      <div
+        class="task-section comments-section"
+        *ngIf="comments && comments.length > 0"
+      >
+        <label class="section-label">Comments ({{ comments.length }})</label>
+        <div class="comment-item" *ngFor="let comment of comments">
+          <div class="comment-header">
+            <div class="comment-author-info">
+              <div class="comment-avatar">
+                <img
+                  *ngIf="comment.createdBy?.avatar?.url"
+                  [src]="comment.createdBy.avatar.url"
+                  [alt]="comment.createdBy.firstName"
+                />
+                <span *ngIf="!comment.createdBy?.avatar?.url">{{
+                  getInitials(
+                    comment.createdBy?.firstName,
+                    comment.createdBy?.lastName
+                  )
+                }}</span>
+              </div>
+              <div class="comment-author-name">
+                {{ comment.createdBy?.firstName }}
+                {{ comment.createdBy?.lastName }}
+              </div>
+              <div class="comment-date">
+                {{ comment.createdAt | date : "short" }}
+              </div>
+            </div>
+            <div class="comment-actions">
+              <button
+                mat-icon-button
+                matTooltip="Edit Comment"
+                color="primary"
+                (click)="editComment(comment)"
+              >
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button
+                mat-icon-button
+                matTooltip="Delete Comment"
+                color="warn"
+                (click)="deleteComment(comment)"
+              >
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </div>
+          <div class="comment-content">{{ comment.content }}</div>
+        </div>
+      </div>
+
       <div *ngIf="isEditing" class="edit-mode">
         <form [formGroup]="taskForm" class="task-edit-form">
           <mat-form-field appearance="outline" class="full-width">
             <mat-label>Task Title</mat-label>
-            <input matInput formControlName="title" required>
-            <mat-error *ngIf="taskForm.get('title')?.hasError('required')">
-              Title is required
-            </mat-error>
-            <mat-error *ngIf="taskForm.get('title')?.hasError('minlength')">
-              Title must be at least 3 characters
-            </mat-error>
+            <input matInput formControlName="title" required />
+            <mat-error *ngIf="taskForm.get('title')?.hasError('required')"
+              >Title is required</mat-error
+            >
+            <mat-error *ngIf="taskForm.get('title')?.hasError('minlength')"
+              >Title must be at least 3 characters</mat-error
+            >
           </mat-form-field>
 
           <mat-form-field appearance="outline" class="full-width">
             <mat-label>Description</mat-label>
-            <textarea 
-              matInput 
-              formControlName="description" 
+            <textarea
+              matInput
+              formControlName="description"
               rows="4"
             ></textarea>
           </mat-form-field>
@@ -149,11 +235,14 @@
           <mat-form-field appearance="outline" class="full-width">
             <mat-label>Priority</mat-label>
             <mat-select formControlName="priority">
-              <mat-option *ngFor="let priority of priorities" [value]="priority">
+              <mat-option
+                *ngFor="let priority of priorities"
+                [value]="priority"
+              >
                 <div class="priority-option">
-                  <mat-icon [class]="'priority-icon-' + priority">
-                    {{ getPriorityIcon(priority) }}
-                  </mat-icon>
+                  <mat-icon [class]="'priority-icon-' + priority">{{
+                    getPriorityIcon(priority)
+                  }}</mat-icon>
                   <span>{{ priority | titlecase }}</span>
                 </div>
               </mat-option>
@@ -162,18 +251,20 @@
 
           <mat-form-field appearance="outline" class="full-width">
             <mat-label>Labels (comma separated)</mat-label>
-            <input matInput formControlName="labels">
-            <mat-hint>Separate multiple labels with commas</mat-hint>
+            <input matInput formControlName="labels" />
           </mat-form-field>
 
           <mat-form-field appearance="outline" class="full-width">
             <mat-label>Due Date</mat-label>
-            <input 
-              matInput 
-              [matDatepicker]="picker" 
+            <input
+              matInput
+              [matDatepicker]="picker"
               formControlName="dueDate"
-            >
-            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            />
+            <mat-datepicker-toggle
+              matSuffix
+              [for]="picker"
+            ></mat-datepicker-toggle>
             <mat-datepicker #picker></mat-datepicker>
           </mat-form-field>
         </form>
@@ -185,9 +276,9 @@
     <button mat-button (click)="toggleEdit()" [disabled]="loading">
       Cancel
     </button>
-    <button 
-      mat-raised-button 
-      color="primary" 
+    <button
+      mat-raised-button
+      color="primary"
       (click)="saveChanges()"
       [disabled]="loading || taskForm.invalid"
     >
