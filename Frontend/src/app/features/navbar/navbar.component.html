@@ -1,38 +1,28 @@
 <nav class="navbar">
   <div class="navbar-container">
     <div class="navbar-brand">
-      <div class="logo-placeholder"></div>
-      <span class="brand-text" routerLink="/" style="cursor: pointer;">flowBoard</span>
+        <div class="logo-placeholder"><!--<img src="assets/Jira.png" alt="">--> </div> 
+      <span class="brand-text" routerLink="/">flowBoard</span>  
     </div>
 
-    <!-- Navigation links for authenticated users -->
-    <div class="navbar-nav" *ngIf="isLoggedIn">
-      <a routerLink="/workSpaces-list" class="nav-link">
-        <i class="fas fa-folder"></i>
-        Workspaces
-      </a>
-    </div>
-
-    <!-- Actions for non-authenticated users -->
     <div class="navbar-actions" *ngIf="!isLoggedIn">
+      <a class="btn-link" routerLink="/">Home</a>
+      <a class="btn-link" routerLink="/about">About</a>
+      <a class="btn-link" routerLink="/privacy">Privacy</a>
       <button class="btn-secondary" routerLink="/login">
-        <i class="fas fa-sign-in-alt"></i>
-        Login
+        <i class="fas fa-sign-in-alt"></i> Login
       </button>
       <button class="btn-primary" routerLink="/register">
-        <i class="fas fa-user-plus"></i>
-        Get Started
+        <i class="fas fa-user-plus"></i> Get Started
       </button>
     </div>
 
-    <!-- Actions for authenticated users -->
     <div class="navbar-actions" *ngIf="isLoggedIn">
       <div class="user-info" *ngIf="currentUser">
-        <span class="welcome-text">Welcome, {{ currentUser.name || currentUser.email }}!</span>
+        <span class="welcome-text">Welcome, {{ currentUser.userName }} !</span>
       </div>
       <button class="btn-secondary" (click)="logout()">
-        <i class="fas fa-sign-out-alt"></i>
-        Logout
+        <i class="fas fa-sign-out-alt"></i> Logout
       </button>
     </div>
 
@@ -43,29 +33,27 @@
     </button>
   </div>
 
-  <!-- Mobile menu -->
   <div class="mobile-menu" [class.active]="isMenuOpen">
     <div *ngIf="!isLoggedIn">
+      <a routerLink="/" class="mobile-nav-item" (click)="toggleMobileMenu()">Home</a>
+      <a routerLink="/about" class="mobile-nav-item" (click)="toggleMobileMenu()">About</a>
+      <a routerLink="/privacy" class="mobile-nav-item" (click)="toggleMobileMenu()">Privacy</a>
       <a routerLink="/login" class="mobile-nav-item" (click)="toggleMobileMenu()">
-        <i class="fas fa-sign-in-alt"></i>
-        Login
+        <i class="fas fa-sign-in-alt"></i> Login
       </a>
       <a routerLink="/register" class="mobile-nav-item" (click)="toggleMobileMenu()">
-        <i class="fas fa-user-plus"></i>
-        Get Started
+        <i class="fas fa-user-plus"></i> Get Started
       </a>
     </div>
     <div *ngIf="isLoggedIn">
       <div class="mobile-user-info" *ngIf="currentUser">
-        <span>Welcome, {{ currentUser.name || currentUser.email }}!</span>
+        <span>Welcome, {{ currentUser.userName }}</span>
       </div>
       <a routerLink="/workSpaces-list" class="mobile-nav-item" (click)="toggleMobileMenu()">
-        <i class="fas fa-folder"></i>
-        Workspaces
+        <i class="fas fa-folder"></i> Workspaces
       </a>
       <button class="mobile-nav-item logout-btn" (click)="logout(); toggleMobileMenu()">
-        <i class="fas fa-sign-out-alt"></i>
-        Logout
+        <i class="fas fa-sign-out-alt"></i> Logout
       </button>
     </div>
   </div>

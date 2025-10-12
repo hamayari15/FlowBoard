@@ -4,6 +4,8 @@ import { RouterModule, Routes } from '@angular/router';
 import { UserGuard } from './core/guards/user.guard';
 
 import { HomeComponent } from './features/home/home.component';
+import { AboutComponent } from './features/about/about.component';
+import { PrivacyComponent } from './features/privacy/privacy.component';
 import { RegisterComponent } from './features/auth/register/register.component';
 import { LoginComponent } from './features/auth/login/login.component';
 import { WorkspaceListComponent } from './features/workSpace/work-spaces-list/work-spaces-list.component';
@@ -18,6 +20,8 @@ const routes: Routes = [
     path: 'home',
     loadChildren: () => import('./features/home/home.module').then(m => m.HomeModule)
     },
+    { path: 'about', component: AboutComponent},
+    { path: 'privacy', component: PrivacyComponent},
     { path: 'register', component: RegisterComponent},
     { path: 'login', component: LoginComponent},
     { path: 'workSpaces-list', component: WorkspaceListComponent, canActivate:[UserGuard]},
