@@ -12,7 +12,7 @@
 }
 
 form {
-  width: 600px;
+  width: 560px;
   background-color: #fff;
   padding: 24px;
   border-radius: 12px;
@@ -24,11 +24,11 @@ form {
 
 .form-title {
   text-align: center;
-  font-size: 32px;
+  font-size: 30px;
   font-style: italic;
   font-weight: 700;
   color: #2c3e50;
-  margin-bottom: 28px;
+  margin-bottom: 24px;
   position: relative;
   padding-bottom: 10px;
   letter-spacing: 1px;
@@ -36,7 +36,7 @@ form {
 
 .form-title::after {
   content: '';
-  width: 200px;
+  width: 180px;
   height: 4px;
   background-color: #007bff;
   position: absolute;
@@ -72,25 +72,40 @@ form {
   font-size: 20px;
 }
 
-.form-group input {
-  padding: 12px 16px;
+.input-icon {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-icon i {
+  position: absolute;
+  left: 12px;
+  color: #999;
+  font-size: 18px;
+}
+
+.input-icon input {
+  width: 100%;
+  padding: 12px 16px 12px 40px;
   border: 1px solid #ccc;
   border-radius: 8px;
   font-size: 15px;
   transition: all 0.3s ease;
+  letter-spacing: 1px;
 }
 
-.form-group input:focus {
+.input-icon input:focus {
   outline: none;
   border-color: #007bff;
 }
 
-.form-group input.ng-invalid.ng-touched {
+.input-icon input.ng-invalid.ng-touched {
   border-color: #e74c3c;
   background-color: #fdecea;
 }
 
-.form-group input.ng-valid {
+.input-icon input.ng-valid {
   border-color: #27ae60;
   background-color: #eafaf1; 
 }
@@ -105,6 +120,7 @@ form {
   padding: 12px;
   border-radius: 8px;
   font-size: 14px;
+  letter-spacing: 1px;
 }
 
 .error-alert {
@@ -153,4 +169,3 @@ button[disabled] {
   color: #0056b3;
   text-decoration: underline;
 }
-
