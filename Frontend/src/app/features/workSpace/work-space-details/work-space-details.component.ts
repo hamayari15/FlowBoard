@@ -83,7 +83,7 @@ export class WorkSpaceDetailsComponent implements OnInit {
 
   openAddProjectDialog() {
     const dialogRef = this.dialog.open(ProjectDialogComponent, {
-      width: '600px',
+      width: '550px',
       data: {
         mode: 'add',
         workspaceId: this.workSpaceId,
@@ -100,7 +100,7 @@ export class WorkSpaceDetailsComponent implements OnInit {
 
   openEditProjectDialog(project: ProjectPopulated) {
     const dialogRef = this.dialog.open(ProjectDialogComponent, {
-      width: '600px',
+      width: '550px',
       data: {
         mode: 'edit',
         workspaceId: this.workSpaceId,

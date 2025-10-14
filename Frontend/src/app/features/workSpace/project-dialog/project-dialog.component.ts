@@ -97,30 +97,8 @@ export class ProjectDialogComponent implements OnInit, OnDestroy {
     this.projectForm.patchValue({
       name: project.name,
       description: project.description || '',
-      status: project.status,
-      members: Array.isArray(project.members) ? project.members.map(member => 
-        typeof member === 'string' ? member : member._id
-      ) : [],
+      status: project.status
     });
-    this.selectedMembers = Array.isArray(project.members) ? project.members.map(member => 
-      typeof member === 'string' ? member : member._id
-    ) : [];
-  }
-
-  onMemberSelectionChange(members: string[]) {
-    this.selectedMembers = members;
-    this.projectForm.patchValue({ members });
-  }
-
-  getSelectedMemberNames(): string {
-    if (this.selectedMembers.length === 0) return 'No members selected';
-    if (this.selectedMembers.length === 1) {
-      const member = this.availableMembers.find(
-        (m) => m._id === this.selectedMembers[0]
-      );
-      return member ? member.name : '1 member';
-    }
-    return `${this.selectedMembers.length} members selected`;
   }
 
   onSubmit() {
