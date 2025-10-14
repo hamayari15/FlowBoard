@@ -57,11 +57,16 @@ export class WorkspaceListComponent implements OnInit, OnDestroy {
   }
 
   goToDetails(id: string): void {
-    if (!id) {
-      console.error('Workspace ID is required');
-      return;
+    if (id) {
+      this.router.navigate(['/workSpace-details', id]);
     }
-    this.router.navigate(['/workSpace-details', id]);
+  }
+  
+  goToCharts(id: string): void {
+    if (id) {
+      this.router.navigate(['/workSpace-stats', id]);
+    }
+
   }
 
   openAddDialog(): void {

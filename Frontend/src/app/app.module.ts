@@ -54,6 +54,7 @@ import { BoardViewComponent } from './features/board/board-view.component';
 import { TaskDialogComponent } from './features/board/task-dialog/task-dialog.component';
 import { TaskDetailDialogComponent } from './features/board/task-detail-dialog/task-detail-dialog.component';
 import { EditCommentDialogComponent } from './features/edit-comment-dialog/edit-comment-dialog.component';
+import { WorkSpaceStatsComponent } from './features/workSpace/work-space-stats/work-space-stats.component';
 
 @NgModule({
   declarations: [
@@ -77,7 +78,8 @@ import { EditCommentDialogComponent } from './features/edit-comment-dialog/edit-
     BoardViewComponent,
     TaskDialogComponent,
     TaskDetailDialogComponent,
-    EditCommentDialogComponent
+    EditCommentDialogComponent,
+    WorkSpaceStatsComponent
   ],
   imports: [
     // Angular Core Modules
