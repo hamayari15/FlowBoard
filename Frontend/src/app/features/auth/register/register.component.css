@@ -129,6 +129,12 @@ form {
   border: 1px solid #e74c3c;
 }
 
+.success-alert {
+  background: #d4edda;
+  color: #155724;
+  border: 1px solid #28a745;
+}
+
 button[type="submit"] {
   width: 100%;
   background-color: #007bff;
@@ -140,6 +146,11 @@ button[type="submit"] {
   font-size: 16px;
   cursor: pointer;
   transition: all 0.3s ease;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
 }
 
 button[type="submit"]:not([disabled]):hover {
@@ -150,6 +161,34 @@ button[type="submit"]:not([disabled]):hover {
 button[disabled] {
   background-color: #a0c4ff;
   cursor: not-allowed;
+  opacity: 0.7;
+}
+
+button[type="submit"].loading {
+  background-color: #0056b3;
+  cursor: wait;
+}
+
+.loading-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .login {
@@ -165,7 +204,13 @@ button[disabled] {
   font-weight: 500;
 }
 
-.login a:hover {
+.login a:hover:not(.disabled-link) {
   color: #0056b3;
   text-decoration: underline;
+}
+
+.login a.disabled-link {
+  color: #a0c4ff;
+  cursor: not-allowed;
+  pointer-events: none;
 }

@@ -144,6 +144,11 @@ button[type="submit"] {
   background-color: #007bff;
   color: white;
   font-weight: bold;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 46px;
 }
 
 button[type="submit"]:not([disabled]):hover {
@@ -153,6 +158,34 @@ button[type="submit"]:not([disabled]):hover {
 button[disabled] {
   background-color: #a0c4ff;
   cursor: not-allowed;
+  opacity: 0.7;
+}
+
+button[type="submit"].loading {
+  background-color: #0056b3;
+  cursor: wait;
+}
+
+.loading-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .divider {
@@ -182,6 +215,12 @@ button[disabled] {
   letter-spacing: 1px;
 }
 
-.register:hover {
+.register:hover:not([disabled]) {
   background-color: rgb(86, 180, 86);
+}
+
+.register[disabled] {
+  background-color: rgb(172, 216, 172);
+  cursor: not-allowed;
+  opacity: 0.7;
 }

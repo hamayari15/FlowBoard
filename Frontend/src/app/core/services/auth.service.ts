@@ -171,36 +171,66 @@ export class AuthService {
 
   private handleError = (error: HttpErrorResponse): Observable<never> => {
     let errorMessage = 'An unknown error occurred';
+    
+    // Check if it's a client-side or network error
     if (error.error instanceof ErrorEvent) {
-      errorMessage = `Error: ${error.error.message}`;
+      // Client-side error
+      errorMessage = `Network error: ${error.error.message}`;
+    } else if (error.status === 0) {
+      // Network error or CORS issue
+      errorMessage = 'Unable to connect to server. Please check your internet connection and try again.';
     } else {
+      // Backend returned an unsuccessful response code
       if (error.error?.message) {
+        // Use the backend's error message
         errorMessage = error.error.message;
+      } else if (error.error?.error) {
+        // Some APIs return error in different format
+        errorMessage = typeof error.error.error === 'string' 
+          ? error.error.error 
+          : 'An error occurred. Please try again.';
       } else {
+        // Fallback to status-based messages
         switch (error.status) {
           case 400:
-            errorMessage = 'Invalid request. Please check your input.';
+            errorMessage = 'Invalid request. Please check your input and try again.';
             break;
           case 401:
-            errorMessage = 'Invalid credentials. Please try again.';
+            errorMessage = 'Invalid email or password. Please try again.';
             break;
           case 403:
-            errorMessage = 'Access forbidden.';
+            errorMessage = 'Access forbidden. Your account may be deactivated.';
             break;
           case 404:
-            errorMessage = 'Service not found.';
+            errorMessage = 'Service not found. Please contact support if this persists.';
             break;
           case 409:
-            errorMessage = 'User already exists with this email.';
+            errorMessage = 'An account with this email or username already exists.';
+            break;
+          case 422:
+            errorMessage = 'Invalid data provided. Please check your input.';
+            break;
+          case 429:
+            errorMessage = 'Too many requests. Please try again later.';
             break;
           case 500:
             errorMessage = 'Internal server error. Please try again later.';
             break;
+          case 503:
+            errorMessage = 'Service temporarily unavailable. Please try again later.';
+            break;
           default:
-            errorMessage = `Error ${error.status}: ${error.statusText}`;
+            errorMessage = `Unexpected error (${error.status}). Please try again later.`;
         }
       }
     }
+    
+    console.error('Auth Service Error:', {
+      status: error.status,
+      message: errorMessage,
+      error: error.error
+    });
+    
     return throwError(() => new Error(errorMessage));
   };
 }
