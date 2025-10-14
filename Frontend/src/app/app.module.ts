@@ -36,6 +36,8 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { NavbarComponent } from './features/navbar/navbar.component';
 import { HomeComponent } from './features/home/home.component';
+import { AboutComponent } from './features/about/about.component';
+import { PrivacyComponent } from './features/privacy/privacy.component';
 import { RegisterComponent } from './features/auth/register/register.component';
 import { LoginComponent } from './features/auth/login/login.component';
 import { FooterComponent } from './features/footer/footer.component';
@@ -58,6 +60,8 @@ import { EditCommentDialogComponent } from './features/edit-comment-dialog/edit-
     AppComponent,
     NavbarComponent,
     HomeComponent,
+    AboutComponent,
+    PrivacyComponent,
     RegisterComponent,
     LoginComponent,
     FooterComponent,
@@ -73,7 +77,7 @@ import { EditCommentDialogComponent } from './features/edit-comment-dialog/edit-
     BoardViewComponent,
     TaskDialogComponent,
     TaskDetailDialogComponent,
-    EditCommentDialogComponent,
+    EditCommentDialogComponent
   ],
   imports: [
     // Angular Core Modules

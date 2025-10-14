@@ -9,19 +9,18 @@ import Swal from 'sweetalert2';
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css'],
 })
+
 export class NavbarComponent implements OnInit, OnDestroy {
+
   isMenuOpen = false;
   isLoggedIn = false;
   currentUser: any = null;
+  
   private authSubscription: Subscription = new Subscription();
 
-  constructor(
-    private authService: AuthService,
-    private router: Router
-  ) {}
+  constructor(private authService: AuthService, private router: Router) {}
 
   ngOnInit(): void {
-    // Subscribe to authentication state changes
     this.authSubscription = this.authService.isLoggedIn$.subscribe(
       (loggedIn) => {
         this.isLoggedIn = loggedIn;
