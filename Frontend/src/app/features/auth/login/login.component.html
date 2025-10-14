@@ -29,10 +29,16 @@
     </div>
 
     <div *ngIf="serverError" class="alert error-alert">{{ serverError }}</div>
-    <button type="submit" [disabled]="loginForm.invalid">Login</button>
+    <button type="submit" [disabled]="loginForm.invalid || isSubmitting" [class.loading]="isSubmitting">
+      <span *ngIf="!isSubmitting">Login</span>
+      <span *ngIf="isSubmitting" class="loading-content">
+        <span class="spinner"></span>
+        <span>Logging in...</span>
+      </span>
+    </button>
     <div class="divider">
       <span>OR</span>
     </div>
-    <button class="register" routerLink="/register">Create an account</button>
+    <button class="register" routerLink="/register" [disabled]="isSubmitting">Create an account</button>
   </form>
 </div>

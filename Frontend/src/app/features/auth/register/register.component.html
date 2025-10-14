@@ -78,7 +78,14 @@
     </div>
 
     <div *ngIf="serverError" class="alert error-alert">{{ serverError }}</div>
-    <button type="submit" [disabled]="registerForm.invalid">Register</button>
-    <p class="login">you already have an account ? <a routerLink="/login">Login</a></p>
+    <div *ngIf="successMessage" class="alert success-alert">{{ successMessage }}</div>
+    <button type="submit" [disabled]="registerForm.invalid || isSubmitting" [class.loading]="isSubmitting">
+      <span *ngIf="!isSubmitting">Register</span>
+      <span *ngIf="isSubmitting" class="loading-content">
+        <span class="spinner"></span>
+        <span>Creating account...</span>
+      </span>
+    </button>
+    <p class="login">you already have an account ? <a routerLink="/login" [class.disabled-link]="isSubmitting">Login</a></p>
   </form>
 </div>
