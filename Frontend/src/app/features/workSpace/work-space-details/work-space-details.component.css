@@ -1,104 +1,80 @@
 .workspace-details-container {
-  padding: 24px;
-  max-width: 1200px;
-  margin: 0 auto;
-  background: #f5f5f5;
-  min-height: calc(100vh - 200px);
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  padding: 2rem 8rem;
+  background-color: #f9fafb;
+  min-height: 100vh;
+  color: #333;
 }
 
 .workspace-header-card {
-  margin-bottom: 24px;
-  border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  border-radius: 1rem;
+  overflow: hidden;
+  margin-bottom: 1.5rem;
 }
 
-.workspace-header-card .mat-mdc-card-header {
-  padding: 24px 24px 16px;
-}
-
-.workspace-header-card .mat-mdc-card-content {
-  padding: 0 24px 24px;
+.workspace-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: hsl(202, 36%, 96%);
+  padding: 1rem;
+  line-break: anywhere;
 }
 
 .workspace-avatar {
-  background: rgba(255, 255, 255, 0.2);
-  color: white;
+  background-color: #dfeef8;  
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
+  width: 50px;
+  height: 50px;
+}
+
+.workspace-avatar mat-icon {
+  color: #1976d2;
+}
+
+.workspace-title-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  flex: 1;
+}
+
+.workspace-title-section mat-card-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #0d47a1;
+}
+
+.workspace-title-section mat-card-subtitle {
+  font-size: 1rem;
+  color: #333;
+}
+
+.workspace-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .workspace-info {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 16px;
-  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1rem 1.25rem;
+  background-color: #f9fafb;
 }
 
 .info-item {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 12px 16px;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
-  backdrop-filter: blur(10px);
-}
-
-.info-item mat-icon {
-  color: rgba(255, 255, 255, 0.8);
-  font-size: 20px;
-}
-
-.info-item span {
-  flex: 1;
-}
-
-.invite-button {
-  color: rgba(255, 255, 255, 0.9) !important;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 8px;
-  transition: all 0.2s ease;
-}
-
-.invite-button:hover {
-  background: rgba(255, 255, 255, 0.2);
-  border-color: rgba(255, 255, 255, 0.3);
-  transform: translateY(-1px);
-}
-
-.skeleton-avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-  background-size: 200% 100%;
-  animation: loading 1.5s infinite;
-}
-
-.skeleton-text {
-  height: 16px;
-  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-  background-size: 200% 100%;
-  animation: loading 1.5s infinite;
-  border-radius: 4px;
-  margin: 8px 0;
-}
-
-.skeleton-title {
-  width: 200px;
-  height: 24px;
-}
-
-.skeleton-subtitle {
-  width: 150px;
-  height: 16px;
+  gap: 0.5rem;
+  font-size: 0.95rem;
+  color: #555;
 }
 
 @keyframes loading {

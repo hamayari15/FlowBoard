@@ -7,7 +7,7 @@ import Swal from 'sweetalert2';
 import { WorkspaceService } from 'src/app/core/services/workspace.service';
 import { WorkSpaceDialogComponent } from '../work-space-dialog/work-space-dialog.component';
 import { WorkspaceInviteDialogComponent } from '../workspace-invite-dialog/workspace-invite-dialog.component';
-import { Workspace, WorkspacePopulated, ApiError } from 'src/app/core/models';
+import { WorkspacePopulated, ApiError } from 'src/app/core/models';
 
 @Component({
   selector: 'app-work-spaces-list',
@@ -16,8 +16,11 @@ import { Workspace, WorkspacePopulated, ApiError } from 'src/app/core/models';
 })
 export class WorkspaceListComponent implements OnInit, OnDestroy {
   workSpaces: WorkspacePopulated[] = [];
+  filteredWorkSpaces: WorkspacePopulated[] = [];
+  searchTerm: string = '';
   loading = false;
   error: string | null = null;
+
   private destroy$ = new Subject<void>();
 
   constructor(
@@ -38,17 +41,16 @@ export class WorkspaceListComponent implements OnInit, OnDestroy {
   getAllWorkSpaces(): void {
     this.loading = true;
     this.error = null;
-    
+
     this.wsService.getWorkSpaces()
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (workspaces: WorkspacePopulated[]) => {
           this.workSpaces = workspaces || [];
+          this.filteredWorkSpaces = [...this.workSpaces];
           this.loading = false;
-          console.log('Workspaces loaded successfully:', this.workSpaces.length);
         },
         error: (error: ApiError) => {
-          console.error('Error fetching workspaces:', error);
           this.error = error.message || 'Failed to load workspaces';
           this.loading = false;
           this.showErrorAlert('Failed to Load', this.error);
@@ -56,17 +58,23 @@ export class WorkspaceListComponent implements OnInit, OnDestroy {
       });
   }
 
-  goToDetails(id: string): void {
-    if (id) {
-      this.router.navigate(['/workSpace-details', id]);
+  searchWorkspaces(): void {
+    const term = this.searchTerm.trim().toLowerCase();
+    if (!term) {
+      this.filteredWorkSpaces = [...this.workSpaces];
+      return;
     }
+    this.filteredWorkSpaces = this.workSpaces.filter(ws =>
+      ws.name.toLowerCase().includes(term)
+    );
   }
-  
-  goToCharts(id: string): void {
-    if (id) {
-      this.router.navigate(['/workSpace-stats', id]);
-    }
 
+  goToDetails(id: string): void {
+    if (id) this.router.navigate(['/workSpace-details', id]);
+  }
+
+  goToCharts(id: string): void {
+    if (id) this.router.navigate(['/workSpace-stats', id]);
   }
 
   openAddDialog(): void {
@@ -79,19 +87,13 @@ export class WorkspaceListComponent implements OnInit, OnDestroy {
 
     dialogRef.afterClosed()
       .pipe(takeUntil(this.destroy$))
-      .subscribe((result) => {
-        if (result) {
-          console.log('Workspace added successfully');
-          this.getAllWorkSpaces();
-        }
+      .subscribe(result => {
+        if (result) this.getAllWorkSpaces();
       });
   }
 
   openEditDialog(workspace: WorkspacePopulated): void {
-    if (!workspace || !workspace._id) {
-      console.error('Valid workspace is required for editing');
-      return;
-    }
+    if (!workspace || !workspace._id) return;
 
     const dialogRef = this.dialog.open(WorkSpaceDialogComponent, {
       width: '500px',
@@ -102,24 +104,33 @@ export class WorkspaceListComponent implements OnInit, OnDestroy {
 
     dialogRef.afterClosed()
       .pipe(takeUntil(this.destroy$))
-      .subscribe((result) => {
-        if (result) {
-          console.log('Workspace updated successfully');
-          this.getAllWorkSpaces();
-        }
+      .subscribe(result => {
+        if (result) this.getAllWorkSpaces();
       });
   }
 
+  openInviteDialog(workspace: WorkspacePopulated): void {
+    const dialogRef = this.dialog.open(WorkspaceInviteDialogComponent, {
+      width: '600px',
+      data: {
+        workspaceId: workspace._id,
+        workspaceName: workspace.name,
+        type: 'workspace',
+      },
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result?.success) this.getAllWorkSpaces();
+    });
+  }
+
   delete(id: string): void {
-    if (!id) {
-      console.error('Workspace ID is required for deletion');
-      return;
-    }
+    if (!id) return;
 
     Swal.fire({
       icon: 'warning',
       title: 'Are you sure?',
-      text: 'You won\'t be able to revert this action!',
+      text: "You won't be able to revert this action!",
       confirmButtonText: 'Yes, delete it!',
       showCancelButton: true,
       confirmButtonColor: '#d33',
@@ -135,7 +146,7 @@ export class WorkspaceListComponent implements OnInit, OnDestroy {
             throw error;
           });
       },
-    }).then((result) => {
+    }).then(result => {
       if (result.isConfirmed) {
         Swal.fire({
           icon: 'success',
@@ -146,14 +157,22 @@ export class WorkspaceListComponent implements OnInit, OnDestroy {
         });
         this.getAllWorkSpaces();
       }
-    }).catch((error: ApiError) => {
-      console.error('Error deleting workspace:', error);
-      this.showErrorAlert('Delete Failed', error.message || 'Failed to delete workspace');
     });
   }
 
   refresh(): void {
+    this.searchTerm = '';
     this.getAllWorkSpaces();
+  }
+
+  trackByWorkspaceId(index: number, workspace: WorkspacePopulated): string {
+    return workspace._id || index.toString();
+  }
+
+  getMembersTooltip(members: any[]): string {
+    if (!members || members.length === 0) return 'No members';
+    if (members.length === 1) return '1 member';
+    return `${members.length} members`;
   }
 
   private showErrorAlert(title: string, message: string): void {
@@ -164,36 +183,4 @@ export class WorkspaceListComponent implements OnInit, OnDestroy {
       confirmButtonColor: '#3085d6',
     });
   }
-
-  trackByWorkspaceId(index: number, workspace: WorkspacePopulated): string {
-    return workspace._id || index.toString();
-  }
-
-  getMembersTooltip(members: any[]): string {
-    if (!members || members.length === 0) {
-      return 'No members';
-    }
-    if (members.length === 1) {
-      return '1 member';
-    }
-    return `${members.length} members`;
-  }
-
-  openWorkspaceInviteDialog(workspace: WorkspacePopulated): void {
-    const dialogRef = this.dialog.open(WorkspaceInviteDialogComponent, {
-      width: '600px',
-      data: {
-        workspaceId: workspace._id,
-        workspaceName: workspace.name,
-        type: 'workspace'
-      },
-    });
-
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result?.success) {
-        this.refresh();
-      }
-    });
-  }
-
-};
+}
