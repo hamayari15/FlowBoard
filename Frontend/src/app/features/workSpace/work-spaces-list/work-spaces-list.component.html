@@ -117,7 +117,7 @@
         <button mat-icon-button color="primary" (click)="goToCharts(ws._id!)" [disabled]="!ws._id" matTooltip="View workspace charts">
           <mat-icon>insights</mat-icon>
         </button>
-        <button mat-icon-button color="primary" (click)="openWorkspaceInviteDialog(ws)" [disabled]="!ws._id" matTooltip="Invite members to workspace">
+        <button mat-icon-button color="primary" (click)="openInviteDialog(ws)" [disabled]="!ws._id" matTooltip="Invite members to workspace">
           <mat-icon>person_add</mat-icon>
         </button>
         <button mat-button color="primary" (click)="goToDetails(ws._id!)" [disabled]="!ws._id" matTooltip="View workspace details">

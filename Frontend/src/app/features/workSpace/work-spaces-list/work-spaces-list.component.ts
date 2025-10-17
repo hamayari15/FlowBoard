@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { Subject, takeUntil } from 'rxjs';
 import Swal from 'sweetalert2';
+
 import { WorkspaceService } from 'src/app/core/services/workspace.service';
 import { WorkSpaceDialogComponent } from '../work-space-dialog/work-space-dialog.component';
 import { WorkspaceInviteDialogComponent } from '../workspace-invite-dialog/workspace-invite-dialog.component';
@@ -16,9 +17,10 @@ import { WorkspacePopulated, ApiError } from 'src/app/core/models';
 export class WorkspaceListComponent implements OnInit, OnDestroy {
   workSpaces: WorkspacePopulated[] = [];
   filteredWorkSpaces: WorkspacePopulated[] = [];
+  searchTerm: string = '';
   loading = false;
   error: string | null = null;
-  searchTerm = '';
+
   private destroy$ = new Subject<void>();
 
   constructor(
@@ -39,8 +41,8 @@ export class WorkspaceListComponent implements OnInit, OnDestroy {
   getAllWorkSpaces(): void {
     this.loading = true;
     this.error = null;
-    this.wsService
-      .getWorkSpaces()
+
+    this.wsService.getWorkSpaces()
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (workspaces: WorkspacePopulated[]) => {
@@ -83,13 +85,16 @@ export class WorkspaceListComponent implements OnInit, OnDestroy {
       disableClose: true,
     });
 
-    dialogRef.afterClosed().pipe(takeUntil(this.destroy$)).subscribe(result => {
-      if (result) this.getAllWorkSpaces();
-    });
+    dialogRef.afterClosed()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(result => {
+        if (result) this.getAllWorkSpaces();
+      });
   }
 
   openEditDialog(workspace: WorkspacePopulated): void {
     if (!workspace || !workspace._id) return;
+
     const dialogRef = this.dialog.open(WorkSpaceDialogComponent, {
       width: '500px',
       maxWidth: '90vw',
@@ -97,17 +102,35 @@ export class WorkspaceListComponent implements OnInit, OnDestroy {
       disableClose: true,
     });
 
-    dialogRef.afterClosed().pipe(takeUntil(this.destroy$)).subscribe(result => {
-      if (result) this.getAllWorkSpaces();
+    dialogRef.afterClosed()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(result => {
+        if (result) this.getAllWorkSpaces();
+      });
+  }
+
+  openInviteDialog(workspace: WorkspacePopulated): void {
+    const dialogRef = this.dialog.open(WorkspaceInviteDialogComponent, {
+      width: '600px',
+      data: {
+        workspaceId: workspace._id,
+        workspaceName: workspace.name,
+        type: 'workspace',
+      },
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result?.success) this.getAllWorkSpaces();
     });
   }
 
   delete(id: string): void {
     if (!id) return;
+
     Swal.fire({
       icon: 'warning',
       title: 'Are you sure?',
-      text: 'You won\'t be able to revert this action!',
+      text: "You won't be able to revert this action!",
       confirmButtonText: 'Yes, delete it!',
       showCancelButton: true,
       confirmButtonColor: '#d33',
@@ -134,23 +157,12 @@ export class WorkspaceListComponent implements OnInit, OnDestroy {
         });
         this.getAllWorkSpaces();
       }
-    }).catch((error: ApiError) => {
-      this.showErrorAlert('Delete Failed', error.message || 'Failed to delete workspace');
     });
   }
 
   refresh(): void {
     this.searchTerm = '';
     this.getAllWorkSpaces();
-  }
-
-  private showErrorAlert(title: string, message: string): void {
-    Swal.fire({
-      icon: 'error',
-      title,
-      text: message,
-      confirmButtonColor: '#3085d6',
-    });
   }
 
   trackByWorkspaceId(index: number, workspace: WorkspacePopulated): string {
@@ -163,18 +175,12 @@ export class WorkspaceListComponent implements OnInit, OnDestroy {
     return `${members.length} members`;
   }
 
-  openWorkspaceInviteDialog(workspace: WorkspacePopulated): void {
-    const dialogRef = this.dialog.open(WorkspaceInviteDialogComponent, {
-      width: '600px',
-      data: {
-        workspaceId: workspace._id,
-        workspaceName: workspace.name,
-        type: 'workspace',
-      },
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (result?.success) this.refresh();
+  private showErrorAlert(title: string, message: string): void {
+    Swal.fire({
+      icon: 'error',
+      title,
+      text: message,
+      confirmButtonColor: '#3085d6',
     });
   }
 }

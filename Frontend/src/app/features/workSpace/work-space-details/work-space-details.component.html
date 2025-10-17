@@ -1,47 +1,47 @@
 <div class="workspace-details-container">
   <mat-card class="workspace-header-card" *ngIf="!loading">
-    <mat-card-header>
-      <div mat-card-avatar class="workspace-avatar">
-        <mat-icon>work</mat-icon>
-      </div>
+  <mat-card-header class="workspace-header">
+    <div mat-card-avatar class="workspace-avatar">
+      <mat-icon>work</mat-icon>
+    </div>
+    <div class="workspace-title-section">
       <mat-card-title>{{ workSpaceData.name }}</mat-card-title>
-      <mat-card-subtitle>Workspace Details</mat-card-subtitle>
-    </mat-card-header>
-    <mat-card-content>
-      <div class="workspace-info">
-        <div class="info-item">
-          <mat-icon>description</mat-icon>
-          <span>{{
-            workSpaceData.description || "No description provided"
-          }}</span>
-        </div>
-        <div class="info-item" *ngIf="workSpaceData.owner">
-          <mat-icon>person</mat-icon>
-          <span
-            >{{ workSpaceData.owner?.firstName }} {{ workSpaceData.owner?.lastName }} ({{
-              workSpaceData.owner?.email
-            }})</span
-          >
-        </div>
-        <div class="info-item" *ngIf="workSpaceData.createdAt">
-          <mat-icon>schedule</mat-icon>
-          <span>Created: {{ workSpaceData.createdAt | date : "medium" }}</span>
-        </div>
-        <div class="info-item">
-          <mat-icon>group</mat-icon>
-          <span>{{ workSpaceData.members?.length || 0 }} Members</span>
-          <button 
-            mat-icon-button 
-            color="primary" 
-            matTooltip="Invite members to workspace"
-            (click)="openWorkspaceInviteDialog()"
-            class="invite-button">
-            <mat-icon>person_add</mat-icon>
-          </button>
-        </div>
-      </div>
-    </mat-card-content>
-  </mat-card>
+      <mat-card-subtitle>{{ workSpaceData.description || 'No description provided' }}</mat-card-subtitle>
+    </div>
+    <div class="workspace-header-actions">
+      <button mat-icon-button color="primary" (click)="goToCharts(workSpaceData._id!)" [disabled]="!workSpaceData._id" matTooltip="View workspace charts">
+        <mat-icon>insights</mat-icon>
+      </button>
+      <button mat-icon-button color="primary" (click)="openWorkspaceInviteDialog()" [disabled]="!workSpaceData._id" matTooltip="Invite members to workspace">
+        <mat-icon>person_add</mat-icon>
+      </button>
+      <button mat-button color="accent" (click)="openEditWorkspaceDialog(workSpaceData)" [disabled]="!workSpaceData._id" matTooltip="Edit workspace">
+          <mat-icon>edit</mat-icon>
+          Edit
+        </button>
+      <button mat-button color="warn" (click)="deleteWorkspace(workSpaceData._id!)" [disabled]="!workSpaceData._id" matTooltip="Delete workspace">
+          <mat-icon>delete</mat-icon>
+          Delete
+        </button>
+    </div>
+  </mat-card-header>
+
+  <mat-card-content class="workspace-info">
+    <div class="info-item" *ngIf="workSpaceData.owner">
+      <mat-icon>person</mat-icon>
+      <span>{{ workSpaceData.owner.firstName }} {{ workSpaceData.owner.lastName }} ({{ workSpaceData.owner.email }})</span>
+    </div>
+    <div class="info-item">
+      <mat-icon>group</mat-icon>
+      <span>{{ workSpaceData.members?.length || 0 }} Members</span>
+    </div>
+    <div class="info-item" *ngIf="workSpaceData.createdAt">
+      <mat-icon>schedule</mat-icon>
+      <span>Created: {{ workSpaceData.createdAt | date:'medium' }}</span>
+    </div>
+  </mat-card-content>
+</mat-card>
+
 
   <mat-card class="workspace-header-card" *ngIf="loading">
     <mat-card-header>
