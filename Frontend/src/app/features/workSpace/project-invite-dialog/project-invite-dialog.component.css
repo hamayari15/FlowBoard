@@ -1,274 +1,186 @@
 .invite-dialog-container {
+  padding: 0;
+  margin: 0;
   min-width: 500px;
   max-width: 600px;
-  padding: 0;
-  overflow: hidden;
+}
+
+.dialog-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 24px 24px 16px;
+  margin: 0;
+  font-size: 24px;
+  font-weight: 600;
+  color: #333;
+  border-bottom: 1px solid #e0e0e0;
+  background: linear-gradient(135deg, #f8f9ff 0%, #e6f2ff 100%);
+}
+
+.dialog-title mat-icon {
+  color: #667eea;
+  font-size: 28px;
+  height: 28px;
+  width: 28px;
+}
+
+.dialog-content {
+  padding: 24px;
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+.intro-text {
+  background: #f0f4ff;
+  padding: 16px;
+  border-radius: 8px;
+  margin-bottom: 24px;
+  border-left: 4px solid #667eea;
+}
+
+.intro-text p {
+  margin: 0;
+  color: #555;
+  line-height: 1.5;
 }
 
 .invite-form {
   display: flex;
   flex-direction: column;
   gap: 24px;
-  padding: 24px;
 }
 
-/* Header Styles */
-.dialog-header {
-  text-align: center;
-  margin-bottom: 8px;
-}
-
-.dialog-title {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  margin: 0 0 8px 0;
-  font-size: 24px;
-  font-weight: 500;
+.emails-section h3,
+.message-section h3 {
   color: #333;
-}
-
-.header-icon {
-  color: #667eea;
-  font-size: 28px;
-}
-
-.dialog-subtitle {
-  color: #666;
-  margin: 0;
-  font-size: 14px;
-  line-height: 1.4;
-}
-
-/* Section Styles */
-.section-header h3 {
-  margin: 0 0 4px 0;
   font-size: 16px;
-  font-weight: 500;
-  color: #333;
-}
-
-.section-description {
+  font-weight: 600;
   margin: 0 0 16px 0;
-  font-size: 12px;
-  color: #666;
-}
-
-/* Email Fields */
-.emails-section {
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  padding: 20px;
-  background-color: #fafafa;
 }
 
 .emails-container {
-  margin-bottom: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
-.email-field-container {
+.email-row {
   display: flex;
   align-items: flex-start;
   gap: 8px;
-  margin-bottom: 16px;
 }
 
 .email-field {
   flex: 1;
-  background-color: white;
 }
 
-.email-field.error input {
-  border-color: #f44336;
-}
-
-.remove-email-btn {
+.remove-btn {
   margin-top: 8px;
-  color: #f44336;
-}
-
-.remove-email-btn:disabled {
-  color: #ccc;
+  width: 40px;
+  height: 40px;
 }
 
 .add-email-btn {
-  width: 100%;
-  padding: 12px;
-  border: 2px dashed #667eea;
+  align-self: flex-start;
+  margin-top: 8px;
   color: #667eea;
-  background-color: transparent;
-  border-radius: 6px;
-  transition: all 0.2s ease;
+  border-color: #667eea;
 }
 
-.add-email-btn:hover:not([disabled]) {
-  background-color: rgba(102, 126, 234, 0.05);
-  border-color: #5a67d8;
+.add-email-btn:hover {
+  background: #f0f4ff;
 }
 
-.add-email-btn:disabled {
-  border-color: #ccc;
-  color: #ccc;
+.message-section {
+  border-top: 1px solid #e0e0e0;
+  padding-top: 16px;
 }
 
-/* Message Section */
-.message-section h3 {
-  margin: 0 0 16px 0;
-  font-size: 16px;
-  font-weight: 500;
-  color: #333;
-}
-
-.message-field {
-  width: 100%;
-}
-
-/* Preview Section */
-.preview-section h3 {
-  margin: 0 0 16px 0;
-  font-size: 16px;
-  font-weight: 500;
-  color: #333;
-}
-
-.preview-card {
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
+.preview-section {
+  background: #f8fff8;
   padding: 16px;
-  background-color: #f8f9ff;
-  border-left: 4px solid #667eea;
+  border-radius: 8px;
+  border-left: 4px solid #46A049;
 }
 
-.preview-header {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 12px;
-  font-weight: 500;
-  color: #667eea;
-}
-
-.preview-emails {
-  margin-bottom: 12px;
-}
-
-.preview-emails mat-chip-set {
-  gap: 6px;
-}
-
-.preview-emails mat-chip {
-  font-size: 12px;
-  background-color: rgba(102, 126, 234, 0.1);
-  color: #667eea;
-}
-
-.preview-message strong {
-  color: #333;
+.preview-section h4 {
+  color: #46A049;
+  margin: 0 0 12px 0;
   font-size: 14px;
+  font-weight: 600;
 }
 
-.preview-message p {
-  margin: 4px 0 0 0;
-  font-style: italic;
-  color: #666;
-  font-size: 13px;
-  line-height: 1.4;
+.email-chips {
+  max-height: 120px;
+  overflow-y: auto;
 }
 
-/* Dialog Actions */
+.email-chip {
+  margin: 4px;
+  background: #e3f2fd !important;
+  color: #1976d2;
+}
+
+.full-width {
+  width: 100%;
+}
+
 .dialog-actions {
-  margin: 8px 0 0 0;
-  padding: 0;
+  padding: 16px 24px 24px;
+  border-top: 1px solid #e0e0e0;
+  margin: 0;
   gap: 12px;
 }
 
-.cancel-btn {
-  color: #666;
-  min-width: 80px;
+.dialog-actions button {
+  min-width: 100px;
+  height: 40px;
 }
 
-.send-btn {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  min-width: 140px;
-  padding: 0 24px;
-  height: 44px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
+.invite-button {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  color: white !important;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
 }
 
-.send-btn:disabled {
-  background: #ccc;
-  color: #999;
+.invite-button:hover {
+  box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);
+  transform: translateY(-1px);
 }
 
-.send-btn mat-spinner {
-  margin-right: 4px;
+.invite-button[disabled] {
+  background: #ccc !important;
+  color: #999 !important;
+  box-shadow: none !important;
 }
 
-/* Responsive Design */
+.mat-mdc-form-field-outline {
+  border-radius: 8px;
+}
+
 @media (max-width: 600px) {
   .invite-dialog-container {
-    min-width: 300px;
-    max-width: 90vw;
+    min-width: unset;
+    width: 100%;
   }
   
-  .invite-form {
+  .dialog-content {
     padding: 16px;
-    gap: 20px;
   }
   
   .dialog-title {
     font-size: 20px;
+    padding: 20px 16px 12px;
   }
   
-  .email-field-container {
+  .email-row {
     flex-direction: column;
     align-items: stretch;
   }
   
-  .remove-email-btn {
+  .remove-btn {
     align-self: flex-end;
     margin-top: 4px;
   }
-  
-  .dialog-actions {
-    flex-direction: column-reverse;
-    gap: 8px;
-  }
-  
-  .cancel-btn,
-  .send-btn {
-    width: 100%;
-  }
-}
-
-/* Animation for smooth transitions */
-.email-field-container {
-  animation: slideIn 0.2s ease-out;
-}
-
-@keyframes slideIn {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Focus states */
-.email-field input:focus {
-  outline: none;
-}
-
-.add-email-btn:focus,
-.send-btn:focus,
-.cancel-btn:focus {
-  outline: 2px solid #667eea;
-  outline-offset: 2px;
 }
