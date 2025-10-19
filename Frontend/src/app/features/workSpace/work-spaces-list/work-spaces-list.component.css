@@ -30,7 +30,7 @@
   margin: 0;
   font-size: 1.5rem;
   font-weight: 600;
-  color: #4d4d4d;
+  color: #5a5a5a;
 }
 
 .workspace-count {
@@ -117,8 +117,8 @@
 }
 
 .card-header {
-  background: hsl(202, 36%, 96%);
   padding: auto auto 0 auto;
+  background: hsl(193, 43%, 96%);
   line-break: anywhere;
 }
 
@@ -185,14 +185,17 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0.8rem 1rem;
+  padding: 0.6rem;
 }
 
 .card-actions button {
   font-weight: 500;
-  transition: background 0.3s ease;
 }
 
-.card-actions button:hover {
-  background: rgba(25, 118, 210, 0.1);
+.card-actions .edit-btn {
+  color: green;
+}
+
+.card-actions .insight-btn {
+  color: orange;
 }

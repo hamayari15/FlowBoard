@@ -21,8 +21,10 @@ export class WorkSpaceDetailsComponent implements OnInit {
   workSpaceId: string = '';
   workSpaceData: any = {};
   projects: ProjectPopulated[] = [];
+  filteredProjects: ProjectPopulated[] = [];
   loading = true;
   loadingProjects = true;
+  searchTerm: string = '';
 
   displayedColumns: string[] = [
     'name',
@@ -33,7 +35,13 @@ export class WorkSpaceDetailsComponent implements OnInit {
     'actions',
   ];
 
-  constructor(private route: ActivatedRoute, private router: Router, private wsService: WorkspaceService, private projectService: ProjectService, private dialog: MatDialog) {}
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private wsService: WorkspaceService,
+    private projectService: ProjectService,
+    private dialog: MatDialog
+  ) {}
 
   ngOnInit(): void {
     this.workSpaceId = this.route.snapshot.paramMap.get('id') || '';
@@ -48,7 +56,6 @@ export class WorkSpaceDetailsComponent implements OnInit {
     this.wsService.getWorkSpaceById(workSpaceId).subscribe({
       next: (data: any) => {
         this.workSpaceData = data;
-        console.log('Workspace data:', this.workSpaceData);
         this.loading = false;
       },
       error: (error) => {
@@ -57,6 +64,10 @@ export class WorkSpaceDetailsComponent implements OnInit {
         Swal.fire('Error', 'Failed to load workspace details', 'error');
       },
     });
+  }
+
+  goBackToWorkspaces() {
+    this.router.navigate(['/workSpaces-list']);
   }
 
   goToCharts(id: string): void {
@@ -111,6 +122,7 @@ export class WorkSpaceDetailsComponent implements OnInit {
         this.wsService.deleteWorkSpace(this.workSpaceId).subscribe({
           next: () => {
             Swal.fire('Deleted!', 'Workspace has been deleted.', 'success');
+            this.goBackToWorkspaces();
           },
           error: () => {
             Swal.fire('Error', 'Failed to delete workspace', 'error');
@@ -125,7 +137,7 @@ export class WorkSpaceDetailsComponent implements OnInit {
     this.projectService.getProjectsByWorkspace(workspaceId).subscribe({
       next: (projects: ProjectPopulated[]) => {
         this.projects = projects;
-        console.log(this.projects)
+        this.filteredProjects = projects;
         this.loadingProjects = false;
       },
       error: (error) => {
@@ -136,11 +148,15 @@ export class WorkSpaceDetailsComponent implements OnInit {
     });
   }
 
+  searchProjects() {
+    const term = this.searchTerm.toLowerCase();
+    this.filteredProjects = this.projects.filter(project =>
+      project.name.toLowerCase().includes(term)
+    );
+  }
+
   goToDetails(id: string): void {
-    if (!id) {
-      console.error('Project ID is required');
-      return;
-    }
+    if (!id) return;
     this.router.navigate(['/project-details', id]);
   }
 
@@ -155,9 +171,7 @@ export class WorkSpaceDetailsComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        this.refreshProjects();
-      }
+      if (result) this.refreshProjects();
     });
   }
 
@@ -172,9 +186,7 @@ export class WorkSpaceDetailsComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        this.refreshProjects();
-      }
+      if (result) this.refreshProjects();
     });
   }
 
@@ -203,9 +215,7 @@ export class WorkSpaceDetailsComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      if (result?.success) {
-        this.refreshProjects();
-      }
+      if (result?.success) this.refreshProjects();
     });
   }
 
@@ -229,8 +239,7 @@ export class WorkSpaceDetailsComponent implements OnInit {
             Swal.fire('Archived!', 'Project has been archived.', 'success');
             this.refreshProjects();
           },
-          error: (error) => {
-            console.error('Error archiving project:', error);
+          error: () => {
             Swal.fire('Error', 'Failed to archive project', 'error');
           },
         });
@@ -242,7 +251,7 @@ export class WorkSpaceDetailsComponent implements OnInit {
     Swal.fire({
       icon: 'warning',
       title: 'Are you sure?',
-      text: 'You wont be able to revert this !',
+      text: 'You wont be able to revert this!',
       confirmButtonText: 'Yes, delete it!',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
@@ -255,8 +264,7 @@ export class WorkSpaceDetailsComponent implements OnInit {
             Swal.fire('Deleted!', 'Project has been deleted.', 'success');
             this.refreshProjects();
           },
-          error: (error) => {
-            console.error('Error deleting project:', error);
+          error: () => {
             Swal.fire('Error', 'Failed to delete project', 'error');
           },
         });
@@ -266,10 +274,6 @@ export class WorkSpaceDetailsComponent implements OnInit {
 
   refreshProjects() {
     this.getProjectsByWorkspace(this.workSpaceId);
-  }
-
-  goBackToWorkspaces() {
-    this.router.navigate(['/workSpaces-list']);
   }
 
   refreshData() {
