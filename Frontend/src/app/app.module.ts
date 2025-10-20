@@ -30,6 +30,8 @@ import { MatListModule } from '@angular/material/list';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+
 
 // Application Components
 import { AppComponent } from './app.component';
@@ -55,6 +57,7 @@ import { TaskDialogComponent } from './features/board/task-dialog/task-dialog.co
 import { TaskDetailDialogComponent } from './features/board/task-detail-dialog/task-detail-dialog.component';
 import { EditCommentDialogComponent } from './features/edit-comment-dialog/edit-comment-dialog.component';
 import { WorkSpaceStatsComponent } from './features/workSpace/work-space-stats/work-space-stats.component';
+import { PageNotFoundComponent } from './features/page-not-found/page-not-found.component';
 
 @NgModule({
   declarations: [
@@ -67,19 +70,20 @@ import { WorkSpaceStatsComponent } from './features/workSpace/work-space-stats/w
     LoginComponent,
     FooterComponent,
     WorkspaceListComponent,
-    WorkSpaceDetailsComponent,
     WorkSpaceDialogComponent,
+    WorkSpaceDetailsComponent,
+    ProjectDetailsComponent,
     ProjectDialogComponent,
     WorkspaceInviteDialogComponent,
     ProjectInviteDialogComponent,
     BoardComponent,
-    ProjectDetailsComponent,
     BoardDialogComponent,
     BoardViewComponent,
     TaskDialogComponent,
     TaskDetailDialogComponent,
     EditCommentDialogComponent,
-    WorkSpaceStatsComponent
+    WorkSpaceStatsComponent,
+    PageNotFoundComponent
   ],
   imports: [
     // Angular Core Modules
@@ -116,6 +120,7 @@ import { WorkSpaceStatsComponent } from './features/workSpace/work-space-stats/w
     MatDatepickerModule,
     MatNativeDateModule,
     DragDropModule,
+    MatButtonToggleModule
   ],
   providers: [],
   bootstrap: [AppComponent],

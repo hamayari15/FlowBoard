@@ -25,6 +25,7 @@ export class WorkSpaceDetailsComponent implements OnInit {
   loading = true;
   loadingProjects = true;
   searchTerm: string = '';
+  archiveFilter: 'all' | 'archived' | 'active' = 'all';
 
   displayedColumns: string[] = [
     'name',
@@ -58,8 +59,7 @@ export class WorkSpaceDetailsComponent implements OnInit {
         this.workSpaceData = data;
         this.loading = false;
       },
-      error: (error) => {
-        console.error('Error fetching workspace:', error);
+      error: () => {
         this.loading = false;
         Swal.fire('Error', 'Failed to load workspace details', 'error');
       },
@@ -70,13 +70,12 @@ export class WorkSpaceDetailsComponent implements OnInit {
     this.router.navigate(['/workSpaces-list']);
   }
 
-  goToCharts(id: string): void {
+  goToCharts(id: string) {
     if (id) this.router.navigate(['/workSpace-stats', id]);
   }
 
-  openEditWorkspaceDialog(workspace: WorkspacePopulated): void {
-    if (!workspace || !workspace._id) return;
-
+  openEditWorkspaceDialog(workspace: WorkspacePopulated) {
+    if (!workspace?._id) return;
     const dialogRef = this.dialog.open(WorkSpaceDialogComponent, {
       width: '500px',
       maxWidth: '90vw',
@@ -99,10 +98,8 @@ export class WorkSpaceDetailsComponent implements OnInit {
       },
     });
 
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result?.success) {
-        this.getWorkSpaceById(this.workSpaceId);
-      }
+    dialogRef.afterClosed().subscribe(result => {
+      if (result?.success) this.getWorkSpaceById(this.workSpaceId);
     });
   }
 
@@ -118,15 +115,13 @@ export class WorkSpaceDetailsComponent implements OnInit {
       cancelButtonColor: '#3085d6',
       reverseButtons: true,
     }).then(result => {
-      if (result.isConfirmed && this.workSpaceId) {
+      if (result.isConfirmed) {
         this.wsService.deleteWorkSpace(this.workSpaceId).subscribe({
           next: () => {
             Swal.fire('Deleted!', 'Workspace has been deleted.', 'success');
             this.goBackToWorkspaces();
           },
-          error: () => {
-            Swal.fire('Error', 'Failed to delete workspace', 'error');
-          },
+          error: () => Swal.fire('Error', 'Failed to delete workspace', 'error')
         });
       }
     });
@@ -137,11 +132,10 @@ export class WorkSpaceDetailsComponent implements OnInit {
     this.projectService.getProjectsByWorkspace(workspaceId).subscribe({
       next: (projects: ProjectPopulated[]) => {
         this.projects = projects;
-        this.filteredProjects = projects;
+        this.applyFilters();
         this.loadingProjects = false;
       },
-      error: (error) => {
-        console.error('Error fetching projects:', error);
+      error: () => {
         this.loadingProjects = false;
         Swal.fire('Error', 'Failed to load projects', 'error');
       },
@@ -149,13 +143,27 @@ export class WorkSpaceDetailsComponent implements OnInit {
   }
 
   searchProjects() {
-    const term = this.searchTerm.toLowerCase();
-    this.filteredProjects = this.projects.filter(project =>
-      project.name.toLowerCase().includes(term)
-    );
+    this.applyFilters();
   }
 
-  goToDetails(id: string): void {
+  applyFilters() {
+    const term = this.searchTerm.toLowerCase();
+    this.filteredProjects = this.projects.filter(project => {
+      const matchesSearch = project.name.toLowerCase().includes(term);
+      const matchesArchive =
+        this.archiveFilter === 'all' ||
+        (this.archiveFilter === 'archived' && project.isArchived) ||
+        (this.archiveFilter === 'active' && !project.isArchived);
+      return matchesSearch && matchesArchive;
+    });
+  }
+
+  setArchiveFilter(filter: 'all' | 'archived' | 'active') {
+    this.archiveFilter = filter;
+    this.applyFilters();
+  }
+
+  goToDetails(id: string) {
     if (!id) return;
     this.router.navigate(['/project-details', id]);
   }
@@ -163,64 +171,38 @@ export class WorkSpaceDetailsComponent implements OnInit {
   openAddProjectDialog() {
     const dialogRef = this.dialog.open(ProjectDialogComponent, {
       width: '550px',
-      data: {
-        mode: 'add',
-        workspaceId: this.workSpaceId,
-        project: null,
-      },
+      data: { mode: 'add', workspaceId: this.workSpaceId, project: null },
     });
-
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result) this.refreshProjects();
-    });
+    dialogRef.afterClosed().subscribe(result => { if (result) this.refreshProjects(); });
   }
 
   openEditProjectDialog(project: ProjectPopulated) {
     const dialogRef = this.dialog.open(ProjectDialogComponent, {
       width: '550px',
-      data: {
-        mode: 'edit',
-        workspaceId: this.workSpaceId,
-        project: project,
-      },
+      data: { mode: 'edit', workspaceId: this.workSpaceId, project },
     });
-
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result) this.refreshProjects();
-    });
+    dialogRef.afterClosed().subscribe(result => { if (result) this.refreshProjects(); });
   }
 
-  getStatusColor(status: string): string {
+  getStatusColor(status: string) {
     switch (status) {
-      case 'active':
-        return '#4caf50';
-      case 'completed':
-        return '#2196f3';
-      case 'on-hold':
-        return '#ff9800';
-      default:
-        return '#757575';
+      case 'active': return '#4caf50';
+      case 'completed': return '#2196f3';
+      case 'on-hold': return '#ff9800';
+      default: return '#757575';
     }
   }
 
   openProjectInviteDialog(project: ProjectPopulated) {
     const dialogRef = this.dialog.open(ProjectInviteDialogComponent, {
       width: '600px',
-      data: {
-        projectId: project._id,
-        projectName: project.name,
-        workspaceName: this.workSpaceData.name,
-        type: 'project'
-      },
+      data: { projectId: project._id, projectName: project.name, workspaceName: this.workSpaceData.name, type: 'project' },
     });
-
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result?.success) this.refreshProjects();
-    });
+    dialogRef.afterClosed().subscribe(result => { if (result?.success) this.refreshProjects(); });
   }
 
-  getMembersCount(project: ProjectPopulated): number {
-    return project.members ? project.members.length : 0;
+  getMembersCount(project: ProjectPopulated) {
+    return project.members?.length || 0;
   }
 
   archiveProject(project: ProjectPopulated) {
@@ -232,16 +214,11 @@ export class WorkSpaceDetailsComponent implements OnInit {
       confirmButtonColor: '#ff9800',
       cancelButtonColor: '#3085d6',
       confirmButtonText: 'Yes, archive it!',
-    }).then((result) => {
+    }).then(result => {
       if (result.isConfirmed && project._id) {
         this.projectService.archiveProject(project._id).subscribe({
-          next: () => {
-            Swal.fire('Archived!', 'Project has been archived.', 'success');
-            this.refreshProjects();
-          },
-          error: () => {
-            Swal.fire('Error', 'Failed to archive project', 'error');
-          },
+          next: () => { Swal.fire('Archived!', 'Project has been archived.', 'success'); this.refreshProjects(); },
+          error: () => Swal.fire('Error', 'Failed to archive project', 'error')
         });
       }
     });
@@ -257,16 +234,11 @@ export class WorkSpaceDetailsComponent implements OnInit {
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
       reverseButtons: true
-    }).then((result) => {
+    }).then(result => {
       if (result.isConfirmed && project._id) {
         this.projectService.deleteProject(project._id).subscribe({
-          next: () => {
-            Swal.fire('Deleted!', 'Project has been deleted.', 'success');
-            this.refreshProjects();
-          },
-          error: () => {
-            Swal.fire('Error', 'Failed to delete project', 'error');
-          },
+          next: () => { Swal.fire('Deleted!', 'Project has been deleted.', 'success'); this.refreshProjects(); },
+          error: () => Swal.fire('Error', 'Failed to delete project', 'error')
         });
       }
     });
@@ -281,4 +253,4 @@ export class WorkSpaceDetailsComponent implements OnInit {
     this.refreshProjects();
   }
 
-};
+}

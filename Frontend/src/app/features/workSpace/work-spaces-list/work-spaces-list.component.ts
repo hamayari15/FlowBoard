@@ -15,6 +15,7 @@ import { WorkspacePopulated, ApiError } from 'src/app/core/models';
   styleUrls: ['./work-spaces-list.component.css'],
 })
 export class WorkspaceListComponent implements OnInit, OnDestroy {
+  
   workSpaces: WorkspacePopulated[] = [];
   filteredWorkSpaces: WorkspacePopulated[] = [];
   searchTerm: string = '';
@@ -151,7 +152,7 @@ export class WorkspaceListComponent implements OnInit, OnDestroy {
         Swal.fire({
           icon: 'success',
           title: 'Deleted!',
-          text: 'Workspace has been deleted successfully.',
+          text: 'Your workspace has been deleted successfully.',
           timer: 2000,
           showConfirmButton: false,
         });

@@ -13,6 +13,7 @@ import { WorkSpaceDetailsComponent } from './features/workSpace/work-space-detai
 import { ProjectDetailsComponent } from './features/workSpace/project-details/project-details.component';
 import { WorkSpaceStatsComponent } from './features/workSpace/work-space-stats/work-space-stats.component';
 import { BoardViewComponent } from './features/board/board-view.component';
+import { PageNotFoundComponent } from './features/page-not-found/page-not-found.component';
 
 const routes: Routes = [
 
@@ -30,6 +31,8 @@ const routes: Routes = [
     { path: 'project-details/:id', component: ProjectDetailsComponent, canActivate:[UserGuard]},
     { path: 'workSpace-stats/:id', component: WorkSpaceStatsComponent, canActivate:[UserGuard]},
     { path: 'board/:boardId', component: BoardViewComponent, canActivate:[UserGuard]},
+
+    {path: '**', component: PageNotFoundComponent}
     
 ];
 
