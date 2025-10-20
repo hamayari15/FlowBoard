@@ -311,8 +311,7 @@ exports.getByWorkspace = async (req, res) => {
   try {
     const workspaceId = req.params.workspaceId;
     const projects = await Project.find({
-      workspace: workspaceId,
-      isArchived: false,
+      workspace: workspaceId    
     })
     .populate("owner", "name email")
     .populate("members", "name email");

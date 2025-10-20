@@ -59,21 +59,17 @@
     <div class="projects-header-second-line">
       <mat-form-field appearance="outline" class="search-field">
         <mat-label>Search project</mat-label>
-        <input
-          matInput
-          [(ngModel)]="searchTerm"
-          (input)="searchProjects()"
-          placeholder="Enter project name"
-        />
-        <button
-          mat-icon-button
-          matSuffix
-          *ngIf="searchTerm"
-          (click)="searchTerm=''; searchProjects()"
-        >
+        <input matInput [(ngModel)]="searchTerm" (input)="searchProjects()" placeholder="Enter project name" />
+        <button mat-icon-button matSuffix *ngIf="searchTerm" (click)="searchTerm=''; searchProjects()">
           <mat-icon>close</mat-icon>
         </button>
       </mat-form-field>
+
+      <mat-button-toggle-group class="filter" [(ngModel)]="archiveFilter" (change)="setArchiveFilter(archiveFilter)" aria-label="Project Archive Filter">
+        <mat-button-toggle value="all">All</mat-button-toggle>
+        <mat-button-toggle value="active">Active</mat-button-toggle>
+        <mat-button-toggle value="archived">Archived</mat-button-toggle>
+      </mat-button-toggle-group>
 
       <button mat-icon-button color="primary" class="refresh" matTooltip="Refresh projects" (click)="refreshProjects()" [disabled]="loadingProjects">
         <mat-icon>refresh</mat-icon>
@@ -122,6 +118,10 @@
           <button mat-button class="edit-btn" (click)="openEditProjectDialog(project)" matTooltip="Edit project">
             <mat-icon>edit</mat-icon>
             Edit
+          </button>
+          <button mat-button class="archive-btn" (click)="archiveProject(project)" matTooltip="Archive project">
+            <mat-icon>archive</mat-icon>
+            Archive
           </button>
           <button mat-button color="warn" (click)="deleteProject(project)" matTooltip="Delete project">
             <mat-icon>delete</mat-icon>

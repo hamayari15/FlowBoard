@@ -30,6 +30,8 @@ import { MatListModule } from '@angular/material/list';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+
 
 // Application Components
 import { AppComponent } from './app.component';
@@ -67,13 +69,13 @@ import { WorkSpaceStatsComponent } from './features/workSpace/work-space-stats/w
     LoginComponent,
     FooterComponent,
     WorkspaceListComponent,
-    WorkSpaceDetailsComponent,
     WorkSpaceDialogComponent,
+    WorkSpaceDetailsComponent,
+    ProjectDetailsComponent,
     ProjectDialogComponent,
     WorkspaceInviteDialogComponent,
     ProjectInviteDialogComponent,
     BoardComponent,
-    ProjectDetailsComponent,
     BoardDialogComponent,
     BoardViewComponent,
     TaskDialogComponent,
@@ -116,6 +118,7 @@ import { WorkSpaceStatsComponent } from './features/workSpace/work-space-stats/w
     MatDatepickerModule,
     MatNativeDateModule,
     DragDropModule,
+    MatButtonToggleModule
   ],
   providers: [],
   bootstrap: [AppComponent],
