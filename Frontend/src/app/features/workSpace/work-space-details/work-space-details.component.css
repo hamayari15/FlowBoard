@@ -67,67 +67,57 @@
   overflow: hidden;
   background-color: #fff;
   margin-bottom: 1.5rem;
+  padding: 0.8rem 1.2rem;
 }
 
-.projects-section-card .header-section {
+.projects-header-first-line {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.6rem 1.25rem;
-  flex-wrap: wrap;
-  justify-content: space-between;
+  margin-bottom: 0.8rem;
 }
 
-.projects-section-card .title-section {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  flex-shrink: 0;
-}
-
-.projects-section-card .header-icon {
-  color: #1976d2;
-}
-
-.projects-section-card .title-section h1 {
-  margin: 0;
+.projects-header-first-line h1 {
   font-size: 1.5rem;
   font-weight: 600;
-  color: #4d4d4d;
+  margin: 0;
+  color: #5a5a5a;
 }
 
-.projects-section-card .workspace-count {
+.projects-header-first-line .workspace-count {
   font-size: 1.2rem;
   color: #817f7f;
-  margin-right: 8px;
 }
 
-.projects-section-card .header-actions {
+.projects-header-second-line {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  flex: 1;
-  min-width: 250px;
   flex-wrap: wrap;
 }
 
-.projects-section-card .search-field {
+.projects-header-second-line .search-field {
   flex: 1;
-  margin-top: 24px;
+  min-width: 180px;
 }
 
-.projects-section-card .add-button {
+.projects-header-second-line .refresh, 
+.projects-header-second-line .add-button {
+  margin-top: -24px;
+}
+
+.projects-header-second-line .add-button {
   display: flex;
   align-items: center;
   font-weight: 500;
-  height: 40px;
+  height: 45px;
 }
 
 .projects-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 20px;
-  padding: 1rem;
+  padding: 16px 0;
 }
 
 .project-card {
@@ -150,7 +140,7 @@
   display: flex;
   align-items: center;
   gap: 1rem;
-  margin-bottom: 0.6rem;
+  margin-bottom: 0.5rem;
 }
 
 .project-avatar {
@@ -238,23 +228,19 @@
     grid-template-columns: 1fr;
   }
 
-  .projects-section-card .header-section {
+  .projects-header-first-line {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .projects-header-second-line {
     flex-direction: column;
-    align-items: flex-start;
+    align-items: stretch;
   }
 
-  .projects-section-card .header-actions {
+  .projects-header-second-line .search-field,
+  .projects-header-second-line .add-button,
+  .projects-header-second-line button {
     width: 100%;
-  }
-
-  .projects-section-card .search-field {
-    width: 100%;
-    max-width: 100%;
-    margin-top: 8px;
-  }
-
-  .projects-section-card .add-button {
-    width: 100%;
-    justify-content: center;
   }
 }

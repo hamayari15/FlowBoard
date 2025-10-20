@@ -1,0 +1,64 @@
+.privacy-container {
+  font-family: 'Poppins', sans-serif;
+  color: #2c3e50;
+  line-height: 1.8;
+  padding: 30px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.privacy-header {
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.privacy-header h1 {
+  font-size: 2.8rem;
+  margin-bottom: 10px;
+  color: #1e293b;
+}
+
+.privacy-header p {
+  font-size: 1rem;
+  color: #6b7280;
+}
+
+.privacy-content h2 {
+  font-size: 1.6rem;
+  margin-top: 40px;
+  margin-bottom: 12px;
+  color: #0f172a;
+}
+
+.privacy-content p {
+  font-size: 1.05rem;
+  color: #374151;
+  margin-bottom: 20px;
+}
+
+.privacy-content a {
+  color: #2563eb;
+  text-decoration: none;
+}
+
+.privacy-content a:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+  .privacy-container {
+    padding: 40px 15px;
+  }
+
+  .privacy-header h1 {
+    font-size: 2.2rem;
+  }
+
+  .privacy-content h2 {
+    font-size: 1.4rem;
+  }
+
+  .privacy-content p {
+    font-size: 1rem;
+  }
+}
