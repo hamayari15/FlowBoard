@@ -109,7 +109,7 @@
 
 .projects-header-second-line .add-button {
   display: flex;
-  align-items: center;
+  align-items: center;    
   font-weight: 500;
   height: 42px;
 }
