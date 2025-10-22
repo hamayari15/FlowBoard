@@ -8,6 +8,7 @@ import { WorkspaceService } from 'src/app/core/services/workspace.service';
 import { WorkSpaceDialogComponent } from '../work-space-dialog/work-space-dialog.component';
 import { WorkspaceInviteDialogComponent } from '../workspace-invite-dialog/workspace-invite-dialog.component';
 import { WorkspacePopulated, ApiError } from 'src/app/core/models';
+import { AuthService } from 'src/app/core/services/auth.service';
 
 @Component({
   selector: 'app-work-spaces-list',
@@ -21,16 +22,19 @@ export class WorkspaceListComponent implements OnInit, OnDestroy {
   searchTerm: string = '';
   loading = false;
   error: string | null = null;
-
   private destroy$ = new Subject<void>();
+  private currentUserId: string = '';
 
   constructor(
     private wsService: WorkspaceService,
     private router: Router,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
+    this.currentUserId = this.authService.getUserFromToken()?._id || '';
+    console.log(this.currentUserId)
     this.getAllWorkSpaces();
   }
 
@@ -39,25 +43,28 @@ export class WorkspaceListComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  getAllWorkSpaces(): void {
-    this.loading = true;
-    this.error = null;
+ getAllWorkSpaces(): void {
+  this.loading = true;
+  this.error = null;
 
-    this.wsService.getWorkSpaces()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (workspaces: WorkspacePopulated[]) => {
-          this.workSpaces = workspaces || [];
-          this.filteredWorkSpaces = [...this.workSpaces];
-          this.loading = false;
-        },
-        error: (error: ApiError) => {
-          this.error = error.message || 'Failed to load workspaces';
-          this.loading = false;
-          this.showErrorAlert('Failed to Load', this.error);
-        },
-      });
-  }
+  this.wsService.getWorkSpaces()
+    .pipe(takeUntil(this.destroy$))
+    .subscribe({
+      next: (workspaces: WorkspacePopulated[]) => {
+        this.workSpaces = workspaces?.filter(ws => 
+          ws.owner && ws.owner._id.toString() === this.currentUserId
+        ) || [];
+        this.filteredWorkSpaces = [...this.workSpaces];
+        this.loading = false;
+      },
+      error: (error: ApiError) => {
+        this.error = error.message || 'Failed to load workspaces';
+        this.loading = false;
+        this.showErrorAlert('Failed to Load', this.error);
+      },
+    });
+}
+
 
   searchWorkspaces(): void {
     const term = this.searchTerm.trim().toLowerCase();
@@ -156,7 +163,7 @@ export class WorkspaceListComponent implements OnInit, OnDestroy {
           timer: 2000,
           showConfirmButton: false,
         });
-        this.getAllWorkSpaces();
+        this.getAllWorkSpaces()
       }
     });
   }
