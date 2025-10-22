@@ -108,17 +108,24 @@ export class WorkSpaceDetailsComponent implements OnInit {
     Swal.fire({
       icon: 'warning',
       title: 'Are you sure?',
-      text: "You won't be able to revert this action!",
-      confirmButtonText: 'Yes, delete it!',
+      text: "You won't be able to revert this action !",
+      confirmButtonText: 'Yes, delete it !',
       showCancelButton: true,
       confirmButtonColor: '#d33',
       cancelButtonColor: '#3085d6',
       reverseButtons: true,
+      showLoaderOnConfirm: true 
     }).then(result => {
       if (result.isConfirmed) {
         this.wsService.deleteWorkSpace(this.workSpaceId).subscribe({
           next: () => {
-            Swal.fire('Deleted!', 'Workspace has been deleted.', 'success');
+            Swal.fire({
+              icon: 'success',
+              title: 'Deleted !',
+              text: 'Workspace has been deleted successfully.',
+              timer: 2000,
+              showConfirmButton: false,
+            });
             this.goBackToWorkspaces();
           },
           error: () => Swal.fire('Error', 'Failed to delete workspace', 'error')
@@ -207,17 +214,24 @@ export class WorkSpaceDetailsComponent implements OnInit {
 
   archiveProject(project: ProjectPopulated) {
     Swal.fire({
-      title: 'Archive Project',
-      text: `Are you sure you want to archive "${project.name}"?`,
       icon: 'question',
+      title: 'Archive Project',
+      text: `Are you sure you want to archive "${project.name}" ?`,
       showCancelButton: true,
       confirmButtonColor: '#ff9800',
       cancelButtonColor: '#3085d6',
-      confirmButtonText: 'Yes, archive it!',
+      reverseButtons: true,
+      confirmButtonText: 'Yes, archive it !',
     }).then(result => {
       if (result.isConfirmed && project._id) {
         this.projectService.archiveProject(project._id).subscribe({
-          next: () => { Swal.fire('Archived!', 'Project has been archived.', 'success'); this.refreshProjects(); },
+          next: () => { Swal.fire({
+                      icon: 'success',
+                      title: 'Project Archived !',
+                      text: 'Project has been archived successfully.',
+                      timer: 2000,
+                      showConfirmButton: false
+                    });   this.refreshProjects(); },
           error: () => Swal.fire('Error', 'Failed to archive project', 'error')
         });
       }
@@ -228,8 +242,8 @@ export class WorkSpaceDetailsComponent implements OnInit {
     Swal.fire({
       icon: 'warning',
       title: 'Are you sure?',
-      text: 'You wont be able to revert this!',
-      confirmButtonText: 'Yes, delete it!',
+      text: 'You wont be able to revert this action !',
+      confirmButtonText: 'Yes, delete it !',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
@@ -237,7 +251,13 @@ export class WorkSpaceDetailsComponent implements OnInit {
     }).then(result => {
       if (result.isConfirmed && project._id) {
         this.projectService.deleteProject(project._id).subscribe({
-          next: () => { Swal.fire('Deleted!', 'Project has been deleted.', 'success'); this.refreshProjects(); },
+          next: () => { Swal.fire({
+                    icon: 'success',
+                    title: 'Deleted !',
+                    text: 'Project has been deleted successfully.',
+                    timer: 2000,
+                    showConfirmButton: false,
+                  }); this.refreshProjects(); },
           error: () => Swal.fire('Error', 'Failed to delete project', 'error')
         });
       }

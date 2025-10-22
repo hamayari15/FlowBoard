@@ -131,8 +131,8 @@ export class WorkspaceListComponent implements OnInit, OnDestroy {
     Swal.fire({
       icon: 'warning',
       title: 'Are you sure?',
-      text: "You won't be able to revert this action!",
-      confirmButtonText: 'Yes, delete it!',
+      text: "You won't be able to revert this action !",
+      confirmButtonText: 'Yes, delete it !',
       showCancelButton: true,
       confirmButtonColor: '#d33',
       cancelButtonColor: '#3085d6',
@@ -151,8 +151,8 @@ export class WorkspaceListComponent implements OnInit, OnDestroy {
       if (result.isConfirmed) {
         Swal.fire({
           icon: 'success',
-          title: 'Deleted!',
-          text: 'Your workspace has been deleted successfully.',
+          title: 'Deleted !',
+          text: 'Workspace has been deleted successfully.',
           timer: 2000,
           showConfirmButton: false,
         });
