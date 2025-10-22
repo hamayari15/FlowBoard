@@ -119,8 +119,12 @@ export class ProjectDialogComponent implements OnInit, OnDestroy {
         this.projectService.addProject(projectData).subscribe({
           next: (res) => {
             this.loading = false;
-            Swal.fire('Success!', 'Project created successfully', 'success');
-            this.dialogRef.close(res);
+            Swal.fire({
+          icon: 'success',
+          title: 'Project Created !',
+          text: 'Your project has been created successfully. You can now invite members using the invite button.',
+          showConfirmButton: true
+        });            this.dialogRef.close(res);
           },
           error: (error) => {
             this.loading = false;
@@ -142,15 +146,21 @@ export class ProjectDialogComponent implements OnInit, OnDestroy {
           .subscribe({
             next: (res) => {
               this.loading = false;
-              Swal.fire('Success!', 'Project updated successfully', 'success');
-              this.dialogRef.close(res);  
-            },
-            error: (error) => {
-              this.loading = false;
-              console.error('Error updating project:', error);
-              Swal.fire('Error', 'Failed to update project', 'error');
-            },
-          });
+              Swal.fire({
+          icon: 'success',
+          title: 'Project Updated !',
+          text: 'Project updated successfully.',
+          timer: 2000,
+          showConfirmButton: false
+        });
+        this.dialogRef.close(res);  
+          },
+          error: (error) => {
+            this.loading = false;
+            console.error('Error updating project:', error);
+            Swal.fire('Error', 'Failed to update project', 'error');
+          },
+        });
       }
     } else {
       this.markFormGroupTouched();

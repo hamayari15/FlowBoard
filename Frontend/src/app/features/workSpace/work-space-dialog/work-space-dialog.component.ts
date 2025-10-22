@@ -89,7 +89,7 @@ export class WorkSpaceDialogComponent implements OnInit, OnDestroy {
         this.data.workspace = workspace;
         Swal.fire({
           icon: 'success',
-          title: 'Workspace Created!',
+          title: 'Workspace Created !',
           text: 'Your workspace has been created successfully. You can now invite members using the invite button.',
           showConfirmButton: true
         });
@@ -111,7 +111,13 @@ export class WorkSpaceDialogComponent implements OnInit, OnDestroy {
     this.wsService.updateWorkSpace(this.data.workspace._id, workspaceData).pipe(takeUntil(this.destroy$)).subscribe({
       next: (workspace: Workspace) => {
         this.loading = false;
-        Swal.fire({ icon: 'success', title: 'Success!', text: 'Workspace updated successfully', timer: 2000, showConfirmButton: true });
+          Swal.fire({
+            icon: 'success',
+            title: 'Workspace Updated !',
+            text: 'Workspace updated successfully.',
+            timer: 2000,
+            showConfirmButton: false
+          });        
         this.dialogRef.close(workspace);
       },
       error: (error: ApiError) => {
