@@ -2,11 +2,10 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import Swal from 'sweetalert2';
-
 import { TaskService } from 'src/app/core/services/task.service';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { ProjectService } from 'src/app/core/services/project.service';
-import { Board, TaskCreateRequest, User } from 'src/app/core/models';
+import { User, TaskCreateRequest, TaskUpdateRequest } from 'src/app/core/models';
 
 @Component({
   selector: 'app-task-dialog',
@@ -20,7 +19,7 @@ export class TaskDialogComponent implements OnInit {
   mode: 'create' | 'edit' = 'create';
   priorities = ['low', 'medium', 'high'];
   projectMembers: User[] = [];
-  
+
   constructor(
     private fb: FormBuilder,
     private taskService: TaskService,
@@ -30,7 +29,6 @@ export class TaskDialogComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
     this.mode = data.mode || 'create';
-    
     this.taskForm = this.fb.group({
       title: ['', [Validators.required, Validators.minLength(3)]],
       description: [''],
@@ -42,19 +40,16 @@ export class TaskDialogComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // Load project members for assignee selection
-    if (this.data.projectId) {
-      this.loadProjectMembers();
-    }
-    
+    if (this.data.projectId) this.loadProjectMembers();
     if (this.mode === 'edit' && this.data.task) {
+      const task = this.data.task;
       this.taskForm.patchValue({
-        title: this.data.task.title,
-        description: this.data.task.description || '',
-        priority: this.data.task.priority,
-        labels: this.data.task.labels?.join(', ') || '',
-        assignee: this.data.task.assignee?._id || this.data.task.assignee || null,
-        dueDate: this.data.task.dueDate || null
+        title: task.title,
+        description: task.description || '',
+        priority: task.priority,
+        labels: task.labels?.join(', ') || '',
+        assignee: task.assignee?._id || task.assignee || null,
+        dueDate: task.dueDate || null
       });
     }
   }
@@ -66,8 +61,7 @@ export class TaskDialogComponent implements OnInit {
         this.projectMembers = project.members || [];
         this.loadingMembers = false;
       },
-      error: (error) => {
-        console.error('Error loading project members:', error);
+      error: () => {
         this.loadingMembers = false;
       }
     });
@@ -83,37 +77,54 @@ export class TaskDialogComponent implements OnInit {
 
     this.loading = true;
     const formValue = this.taskForm.value;
-    
-    // Parse labels from comma-separated string
     const labels = formValue.labels 
       ? formValue.labels.split(',').map((l: string) => l.trim()).filter((l: string) => l)
       : [];
 
     const currentUser = this.authService.getCurrentUser();
-    
-    const taskData: TaskCreateRequest = {
-      title: formValue.title,
-      description: formValue.description,
-      board: this.data.boardId,
-      status: this.data.status || 'to-do',
-      priority: formValue.priority,
-      labels: labels,
-      assignee: formValue.assignee || undefined,
-      dueDate: formValue.dueDate,
-      createdBy: (currentUser as any)?._id || (currentUser as any)?.id
-    };
 
-    this.taskService.createTask(taskData).subscribe({
-      next: (response) => {
-        Swal.fire('Success', 'Task created successfully', 'success');
-        this.dialogRef.close(response);
-      },
-      error: (error) => {
-        console.error('Error creating task:', error);
-        Swal.fire('Error', error.message || 'Failed to create task', 'error');
-        this.loading = false;
-      }
-    });
+    if (this.mode === 'create') {
+      const taskData: TaskCreateRequest = {
+        title: formValue.title,
+        description: formValue.description,
+        board: this.data.boardId,
+        status: this.data.status || 'to-do',
+        priority: formValue.priority,
+        labels: labels,
+        assignee: formValue.assignee || undefined,
+        dueDate: formValue.dueDate,
+        createdBy: (currentUser as any)?._id || (currentUser as any)?.id
+      };
+      this.taskService.createTask(taskData).subscribe({
+        next: (response) => {
+          Swal.fire('Success', 'Task created successfully', 'success');
+          this.dialogRef.close(response);
+        },
+        error: (error) => {
+          Swal.fire('Error', error.message || 'Failed to create task', 'error');
+          this.loading = false;
+        }
+      });
+    } else if (this.mode === 'edit') {
+      const updateData: TaskUpdateRequest = {
+        title: formValue.title,
+        description: formValue.description,
+        priority: formValue.priority,
+        labels: labels,
+        assignee: formValue.assignee || undefined,
+        dueDate: formValue.dueDate
+      };
+      this.taskService.updateTask(this.data.task._id, updateData).subscribe({
+        next: (response) => {
+          Swal.fire('Success', 'Task updated successfully', 'success');
+          this.dialogRef.close({ updated: true });
+        },
+        error: (error) => {
+          Swal.fire('Error', error.message || 'Failed to update task', 'error');
+          this.loading = false;
+        }
+      });
+    }
   }
 
   onCancel(): void {
@@ -122,12 +133,8 @@ export class TaskDialogComponent implements OnInit {
 
   getErrorMessage(fieldName: string): string {
     const control = this.taskForm.get(fieldName);
-    if (control?.hasError('required')) {
-      return `${fieldName} is required`;
-    }
-    if (control?.hasError('minlength')) {
-      return `${fieldName} must be at least ${control.errors?.['minlength'].requiredLength} characters`;
-    }
+    if (control?.hasError('required')) return `${fieldName} is required`;
+    if (control?.hasError('minlength')) return `${fieldName} must be at least ${control.errors?.['minlength'].requiredLength} characters`;
     return '';
   }
 }

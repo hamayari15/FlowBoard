@@ -7,8 +7,7 @@
     <div class="header-actions">
       <button
         mat-icon-button
-        *ngIf="!isEditing"
-        (click)="toggleEdit()"
+        (click)="openEditTaskDialog()"
         matTooltip="Edit task"
       >
         <mat-icon>edit</mat-icon>
@@ -29,7 +28,7 @@
 
   <mat-dialog-content>
     <div class="task-content">
-      <div *ngIf="!isEditing" class="view-mode">
+      <div class="view-mode">
         <div class="task-section">
           <h3 class="task-title-display">{{ task.title }}</h3>
         </div>
@@ -134,7 +133,6 @@
         </div>
       </div>
 
-      <!-- Add Comment Section -->
       <div class="task-section add-comment">
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Add a comment</mat-label>
@@ -157,7 +155,6 @@
         </button>
       </div>
 
-      <!-- Comments List -->
       <div
         class="task-section comments-section"
         *ngIf="comments && comments.length > 0"
@@ -209,81 +206,6 @@
           <div class="comment-content">{{ comment.content }}</div>
         </div>
       </div>
-
-      <div *ngIf="isEditing" class="edit-mode">
-        <form [formGroup]="taskForm" class="task-edit-form">
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Task Title</mat-label>
-            <input matInput formControlName="title" required />
-            <mat-error *ngIf="taskForm.get('title')?.hasError('required')"
-              >Title is required</mat-error
-            >
-            <mat-error *ngIf="taskForm.get('title')?.hasError('minlength')"
-              >Title must be at least 3 characters</mat-error
-            >
-          </mat-form-field>
-
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Description</mat-label>
-            <textarea
-              matInput
-              formControlName="description"
-              rows="4"
-            ></textarea>
-          </mat-form-field>
-
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Priority</mat-label>
-            <mat-select formControlName="priority">
-              <mat-option
-                *ngFor="let priority of priorities"
-                [value]="priority"
-              >
-                <div class="priority-option">
-                  <mat-icon [class]="'priority-icon-' + priority">{{
-                    getPriorityIcon(priority)
-                  }}</mat-icon>
-                  <span>{{ priority | titlecase }}</span>
-                </div>
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Labels (comma separated)</mat-label>
-            <input matInput formControlName="labels" />
-          </mat-form-field>
-
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Due Date</mat-label>
-            <input
-              matInput
-              [matDatepicker]="picker"
-              formControlName="dueDate"
-            />
-            <mat-datepicker-toggle
-              matSuffix
-              [for]="picker"
-            ></mat-datepicker-toggle>
-            <mat-datepicker #picker></mat-datepicker>
-          </mat-form-field>
-        </form>
-      </div>
     </div>
   </mat-dialog-content>
-
-  <mat-dialog-actions align="end" *ngIf="isEditing">
-    <button mat-button (click)="toggleEdit()" [disabled]="loading">
-      Cancel
-    </button>
-    <button
-      mat-raised-button
-      color="primary"
-      (click)="saveChanges()"
-      [disabled]="loading || taskForm.invalid"
-    >
-      <mat-spinner *ngIf="loading" diameter="20"></mat-spinner>
-      <span *ngIf="!loading">Save Changes</span>
-    </button>
-  </mat-dialog-actions>
 </div>
