@@ -88,6 +88,7 @@ export class BoardViewComponent implements OnInit, OnDestroy {
     if (!this.board) return;
 
     this.columnsWithTasks = this.board.columns.map(column => {
+      console.log(this.board);
       const columnId = getColumnId(column);
       return {
         ...column,

@@ -24,7 +24,7 @@
           <mat-icon>edit</mat-icon>
           Edit
         </button>
-        <button mat-button color="warn" (click)="deleteWorkspace(workSpaceData._id!)" [disabled]="!workSpaceData._id" matTooltip="Delete workspace">
+<button mat-button color="warn" (click)="deleteWorkspace()" [disabled]="!workSpaceData._id" matTooltip="Delete workspace">
           <mat-icon>delete</mat-icon>
           Delete
         </button>
@@ -111,7 +111,7 @@
           <button mat-icon-button color="primary" (click)="openProjectInviteDialog(project)" matTooltip="Invite members">
             <mat-icon>person_add</mat-icon>
           </button>
-          <button mat-button color="primary" (click)="goToDetails(project._id!)" [disabled]="!project._id" matTooltip="View project details">
+<button mat-button color="primary" (click)="goToDetails(project._id!)" [disabled]="!project._id" matTooltip="View project details">
             <mat-icon>visibility</mat-icon>
             View
           </button>

@@ -65,7 +65,8 @@ export class BoardDialogComponent implements OnInit {
       columns: [
         { name: 'To Do', order: 0 },
         { name: 'In Progress', order: 1 },
-        { name: 'Done', order: 2 }
+        { name: 'In Review', order: 2 },
+        { name: 'Done', order: 3 }
       ]
     };
 
