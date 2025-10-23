@@ -9,19 +9,19 @@ import { takeUntil } from 'rxjs/operators';
 import { BoardService } from 'src/app/core/services/board.service';
 import { TaskService } from 'src/app/core/services/task.service';
 import { Board, BoardColumn, TaskPopulated, getColumnId } from 'src/app/core/models';
-import { TaskDialogComponent } from './task-dialog/task-dialog.component';
-import { TaskDetailDialogComponent } from './task-detail-dialog/task-detail-dialog.component';
+import { TaskDialogComponent } from '../task-dialog/task-dialog.component';
+import { TaskDetailDialogComponent } from '../task-detail-dialog/task-detail-dialog.component';
 
 interface ColumnWithTasks extends BoardColumn {
   id: string;
   tasks: TaskPopulated[];
 }
-
 @Component({
   selector: 'app-board-view',
   templateUrl: './board-view.component.html',
   styleUrls: ['./board-view.component.css']
 })
+
 export class BoardViewComponent implements OnInit, OnDestroy {
   boardId: string = '';
   board: Board | null = null;

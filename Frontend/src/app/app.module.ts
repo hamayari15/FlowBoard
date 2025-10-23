@@ -43,20 +43,19 @@ import { PrivacyComponent } from './features/privacy/privacy.component';
 import { RegisterComponent } from './features/auth/register/register.component';
 import { LoginComponent } from './features/auth/login/login.component';
 import { FooterComponent } from './features/footer/footer.component';
-import { WorkspaceListComponent } from './features/workSpace/work-spaces-list/work-spaces-list.component';
-import { WorkSpaceDetailsComponent } from './features/workSpace/work-space-details/work-space-details.component';
-import { WorkSpaceDialogComponent } from './features/workSpace/work-space-dialog/work-space-dialog.component';
-import { ProjectDialogComponent } from './features/workSpace/project-dialog/project-dialog.component';
-import { WorkspaceInviteDialogComponent } from './features/workSpace/workspace-invite-dialog/workspace-invite-dialog.component';
-import { ProjectInviteDialogComponent } from './features/workSpace/project-invite-dialog/project-invite-dialog.component';
-import { BoardComponent } from './features/board/board.component';
-import { ProjectDetailsComponent } from './features/workSpace/project-details/project-details.component';
-import { BoardDialogComponent } from './features/workSpace/board-dialog/board-dialog.component';
+import { WorkspaceListComponent } from './features/work-spaces-list/work-spaces-list.component';
+import { WorkSpaceDetailsComponent } from './features/work-space-details/work-space-details.component';
+import { WorkSpaceDialogComponent } from './features/work-space-dialog/work-space-dialog.component';
+import { ProjectDialogComponent } from './features/project-dialog/project-dialog.component';
+import { WorkspaceInviteDialogComponent } from './features/workspace-invite-dialog/workspace-invite-dialog.component';
+import { ProjectInviteDialogComponent } from './features/project-invite-dialog/project-invite-dialog.component';
+import { ProjectDetailsComponent } from './features/project-details/project-details.component';
+import { BoardDialogComponent } from './features/board-dialog/board-dialog.component';
 import { BoardViewComponent } from './features/board/board-view.component';
-import { TaskDialogComponent } from './features/board/task-dialog/task-dialog.component';
-import { TaskDetailDialogComponent } from './features/board/task-detail-dialog/task-detail-dialog.component';
+import { TaskDialogComponent } from './features/task-dialog/task-dialog.component';
+import { TaskDetailDialogComponent } from './features/task-detail-dialog/task-detail-dialog.component';
 import { EditCommentDialogComponent } from './features/edit-comment-dialog/edit-comment-dialog.component';
-import { WorkSpaceStatsComponent } from './features/workSpace/work-space-stats/work-space-stats.component';
+import { WorkSpaceStatsComponent } from './features/work-space-stats/work-space-stats.component';
 import { PageNotFoundComponent } from './features/page-not-found/page-not-found.component';
 
 @NgModule({
@@ -76,7 +75,7 @@ import { PageNotFoundComponent } from './features/page-not-found/page-not-found.
     ProjectDialogComponent,
     WorkspaceInviteDialogComponent,
     ProjectInviteDialogComponent,
-    BoardComponent,
+    BoardViewComponent,
     BoardDialogComponent,
     BoardViewComponent,
     TaskDialogComponent,

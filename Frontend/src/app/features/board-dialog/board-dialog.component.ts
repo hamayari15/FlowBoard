@@ -6,6 +6,7 @@ import Swal from 'sweetalert2';
 import { BoardService } from 'src/app/core/services/board.service';
 import { BoardCreateRequest, BoardUpdateRequest } from 'src/app/core/models';
 
+
 @Component({
   selector: 'app-board-dialog',
   templateUrl: './board-dialog.component.html',
