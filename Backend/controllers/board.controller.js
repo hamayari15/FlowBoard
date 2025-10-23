@@ -20,7 +20,8 @@ exports.createBoard = async (req, res) => {
     const defaultColumns = columns || [
       { name: "To Do", order: 0 },
       { name: "In Progress", order: 1 },
-      { name: "Done", order: 2 }
+      { name: "In Review", order: 2 },
+      { name: "Done", order: 3 }
     ];
 
     const board = new Board({
@@ -32,6 +33,7 @@ exports.createBoard = async (req, res) => {
 
     const savedBoard = await board.save();
     res.status(201).json(savedBoard);
+    console.log('Board created successfully:', savedBoard);
 
   } catch (err) {
     console.error('Error creating board:', err);

@@ -3,10 +3,9 @@
     <div class="title-section">
       <mat-icon class="header-icon">workspaces</mat-icon>
       <h1>Workspaces</h1>
-      <span class="workspace-count" *ngIf="!loading && filteredWorkSpaces.length > 0">
-        ({{ filteredWorkSpaces.length }})
-      </span>
+      <span class="workspace-count">({{ filteredWorkSpaces.length }})</span>
     </div>
+
     <div class="header-actions">
       <mat-form-field appearance="outline" class="search-field">
         <mat-label>Search workspace</mat-label>
@@ -26,7 +25,7 @@
         </button>
       </mat-form-field>
 
-      <button mat-icon-button color="primary" matTooltip="Refresh workspaces" (click)="refresh()" [disabled]="loading">
+      <button mat-icon-button color="primary" matTooltip="Refresh" (click)="refresh()" [disabled]="loading">
         <mat-icon>refresh</mat-icon>
       </button>
 
@@ -55,7 +54,7 @@
   <div *ngIf="!loading && !error && workSpaces.length === 0" class="empty-state">
     <mat-icon class="empty-icon">workspace_premium</mat-icon>
     <h2>No workspaces found</h2>
-    <p>Create your first workspace to get started with your projects</p>
+    <p>Create your first workspace to get started</p>
     <button mat-raised-button color="primary" (click)="openAddDialog()">
       <mat-icon>add</mat-icon>
       Create Workspace
@@ -64,38 +63,36 @@
 
   <div *ngIf="!loading && !error && workSpaces.length > 0 && filteredWorkSpaces.length === 0" class="no-results">
     <mat-icon class="empty-icon">search_off</mat-icon>
-    <h2>No workspace found with name "{{ searchTerm }}"</h2>
+    <h2>
+      No workspace found with name
+      <span class="highlight">"{{ searchTerm }}"</span>
+    </h2>
   </div>
 
   <div *ngIf="!loading && !error && filteredWorkSpaces.length > 0" class="workspaces-grid">
     <mat-card
       *ngFor="let ws of filteredWorkSpaces; trackBy: trackByWorkspaceId"
       class="workspace-card"
-      [class.mat-elevation-z2]="true"
     >
       <mat-card-header class="card-header">
         <div mat-card-avatar class="workspace-avatar">
           <mat-icon>folder</mat-icon>
         </div>
-        <mat-card-title [title]="ws.name">{{ ws.name }}</mat-card-title>
-        <mat-card-subtitle [title]="ws.description || 'No description available'">
-          {{ ws.description || "No description available" }}
-        </mat-card-subtitle>
+        <mat-card-title>{{ ws.name }}</mat-card-title>
+        <mat-card-subtitle>{{ ws.description || 'No description available' }}</mat-card-subtitle>
       </mat-card-header>
 
       <mat-card-content class="card-content">
         <div class="owner-section" *ngIf="ws.owner">
           <mat-icon class="info-icon">person</mat-icon>
           <div class="owner-details">
-            <span class="owner-name" [title]="ws.owner.firstName + ' ' + ws.owner.lastName">
-              {{ ws.owner.firstName }} {{ ws.owner.lastName }}
-            </span>
-            <span class="owner-email" [title]="ws.owner.email">{{ ws.owner.email }}</span>
+            <span class="owner-name">{{ ws.owner.firstName }} {{ ws.owner.lastName }}</span>
+            <span class="owner-email">{{ ws.owner.email }}</span>
           </div>
         </div>
 
         <div class="stats-section">
-          <mat-chip-set aria-label="Workspace statistics">
+          <mat-chip-set aria-label="Workspace stats">
             <mat-chip class="stat-chip" [matTooltip]="getMembersTooltip(ws.members)">
               <mat-icon matChipAvatar>group</mat-icon>
               {{ ws.members.length || 0 }}
@@ -114,23 +111,20 @@
       </mat-card-content>
 
       <mat-card-actions class="card-actions">
-        <button mat-icon-button class="insight-btn" (click)="goToCharts(ws._id!)" [disabled]="!ws._id" matTooltip="View workspace charts">
+        <button mat-icon-button class="insight-btn" (click)="goToCharts(ws._id!)" [disabled]="!ws._id" matTooltip="Charts">
           <mat-icon>insights</mat-icon>
         </button>
-        <button mat-icon-button color="primary" (click)="openInviteDialog(ws)" [disabled]="!ws._id" matTooltip="Invite members to workspace">
+        <button mat-icon-button color="primary" (click)="openInviteDialog(ws)" [disabled]="!ws._id" matTooltip="Invite">
           <mat-icon>person_add</mat-icon>
         </button>
-        <button mat-button color="primary" (click)="goToDetails(ws._id!)" [disabled]="!ws._id" matTooltip="View workspace details">
-          <mat-icon>visibility</mat-icon>
-          View
+        <button mat-button color="primary" (click)="goToDetails(ws._id!)" [disabled]="!ws._id">
+          <mat-icon>visibility</mat-icon> View
         </button>
-        <button mat-button class="edit-btn" (click)="openEditDialog(ws)" [disabled]="!ws._id" matTooltip="Edit workspace">
-          <mat-icon>edit</mat-icon>
-          Edit
+        <button mat-button class="edit-btn" (click)="openEditDialog(ws)" [disabled]="!ws._id">
+          <mat-icon>edit</mat-icon> Edit
         </button>
-        <button mat-button color="warn" (click)="delete(ws._id!)" [disabled]="!ws._id" matTooltip="Delete workspace">
-          <mat-icon>delete</mat-icon>
-          Delete
+        <button mat-button color="warn" (click)="delete(ws._id!)" [disabled]="!ws._id">
+          <mat-icon>delete</mat-icon> Delete
         </button>
       </mat-card-actions>
     </mat-card>

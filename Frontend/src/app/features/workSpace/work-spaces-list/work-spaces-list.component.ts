@@ -3,7 +3,6 @@ import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { Subject, takeUntil } from 'rxjs';
 import Swal from 'sweetalert2';
-
 import { WorkspaceService } from 'src/app/core/services/workspace.service';
 import { WorkSpaceDialogComponent } from '../work-space-dialog/work-space-dialog.component';
 import { WorkspaceInviteDialogComponent } from '../workspace-invite-dialog/workspace-invite-dialog.component';
@@ -16,14 +15,13 @@ import { AuthService } from 'src/app/core/services/auth.service';
   styleUrls: ['./work-spaces-list.component.css'],
 })
 export class WorkspaceListComponent implements OnInit, OnDestroy {
-  
   workSpaces: WorkspacePopulated[] = [];
   filteredWorkSpaces: WorkspacePopulated[] = [];
-  searchTerm: string = '';
+  searchTerm = '';
   loading = false;
   error: string | null = null;
   private destroy$ = new Subject<void>();
-  private currentUserId: string = '';
+  private currentUserId = '';
 
   constructor(
     private wsService: WorkspaceService,
@@ -34,7 +32,6 @@ export class WorkspaceListComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.currentUserId = this.authService.getUserFromToken()?._id || '';
-    console.log(this.currentUserId)
     this.getAllWorkSpaces();
   }
 
@@ -43,38 +40,30 @@ export class WorkspaceListComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
- getAllWorkSpaces(): void {
-  this.loading = true;
-  this.error = null;
-
-  this.wsService.getWorkSpaces()
-    .pipe(takeUntil(this.destroy$))
-    .subscribe({
-      next: (workspaces: WorkspacePopulated[]) => {
-        this.workSpaces = workspaces?.filter(ws => 
-          ws.owner && ws.owner._id.toString() === this.currentUserId
-        ) || [];
-        this.filteredWorkSpaces = [...this.workSpaces];
-        this.loading = false;
-      },
-      error: (error: ApiError) => {
-        this.error = error.message || 'Failed to load workspaces';
-        this.loading = false;
-        this.showErrorAlert('Failed to Load', this.error);
-      },
-    });
-}
-
+  getAllWorkSpaces(): void {
+    this.loading = true;
+    this.error = null;
+    this.wsService.getWorkSpaces()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (workspaces: WorkspacePopulated[]) => {
+          this.workSpaces = workspaces?.filter(ws => ws.owner && ws.owner._id.toString() === this.currentUserId) || [];
+          this.filteredWorkSpaces = [...this.workSpaces];
+          this.loading = false;
+        },
+        error: (error: ApiError) => {
+          this.error = error.message || 'Failed to load workspaces';
+          this.loading = false;
+          this.showErrorAlert('Failed to Load', this.error);
+        },
+      });
+  }
 
   searchWorkspaces(): void {
     const term = this.searchTerm.trim().toLowerCase();
-    if (!term) {
-      this.filteredWorkSpaces = [...this.workSpaces];
-      return;
-    }
-    this.filteredWorkSpaces = this.workSpaces.filter(ws =>
-      ws.name.toLowerCase().includes(term)
-    );
+    this.filteredWorkSpaces = term
+      ? this.workSpaces.filter(ws => ws.name.toLowerCase().includes(term))
+      : [...this.workSpaces];
   }
 
   goToDetails(id: string): void {
@@ -92,41 +81,29 @@ export class WorkspaceListComponent implements OnInit, OnDestroy {
       data: { mode: 'add', workspace: null },
       disableClose: true,
     });
-
-    dialogRef.afterClosed()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(result => {
-        if (result) this.getAllWorkSpaces();
-      });
+    dialogRef.afterClosed().pipe(takeUntil(this.destroy$)).subscribe(result => {
+      if (result) this.getAllWorkSpaces();
+    });
   }
 
   openEditDialog(workspace: WorkspacePopulated): void {
-    if (!workspace || !workspace._id) return;
-
+    if (!workspace?._id) return;
     const dialogRef = this.dialog.open(WorkSpaceDialogComponent, {
       width: '500px',
       maxWidth: '90vw',
       data: { mode: 'edit', workspace },
       disableClose: true,
     });
-
-    dialogRef.afterClosed()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(result => {
-        if (result) this.getAllWorkSpaces();
-      });
+    dialogRef.afterClosed().pipe(takeUntil(this.destroy$)).subscribe(result => {
+      if (result) this.getAllWorkSpaces();
+    });
   }
 
   openInviteDialog(workspace: WorkspacePopulated): void {
     const dialogRef = this.dialog.open(WorkspaceInviteDialogComponent, {
       width: '600px',
-      data: {
-        workspaceId: workspace._id,
-        workspaceName: workspace.name,
-        type: 'workspace',
-      },
+      data: { workspaceId: workspace._id, workspaceName: workspace.name, type: 'workspace' },
     });
-
     dialogRef.afterClosed().subscribe(result => {
       if (result?.success) this.getAllWorkSpaces();
     });
@@ -134,36 +111,34 @@ export class WorkspaceListComponent implements OnInit, OnDestroy {
 
   delete(id: string): void {
     if (!id) return;
-
     Swal.fire({
       icon: 'warning',
       title: 'Are you sure?',
-      text: "You won't be able to revert this action !",
-      confirmButtonText: 'Yes, delete it !',
+      text: "You won't be able to revert this action!",
+      confirmButtonText: 'Yes, delete it!',
       showCancelButton: true,
       confirmButtonColor: '#d33',
       cancelButtonColor: '#3085d6',
       reverseButtons: true,
       showLoaderOnConfirm: true,
-      preConfirm: () => {
-        return this.wsService.deleteWorkSpace(id)
+      preConfirm: () =>
+        this.wsService.deleteWorkSpace(id)
           .pipe(takeUntil(this.destroy$))
           .toPromise()
           .catch((error: ApiError) => {
             Swal.showValidationMessage(`Request failed: ${error.message}`);
             throw error;
-          });
-      },
+          }),
     }).then(result => {
       if (result.isConfirmed) {
         Swal.fire({
           icon: 'success',
           title: 'Deleted !',
-          text: 'Workspace has been deleted successfully.',
+          text: 'Workspace deleted successfully.',
           timer: 2000,
           showConfirmButton: false,
         });
-        this.getAllWorkSpaces()
+        this.getAllWorkSpaces();
       }
     });
   }
@@ -178,17 +153,11 @@ export class WorkspaceListComponent implements OnInit, OnDestroy {
   }
 
   getMembersTooltip(members: any[]): string {
-    if (!members || members.length === 0) return 'No members';
-    if (members.length === 1) return '1 member';
-    return `${members.length} members`;
+    if (!members?.length) return 'No members';
+    return members.length === 1 ? '1 member' : `${members.length} members`;
   }
 
   private showErrorAlert(title: string, message: string): void {
-    Swal.fire({
-      icon: 'error',
-      title,
-      text: message,
-      confirmButtonColor: '#3085d6',
-    });
+    Swal.fire({ icon: 'error', title, text: message, confirmButtonColor: '#3085d6' });
   }
 }
