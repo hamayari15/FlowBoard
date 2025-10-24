@@ -275,19 +275,6 @@ exports.bulkInviteMembers = async (req, res) => {
 };
 
 
-exports.getAll = async (req, res) => {
-  try {
-    const projects = await Project.find({ isArchived: false })
-      .populate("owner", "name email")
-      .populate("members", "name email");
-    res.status(200).json(projects);
-
-  } catch (err) {
-    res.status(500).json({ message: "Error fetching projects", error: err.message });
-  }
-};
-
-
 exports.getById = async (req, res) => {
   try {
     const id = req.params.id;

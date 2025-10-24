@@ -20,13 +20,6 @@ export class ProjectService {
     );
   }
 
-  getProjects(): Observable<ProjectPopulated[]> {
-    return this.http.get<ProjectPopulated[]>(`${this.apiUrl}/getAll`).pipe(
-      map((response: any) => response as ProjectPopulated[]),
-      catchError(this.handleError)
-    );
-  }
-
   getProjectById(id: string): Observable<ProjectPopulated> {
     if (!id) {
       return throwError(() => new Error('Project ID is required'));

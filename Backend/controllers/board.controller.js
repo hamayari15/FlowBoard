@@ -42,17 +42,6 @@ exports.createBoard = async (req, res) => {
 };
 
 
-exports.getAll = async (req, res) => {
-  try {
-    const Boards = await Board.find().populate('project', 'name description');
-    res.status(200).json(Boards);
-
-  } catch (err) {
-    res.status(500).json({ message: "Error fetching boards", err });
-  }
-};
-
-
 exports.getById = async (req, res) => {
   try {
     const boardId = req.params.id;
@@ -103,6 +92,10 @@ exports.Delete = async (req, res) => {
   try {
     const id = req.params.id;
     const deletedBoard = await Board.findByIdAndDelete(id);
+
+    if (!deletedBoard) {
+      return res.status(404).json({ message: "Board not found" });
+    }
     res.status(200).json(deletedBoard);
 
   } catch (err) {

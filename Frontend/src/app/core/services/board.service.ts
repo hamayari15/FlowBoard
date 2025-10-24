@@ -20,13 +20,6 @@ export class BoardService {
     );
   }
 
-  getBoards(): Observable<Board[]> {
-    return this.http.get<Board[]>(`${this.apiUrl}/getAll`).pipe(
-      map((response: any) => response as Board[]),
-      catchError(this.handleError)
-    );
-  }
-
   getBoardById(id: string): Observable<Board> {
     if (!id) {
       return throwError(() => new Error('Board ID is required'));
