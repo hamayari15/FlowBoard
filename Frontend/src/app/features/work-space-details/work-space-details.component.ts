@@ -135,7 +135,7 @@ export class WorkSpaceDetailsComponent implements OnInit, OnDestroy {
     dialogRef.afterClosed().pipe(takeUntil(this.destroy$)).subscribe(result => { if (result?.success) this.refreshProjects(); });
   }
 
-  toggleArchiveProject(project: ProjectPopulated): void {
+  archiveProject(project: ProjectPopulated): void {
     if (!project._id) return;
     const action = project.isArchived ? 'Unarchive' : 'Archive';
     Swal.fire({

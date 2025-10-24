@@ -50,7 +50,7 @@
   <mat-card class="projects-section-card">
     <div class="projects-header-first-line">
       <mat-icon class="header-icon">folder</mat-icon>
-      <h1>{{ workSpaceData.name }} Projects</h1>
+      <h1>"{{ workSpaceData.name }}" Projects</h1>
       <span class="workspace-count" *ngIf="!loadingProjects && filteredProjects.length > 0">
         ({{ filteredProjects.length }})
       </span>
@@ -82,67 +82,66 @@
     </div>
 
     <div *ngIf="!loadingProjects && projects.length === 0" class="projects-empty-state empty-state">
-  <mat-icon class="empty-icon">assignment_turned_in</mat-icon>
-  <h2>No projects found</h2>
-  <p>Create your first project to get started</p>
-</div>
+      <mat-icon class="empty-icon">assignment_turned_in</mat-icon>
+      <h2>No projects found</h2>
+      <p>Create your first project to get started</p>
+    </div>
 
     <div *ngIf="!loadingProjects && projects.length > 0 && filteredProjects.length === 0" class="projects-no-results no-results">
-  <mat-icon class="empty-icon">search_off</mat-icon>
-  <h2>
-    No project found with name
-    <span class="highlight">"{{ searchTerm }}"</span>
-  </h2>
-</div>
-
+      <mat-icon class="empty-icon">search_off</mat-icon>
+      <h2>
+        No project found with name
+        <span class="highlight">"{{ searchTerm }}"</span>
+      </h2>
+    </div>
 
     <div *ngIf="!loadingProjects && filteredProjects.length > 0" class="projects-grid">
       <mat-card class="project-card" *ngFor="let project of filteredProjects">
-        <div class="project-header">
-          <div class="project-avatar">
+        <mat-card-header class="card-header">
+          <div mat-card-avatar class="workspace-avatar">
             <mat-icon>assignment</mat-icon>
           </div>
-          <div class="project-header-text">
-            <h3>{{ project.name }}</h3>
-            <p>{{ project.description || "No description provided" }}</p>
-          </div>
-        </div>
+          <mat-card-title>{{ project.name }}</mat-card-title>
+          <mat-card-subtitle>{{ project.description || 'No description provided' }}</mat-card-subtitle>
+        </mat-card-header>
 
-        <div class="project-info-line">
-          <mat-chip [style.background-color]="getStatusColor(project.status)" class="status-chip">
-            {{ project.status | titlecase }}
-          </mat-chip>
-          <div class="project-info-item">
+        <mat-card-content class="project-info">
+          <div class="info-item">
+            <mat-chip [style.background-color]="getStatusColor(project.status)" class="status-chip">
+              {{ project.status | titlecase }}
+            </mat-chip>
+          </div>
+          <div class="info-item">
             <mat-icon>group</mat-icon>
             <span>{{ getMembersCount(project) }} Members</span>
           </div>
-          <div class="project-info-item">
+          <div class="info-item">
             <mat-icon>schedule</mat-icon>
-            <span>{{ project.createdAt | date: "shortDate" }}</span>
+            <span>{{ project.createdAt | date: 'shortDate' }}</span>
           </div>
-        </div>
+        </mat-card-content>
 
-        <div class="project-actions">
+        <mat-card-actions class="card-actions">
           <button mat-icon-button color="primary" (click)="openProjectInviteDialog(project)" matTooltip="Invite members">
             <mat-icon>person_add</mat-icon>
           </button>
-          <button mat-button color="primary" (click)="goToDetails(project._id!)" [disabled]="!project._id" matTooltip="View project details">
+          <button mat-button color="primary" (click)="goToDetails(project._id!)" [disabled]="!project._id">
             <mat-icon>visibility</mat-icon>
             View
           </button>
-          <button mat-button class="edit-btn" (click)="openEditProjectDialog(project)" matTooltip="Edit project">
+          <button mat-button class="edit-btn" (click)="openEditProjectDialog(project)">
             <mat-icon>edit</mat-icon>
             Edit
           </button>
-          <button mat-button class="archive-btn" (click)="toggleArchiveProject(project)" matTooltip="Archive project">
+          <button mat-button class="archive-btn" (click)="archiveProject(project)">
             <mat-icon>archive</mat-icon>
             {{ project.isArchived ? 'Unarchive' : 'Archive' }}
           </button>
-          <button mat-button color="warn" (click)="deleteProject(project)" matTooltip="Delete project">
+          <button mat-button color="warn" (click)="deleteProject(project)">
             <mat-icon>delete</mat-icon>
             Delete
           </button>
-        </div>
+        </mat-card-actions>
       </mat-card>
     </div>
   </mat-card>
