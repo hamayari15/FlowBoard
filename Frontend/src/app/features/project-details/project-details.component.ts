@@ -127,7 +127,7 @@ export class ProjectDetailsComponent implements OnInit {
       confirmButtonText: 'Yes, archive it!'
     }).then(result => {
       if(result.isConfirmed && project._id) {
-        this.projectService.archiveProject(project._id).subscribe({
+        this.projectService.toggleArchiveProject(project._id).subscribe({
           next: () => { Swal.fire('Archived!', 'Project archived.', 'success'); this.getProjectById(this.projectId); },
           error: () => Swal.fire('Error', 'Failed to archive project', 'error')
         });

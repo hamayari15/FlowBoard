@@ -18,7 +18,6 @@ import { ProjectInviteDialogComponent } from '../project-invite-dialog/project-i
   styleUrls: ['./work-space-details.component.css'],
 })
 export class WorkSpaceDetailsComponent implements OnInit, OnDestroy {
-
   workSpaceId = '';
   workSpaceData: WorkspacePopulated | any = {};
   projects: ProjectPopulated[] = [];
@@ -29,9 +28,7 @@ export class WorkSpaceDetailsComponent implements OnInit, OnDestroy {
   archiveFilter: 'all' | 'archived' | 'active' = 'all';
   private destroy$ = new Subject<void>();
 
-  displayedColumns: string[] = [
-    'name', 'description', 'status', 'members', 'createdAt', 'actions',
-  ];
+  displayedColumns: string[] = ['name', 'description', 'status', 'members', 'createdAt', 'actions'];
 
   constructor(
     private route: ActivatedRoute,
@@ -96,35 +93,22 @@ export class WorkSpaceDetailsComponent implements OnInit, OnDestroy {
 
   openEditWorkspaceDialog(workspace: WorkspacePopulated): void {
     if (!workspace?._id) return;
-    const dialogRef = this.dialog.open(WorkSpaceDialogComponent, {
-      width: '500px', maxWidth: '90vw', data: { mode: 'edit', workspace }, disableClose: true,
-    });
+    const dialogRef = this.dialog.open(WorkSpaceDialogComponent, { width: '500px', maxWidth: '90vw', data: { mode: 'edit', workspace }, disableClose: true });
     dialogRef.afterClosed().pipe(takeUntil(this.destroy$)).subscribe(result => { if (result) this.getWorkSpaceById(); });
   }
 
   openWorkspaceInviteDialog(): void {
-    const dialogRef = this.dialog.open(WorkspaceInviteDialogComponent, {
-      width: '600px',
-      data: { workspaceId: this.workSpaceId, workspaceName: this.workSpaceData.name, type: 'workspace' },
-    });
+    const dialogRef = this.dialog.open(WorkspaceInviteDialogComponent, { width: '600px', data: { workspaceId: this.workSpaceId, workspaceName: this.workSpaceData.name, type: 'workspace' } });
     dialogRef.afterClosed().pipe(takeUntil(this.destroy$)).subscribe(result => { if (result?.success) this.getWorkSpaceById(); });
   }
 
   deleteWorkspace(): void {
     if (!this.workSpaceId) return;
     Swal.fire({
-      icon: 'warning',
-      title: 'Are you sure?',
-      text: "You won't be able to revert this action!",
-      confirmButtonText: 'Yes, delete it!',
-      showCancelButton: true,
-      confirmButtonColor: '#d33',
-      cancelButtonColor: '#3085d6',
-      reverseButtons: true,
+      icon: 'warning', title: 'Are you sure?', text: "You won't be able to revert this action!",
+      confirmButtonText: 'Yes, delete it!', showCancelButton: true, confirmButtonColor: '#d33', cancelButtonColor: '#3085d6', reverseButtons: true,
       showLoaderOnConfirm: true,
-      preConfirm: () => this.wsService.deleteWorkSpace(this.workSpaceId)
-        .pipe(takeUntil(this.destroy$))
-        .toPromise()
+      preConfirm: () => this.wsService.deleteWorkSpace(this.workSpaceId).pipe(takeUntil(this.destroy$)).toPromise()
         .catch((error: ApiError) => { Swal.showValidationMessage(`Request failed: ${error.message}`); throw error; }),
     }).then(result => {
       if (result.isConfirmed) {
@@ -134,51 +118,38 @@ export class WorkSpaceDetailsComponent implements OnInit, OnDestroy {
     });
   }
 
-  goToDetails(id: string): void {
-    if (!id) return;
-    this.router.navigate(['/project-details', id]);
-  }
+  goToDetails(id: string): void { if (!id) return; this.router.navigate(['/project-details', id]); }
 
   openAddProjectDialog(): void {
-    const dialogRef = this.dialog.open(ProjectDialogComponent, {
-      width: '550px', data: { mode: 'add', workspaceId: this.workSpaceId, project: null },
-    });
+    const dialogRef = this.dialog.open(ProjectDialogComponent, { width: '550px', data: { mode: 'add', workspaceId: this.workSpaceId, project: null } });
     dialogRef.afterClosed().pipe(takeUntil(this.destroy$)).subscribe(result => { if (result) this.refreshProjects(); });
   }
 
   openEditProjectDialog(project: ProjectPopulated): void {
-    const dialogRef = this.dialog.open(ProjectDialogComponent, {
-      width: '550px', data: { mode: 'edit', workspaceId: this.workSpaceId, project },
-    });
+    const dialogRef = this.dialog.open(ProjectDialogComponent, { width: '550px', data: { mode: 'edit', workspaceId: this.workSpaceId, project } });
     dialogRef.afterClosed().pipe(takeUntil(this.destroy$)).subscribe(result => { if (result) this.refreshProjects(); });
   }
 
   openProjectInviteDialog(project: ProjectPopulated): void {
-    const dialogRef = this.dialog.open(ProjectInviteDialogComponent, {
-      width: '600px', data: { projectId: project._id, projectName: project.name, workspaceName: this.workSpaceData.name, type: 'project' },
-    });
+    const dialogRef = this.dialog.open(ProjectInviteDialogComponent, { width: '600px', data: { projectId: project._id, projectName: project.name, workspaceName: this.workSpaceData.name, type: 'project' } });
     dialogRef.afterClosed().pipe(takeUntil(this.destroy$)).subscribe(result => { if (result?.success) this.refreshProjects(); });
   }
 
-  archiveProject(project: ProjectPopulated): void {
+  toggleArchiveProject(project: ProjectPopulated): void {
     if (!project._id) return;
+    const action = project.isArchived ? 'Unarchive' : 'Archive';
     Swal.fire({
       icon: 'question',
-      title: 'Archive Project',
-      text: `Are you sure you want to archive "${project.name}"?`,
-      showCancelButton: true,
-      confirmButtonColor: '#ff9800',
-      cancelButtonColor: '#3085d6',
-      reverseButtons: true,
-      confirmButtonText: 'Yes, archive it!',
+      title: `${action} Project`,
+      text: `Are you sure you want to ${action.toLowerCase()} "${project.name}"?`,
+      confirmButtonText: `Yes, ${action.toLowerCase()} it!`,
+      showCancelButton: true, confirmButtonColor: '#ff9800', cancelButtonColor: '#3085d6', reverseButtons: true,
       showLoaderOnConfirm: true,
-      preConfirm: () => this.projectService.archiveProject(project._id!)
-        .pipe(takeUntil(this.destroy$))
-        .toPromise()
+      preConfirm: () => this.projectService.toggleArchiveProject(project._id!).pipe(takeUntil(this.destroy$)).toPromise()
         .catch(error => { Swal.showValidationMessage(`Request failed: ${error.message}`); throw error; }),
     }).then(result => {
       if (result.isConfirmed) {
-        Swal.fire({ icon: 'success', title: 'Archived !', text: 'Project archived successfully.', timer: 2000, showConfirmButton: false });
+        Swal.fire({ icon: 'success', title: `${action}d !`, text: `Project ${action.toLowerCase()}ed successfully.`, timer: 2000, showConfirmButton: false });
         this.refreshProjects();
       }
     });
@@ -187,18 +158,10 @@ export class WorkSpaceDetailsComponent implements OnInit, OnDestroy {
   deleteProject(project: ProjectPopulated): void {
     if (!project._id) return;
     Swal.fire({
-      icon: 'warning',
-      title: 'Are you sure?',
-      text: "You won't be able to revert this action!",
-      confirmButtonText: 'Yes, delete it!',
-      showCancelButton: true,
-      confirmButtonColor: '#d33',
-      cancelButtonColor: '#3085d6',
-      reverseButtons: true,
+      icon: 'warning', title: 'Are you sure?', text: "You won't be able to revert this action!",
+      confirmButtonText: 'Yes, delete it!', showCancelButton: true, confirmButtonColor: '#d33', cancelButtonColor: '#3085d6', reverseButtons: true,
       showLoaderOnConfirm: true,
-      preConfirm: () => this.projectService.deleteProject(project._id!)
-        .pipe(takeUntil(this.destroy$))
-        .toPromise()
+      preConfirm: () => this.projectService.deleteProject(project._id!).pipe(takeUntil(this.destroy$)).toPromise()
         .catch(error => { Swal.showValidationMessage(`Request failed: ${error.message}`); throw error; }),
     }).then(result => {
       if (result.isConfirmed) {

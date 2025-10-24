@@ -14,6 +14,7 @@
           [(ngModel)]="searchTerm"
           (input)="searchWorkspaces()"
           placeholder="Enter workspace name"
+          [disabled]="workSpaces.length === 0"
         />
         <button
           mat-icon-button
@@ -55,10 +56,6 @@
     <mat-icon class="empty-icon">workspace_premium</mat-icon>
     <h2>No workspaces found</h2>
     <p>Create your first workspace to get started</p>
-    <button mat-raised-button color="primary" (click)="openAddDialog()">
-      <mat-icon>add</mat-icon>
-      Create Workspace
-    </button>
   </div>
 
   <div *ngIf="!loading && !error && workSpaces.length > 0 && filteredWorkSpaces.length === 0" class="no-results">

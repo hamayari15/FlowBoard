@@ -329,19 +329,25 @@ exports.Update = async (req, res) => {
 };
 
 
-exports.Archive = async (req, res) => {
+exports.ToggleArchive = async (req, res) => {
   try {
     const id = req.params.id;
+    const project = await Project.findById(id);
 
-    const archivedProject = await Project.findByIdAndUpdate(id,{ isArchived: true },{ new: true });
-
-    if (!archivedProject) {
+    if (!project) {
       return res.status(404).json({ message: "Project not found" });
     }
-    res.status(200).json({ message: "Project archived successfully", archivedProject });
+
+    project.isArchived = !project.isArchived;
+    await project.save();
+
+    res.status(200).json({
+      message: project.isArchived ? "Project archived successfully" : "Project unarchived successfully",
+      project
+    });
 
   } catch (err) {
-    res.status(500).json({ message: "Error archiving project", error: err.message });
+    res.status(500).json({ message: "Error updating project archive status", error: err.message });
   }
 };
 

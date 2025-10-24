@@ -218,6 +218,28 @@
   color: #607d8b;
 }
 
+/* Reuse Workspace page empty/no-results styling */
+.projects-empty-state.empty-state,
+.projects-no-results.no-results {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  text-align: center;
+}
+
+.projects-empty-state.empty-state .empty-icon,
+.projects-no-results.no-results .empty-icon {
+  margin-top: 24px;
+  color: #1976d2;
+}
+
+.projects-no-results.no-results .highlight {
+  color: #1976d2; 
+  font-weight: 600;
+}
+
 @media (max-width: 1024px) {
   .projects-grid {
     grid-template-columns: repeat(2, 1fr);

@@ -24,7 +24,7 @@
           <mat-icon>edit</mat-icon>
           Edit
         </button>
-<button mat-button color="warn" (click)="deleteWorkspace()" [disabled]="!workSpaceData._id" matTooltip="Delete workspace">
+        <button mat-button color="warn" (click)="deleteWorkspace()" [disabled]="!workSpaceData._id" matTooltip="Delete workspace">
           <mat-icon>delete</mat-icon>
           Delete
         </button>
@@ -51,35 +51,50 @@
     <div class="projects-header-first-line">
       <mat-icon class="header-icon">folder</mat-icon>
       <h1>{{ workSpaceData.name }} Projects</h1>
-      <span class="workspace-count" *ngIf="!loadingProjects && (filteredProjects?.length || 0) > 0">
-        ({{ filteredProjects?.length || 0 }})
+      <span class="workspace-count" *ngIf="!loadingProjects && filteredProjects.length > 0">
+        ({{ filteredProjects.length }})
       </span>
     </div>
 
     <div class="projects-header-second-line">
       <mat-form-field appearance="outline" class="search-field">
         <mat-label>Search project</mat-label>
-        <input matInput [(ngModel)]="searchTerm" (input)="searchProjects()" placeholder="Enter project name" />
+        <input matInput [(ngModel)]="searchTerm" (input)="searchProjects()" placeholder="Enter project name" [disabled]="!projects.length">
         <button mat-icon-button matSuffix *ngIf="searchTerm" (click)="searchTerm=''; searchProjects()">
           <mat-icon>close</mat-icon>
         </button>
       </mat-form-field>
 
-      <mat-button-toggle-group class="filter" [(ngModel)]="archiveFilter" (change)="setArchiveFilter(archiveFilter)" aria-label="Project Archive Filter">
+      <mat-button-toggle-group class="filter" [(ngModel)]="archiveFilter" (change)="setArchiveFilter(archiveFilter)" aria-label="Project Archive Filter" [disabled]="!projects.length">
         <mat-button-toggle value="all">All</mat-button-toggle>
         <mat-button-toggle value="active">Active</mat-button-toggle>
         <mat-button-toggle value="archived">Archived</mat-button-toggle>
       </mat-button-toggle-group>
 
-      <button mat-icon-button color="primary" class="refresh" matTooltip="Refresh projects" (click)="refreshProjects()" [disabled]="loadingProjects">
+      <button mat-icon-button color="primary" class="refresh" matTooltip="Refresh projects" (click)="refreshProjects()" [disabled]="loadingProjects || !projects.length">
         <mat-icon>refresh</mat-icon>
       </button>
 
       <button mat-raised-button color="primary" class="add-button" (click)="openAddProjectDialog()" [disabled]="loadingProjects">
         <mat-icon>add</mat-icon>
-        New Project
+        Add Project
       </button>
     </div>
+
+    <div *ngIf="!loadingProjects && projects.length === 0" class="projects-empty-state empty-state">
+  <mat-icon class="empty-icon">assignment_turned_in</mat-icon>
+  <h2>No projects found</h2>
+  <p>Create your first project to get started</p>
+</div>
+
+    <div *ngIf="!loadingProjects && projects.length > 0 && filteredProjects.length === 0" class="projects-no-results no-results">
+  <mat-icon class="empty-icon">search_off</mat-icon>
+  <h2>
+    No project found with name
+    <span class="highlight">"{{ searchTerm }}"</span>
+  </h2>
+</div>
+
 
     <div *ngIf="!loadingProjects && filteredProjects.length > 0" class="projects-grid">
       <mat-card class="project-card" *ngFor="let project of filteredProjects">
@@ -111,7 +126,7 @@
           <button mat-icon-button color="primary" (click)="openProjectInviteDialog(project)" matTooltip="Invite members">
             <mat-icon>person_add</mat-icon>
           </button>
-<button mat-button color="primary" (click)="goToDetails(project._id!)" [disabled]="!project._id" matTooltip="View project details">
+          <button mat-button color="primary" (click)="goToDetails(project._id!)" [disabled]="!project._id" matTooltip="View project details">
             <mat-icon>visibility</mat-icon>
             View
           </button>
@@ -119,9 +134,9 @@
             <mat-icon>edit</mat-icon>
             Edit
           </button>
-          <button mat-button class="archive-btn" (click)="archiveProject(project)" matTooltip="Archive project">
+          <button mat-button class="archive-btn" (click)="toggleArchiveProject(project)" matTooltip="Archive project">
             <mat-icon>archive</mat-icon>
-            Archive
+            {{ project.isArchived ? 'Unarchive' : 'Archive' }}
           </button>
           <button mat-button color="warn" (click)="deleteProject(project)" matTooltip="Delete project">
             <mat-icon>delete</mat-icon>
