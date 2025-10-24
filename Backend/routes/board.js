@@ -6,8 +6,6 @@ const boardController = require('../controllers/board.controller');
 
 Router.post('/Add', boardController.createBoard);
 
-Router.get('/getAll', boardController.getAll);
-
 Router.get('/getById/:id', boardController.getById);
 
 Router.get('/getByProject/:projectId', boardController.getByProject);
