@@ -57,7 +57,7 @@
   display: flex;
   align-items: center;
   font-weight: 500;
-  height: 42px;
+  height: 40px;
 }
 
 .loading-container,
@@ -67,22 +67,41 @@
   text-align: center;
 }
 
+/* ✅ Modern centered error */
 .error-container {
-  background: #fff5f5;
-  color: #b00020;
-  border: 1px solid #ffcdd2;
-  border-radius: 1rem;
-}
-
-.empty-state {
-  background: #fff;
-  border-radius: 1rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   height: 60vh;
+  background: none;
+  color: #b00020;
+  gap: 1rem;
+}
+
+.error-icon {
+  font-size: 3rem;
+  color: #b00020;
+}
+
+.error-container h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.error-container p {
+  color: #555;
+  max-width: 400px;
+}
+
+/* ✅ Clean centered "No workspaces found" (no card) */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 60vh;
+  color: #555;
 }
 
 .empty-icon {
@@ -208,15 +227,25 @@
   color: orange;
 }
 
+/* ✅ Responsive adjustments */
 @media (max-width: 768px) {
   .workspace-container {
     padding: 1rem 4vw;
   }
+
   .header-section {
     flex-direction: column;
     align-items: flex-start;
   }
+
   .workspaces-grid {
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  }
+
+  .error-container,
+  .empty-state,
+  .no-results {
+    height: auto;
+    padding: 2rem 1rem;
   }
 }

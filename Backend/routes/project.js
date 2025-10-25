@@ -16,7 +16,7 @@ Router.get('/getByWorkspace/:workspaceId', projectController.getByWorkspace);
 
 Router.put('/Update/:id', projectController.Update);
 
-Router.patch('/Archive/:id', projectController.Archive);
+Router.patch('/Archive/:id', projectController.ToggleArchive);
 
 Router.delete('/Delete/:id', projectController.Delete);
 

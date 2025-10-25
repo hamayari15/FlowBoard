@@ -31,16 +31,16 @@ export class BoardService {
     );
   }
 
-  getBoardsByProject(projectId: string): Observable<Board[]> {
-    if (!projectId) {
-      return throwError(() => new Error('Project ID is required'));
-    }
+  // getBoardsByProject(projectId: string): Observable<Board[]> {
+  //   if (!projectId) {
+  //     return throwError(() => new Error('Project ID is required'));
+  //   }
 
-    return this.http.get<Board[]>(`${this.apiUrl}/getByProject/${projectId}`).pipe(
-      map((response: any) => response as Board[]),
-      catchError(this.handleError)
-    );
-  }
+  //   return this.http.get<Board[]>(`${this.apiUrl}/getByProject/${projectId}`).pipe(
+  //     map((response: any) => response as Board[]),
+  //     catchError(this.handleError)
+  //   );
+  // }
 
   updateBoard(id: string, boardData: BoardUpdateRequest): Observable<Board> {
     if (!id) {

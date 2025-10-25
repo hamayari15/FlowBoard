@@ -73,7 +73,7 @@ export class ProjectService {
     );
   }
 
-  archiveProject(id: string): Observable<boolean> {
+  toggleArchiveProject(id: string): Observable<boolean> {
     if (!id) {
       return throwError(() => new Error('Project ID is required'));
     }

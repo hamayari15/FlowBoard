@@ -309,6 +309,6 @@ exports.Delete = async (req, res) => {
     res.status(200).json(deletedWorkSpace);
 
   } catch (err) {
-    res.status(500).json({ message: "Error deleting workspace", err });
+    res.status(500).json({ message: "Error Deleting Workspace", err });
   }
 };
