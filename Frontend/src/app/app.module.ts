@@ -5,6 +5,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { NgChartsModule } from 'ng2-charts';
+
 
 // Angular Material Modules
 import { MatDialogModule } from '@angular/material/dialog';
@@ -55,8 +57,8 @@ import { BoardViewComponent } from './features/board/board-view.component';
 import { TaskDialogComponent } from './features/task-dialog/task-dialog.component';
 import { TaskDetailDialogComponent } from './features/task-detail-dialog/task-detail-dialog.component';
 import { EditCommentDialogComponent } from './features/edit-comment-dialog/edit-comment-dialog.component';
-import { WorkSpaceStatsComponent } from './features/work-space-stats/work-space-stats.component';
 import { PageNotFoundComponent } from './features/page-not-found/page-not-found.component';
+import { WorkSpaceStatsComponent } from './features/work-space-stats/work-space-stats.component';
 
 @NgModule({
   declarations: [
@@ -94,6 +96,7 @@ import { PageNotFoundComponent } from './features/page-not-found/page-not-found.
     CommonModule,
     RouterModule,
     AppRoutingModule,
+    NgChartsModule, 
     
     // Angular Material Modules
     MatDialogModule,

@@ -1,1 +1,53 @@
-<p>work-space-stats works!</p>
+<div class="workspace-stats">
+  <h2>Workspace Stats</h2>
+  <p>Total Tasks: {{ totalTasks }}</p>
+
+  <div class="charts-container">
+    <div class="chart">
+      <h3>Task Status</h3>
+      <canvas baseChart
+              [data]="taskStatusData"
+              [options]="chartOptions"
+              [type]="'doughnut'">
+      </canvas>
+    </div>
+
+    <div class="chart">
+      <h3>Task Priority</h3>
+      <canvas baseChart
+              [data]="taskPriorityData"
+              [options]="chartOptions"
+              [type]="'doughnut'">
+      </canvas>
+    </div>
+
+    <div class="chart">
+      <h3>Tasks by Assignee</h3>
+      <canvas baseChart
+              [data]="assigneeStats"
+              [options]="chartOptions"
+              [type]="'bar'">
+      </canvas>
+    </div>
+  </div>
+
+  <div class="project-progress">
+    <h3>Project Progress</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Project Name</th>
+          <th>Total Tasks</th>
+          <th>Completed Tasks</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let project of projectProgress">
+          <td>{{ project.projectName }}</td>
+          <td>{{ project.totalTasks }}</td>
+          <td>{{ project.doneTasks }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
