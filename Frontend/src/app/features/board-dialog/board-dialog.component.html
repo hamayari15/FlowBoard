@@ -1,14 +1,21 @@
-<div class="board-dialog">
-  <h2 mat-dialog-title>
-    <mat-icon>view_kanban</mat-icon>
+<div class="board-dialog-container">
+  <h2 mat-dialog-title class="dialog-title">
+    <mat-icon>{{ mode === 'add' ? 'add_circle' : 'edit' }}</mat-icon>
     {{ mode === 'add' ? 'Create New Board' : 'Edit Board' }}
   </h2>
 
-  <mat-dialog-content>
+  <mat-dialog-content class="dialog-content">
     <form [formGroup]="boardForm" class="board-form">
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Board Name</mat-label>
-        <input matInput formControlName="name" placeholder="Enter board name" required>
+        <input
+          matInput
+          formControlName="name"
+          placeholder="Enter board name"
+          maxlength="100"
+        />
+        <mat-icon matSuffix>view_kanban</mat-icon>
+        <mat-hint>{{ boardForm.get('name')?.value?.length || 0 }}/100</mat-hint>
         <mat-error *ngIf="boardForm.get('name')?.hasError('required')">
           Board name is required
         </mat-error>
@@ -19,12 +26,15 @@
 
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Description</mat-label>
-        <textarea 
-          matInput 
-          formControlName="description" 
+        <textarea
+          matInput
+          formControlName="description"
           placeholder="Add a description..."
           rows="4"
+          maxlength="500"
         ></textarea>
+        <mat-icon matSuffix>description</mat-icon>
+        <mat-hint>{{ boardForm.get('description')?.value?.length || 0 }}/500</mat-hint>
       </mat-form-field>
 
       <div class="info-note" *ngIf="mode === 'add'">
@@ -34,18 +44,17 @@
     </form>
   </mat-dialog-content>
 
-  <mat-dialog-actions align="end">
-    <button mat-button (click)="onCancel()" [disabled]="loading">
-      Cancel
-    </button>
-    <button 
-      mat-raised-button 
-      color="primary" 
+  <mat-dialog-actions align="end" class="dialog-actions">
+    <button mat-button (click)="onCancel()" [disabled]="loading">Cancel</button>
+    <button
+      mat-raised-button
+      color="primary"
       (click)="onSubmit()"
-      [disabled]="loading || boardForm.invalid"
+      [disabled]="loading"
     >
-      <mat-spinner *ngIf="loading" diameter="20"></mat-spinner>
-      <span *ngIf="!loading">{{ mode === 'add' ? 'Create Board' : 'Update Board' }}</span>
+      <mat-spinner diameter="16" *ngIf="loading"></mat-spinner>
+      <mat-icon *ngIf="!loading">{{ mode === 'add' ? 'add' : 'save' }}</mat-icon>
+      {{ mode === 'add' ? 'Create Board' : 'Update Board' }}
     </button>
   </mat-dialog-actions>
 </div>

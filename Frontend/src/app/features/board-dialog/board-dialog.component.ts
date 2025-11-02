@@ -1,11 +1,9 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import Swal from 'sweetalert2';
-
 import { BoardService } from 'src/app/core/services/board.service';
-import { BoardCreateRequest, BoardUpdateRequest } from 'src/app/core/models';
-
+import { BoardCreateRequest, BoardUpdateRequest, Board, ApiError } from 'src/app/core/models';
 
 @Component({
   selector: 'app-board-dialog',
@@ -24,10 +22,9 @@ export class BoardDialogComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
     this.mode = data.mode || 'add';
-    
     this.boardForm = this.fb.group({
-      name: ['', [Validators.required, Validators.minLength(3)]],
-      description: ['']
+      name: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(100), this.noWhitespaceValidator]],
+      description: ['', [Validators.maxLength(500)]]
     });
   }
 
@@ -40,28 +37,33 @@ export class BoardDialogComponent implements OnInit {
     }
   }
 
+  private noWhitespaceValidator(control: AbstractControl): { [key: string]: any } | null {
+    if (control.value && control.value.trim().length === 0) {
+      return { whitespace: true };
+    }
+    return null;
+  }
+
   onSubmit(): void {
     if (this.boardForm.invalid) {
-      Object.keys(this.boardForm.controls).forEach(key => {
-        this.boardForm.get(key)?.markAsTouched();
-      });
+      Object.keys(this.boardForm.controls).forEach(key => this.boardForm.get(key)?.markAsTouched());
       return;
     }
 
     this.loading = true;
+    const formValue = this.boardForm.value;
 
     if (this.mode === 'add') {
-      this.createBoard();
+      this.createBoard(formValue);
     } else {
-      this.updateBoard();
+      this.updateBoard(formValue);
     }
   }
 
-  createBoard(): void {
-    const formValue = this.boardForm.value;
+  private createBoard(formValue: any): void {
     const boardData: BoardCreateRequest = {
-      name: formValue.name,
-      description: formValue.description,
+      name: formValue.name.trim(),
+      description: formValue.description?.trim() || undefined,
       project: this.data.projectId || this.data.project,
       columns: [
         { name: 'To Do', order: 0 },
@@ -72,40 +74,56 @@ export class BoardDialogComponent implements OnInit {
     };
 
     this.boardService.createBoard(boardData).subscribe({
-      next: (response) => {
-        Swal.fire('Success', 'Board created successfully', 'success');
-        this.dialogRef.close(response);
-      },
-      error: (error) => {
-        console.error('Error creating board:', error);
-        Swal.fire('Error', error.message || 'Failed to create board', 'error');
+      next: (board: Board) => {
         this.loading = false;
+        this.data.board = board;
+        Swal.fire({
+          icon: 'success',
+          title: 'Board Created !',
+          text: 'Your board has been created successfully.',
+          showConfirmButton: true
+        });
+        this.dialogRef.close(board);
+      },
+      error: (error: ApiError) => {
+        this.loading = false;
+        this.showErrorAlert('Creation Failed', error.message || 'Failed to create board');
       }
     });
   }
 
-  updateBoard(): void {
-    const formValue = this.boardForm.value;
+  private updateBoard(formValue: any): void {
+    if (!this.data.board?._id) return;
+
     const boardData: BoardUpdateRequest = {
-      name: formValue.name,
-      description: formValue.description
+      name: formValue.name.trim(),
+      description: formValue.description?.trim() || undefined
     };
 
     this.boardService.updateBoard(this.data.board._id, boardData).subscribe({
-      next: (response) => {
-        Swal.fire('Success', 'Board updated successfully', 'success');
-        this.dialogRef.close(response);
-      },
-      error: (error) => {
-        console.error('Error updating board:', error);
-        Swal.fire('Error', error.message || 'Failed to update board', 'error');
+      next: (board: Board) => {
         this.loading = false;
+        Swal.fire({
+          icon: 'success',
+          title: 'Board Updated !',
+          text: 'Board updated successfully.',
+          timer: 2000,
+          showConfirmButton: false
+        });
+        this.dialogRef.close(board);
+      },
+      error: (error: ApiError) => {
+        this.loading = false;
+        this.showErrorAlert('Update Failed', error.message || 'Failed to update board');
       }
     });
+  }
+
+  private showErrorAlert(title: string, message: string): void {
+    Swal.fire({ icon: 'error', title, text: message, confirmButtonColor: '#3085d6' });
   }
 
   onCancel(): void {
     this.dialogRef.close();
   }
-  
-};
+}

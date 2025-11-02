@@ -6,8 +6,6 @@ const taskController = require('../controllers/task.controller');
 
 Router.post('/Add', taskController.createTask);
 
-Router.get('/getAll', taskController.getAll);
-
 Router.get('/getById/:id', taskController.getById);
 
 Router.get('/getByBoard/:boardId', taskController.getByBoard);
