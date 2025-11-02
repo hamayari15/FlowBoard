@@ -14,6 +14,8 @@ Router.get('/getAll', workSpaceController.getAll);
 
 Router.get('/getById/:id', workSpaceController.getById);
 
+Router.get('/getWorkspaceStats/:id', workSpaceController.getWorkspaceStats);
+
 Router.put('/Update/:id', workSpaceController.Update);
 
 Router.delete('/Delete/:id', workSpaceController.Delete);

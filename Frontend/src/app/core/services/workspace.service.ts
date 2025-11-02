@@ -25,11 +25,11 @@ export class WorkspaceService {
   }
 
   inviteMember(workspaceId: string, email: string) {
-    return this.http.post(`${this.apiUrl}/${workspaceId}/addMember`, {email})
+    return this.http.post(`${this.apiUrl}/${workspaceId}/addMember`, { email });
   }
 
   bulkInviteMembers(workspaceId: string, emails: string[]) {
-    return this.http.post(`${this.apiUrl}/${workspaceId}/bulkInvite`, {emails})
+    return this.http.post(`${this.apiUrl}/${workspaceId}/bulkInvite`, { emails });
   }
 
   getWorkSpaces(): Observable<WorkspacePopulated[]> {
@@ -38,14 +38,23 @@ export class WorkspaceService {
       catchError(this.handleError)
     );
   }
-
+  
   getWorkSpaceById(id: string): Observable<WorkspacePopulated> {
     if (!id) {
       return throwError(() => new Error('Workspace ID is required'));
     }
-
+    
     return this.http.get<WorkspacePopulated>(`${this.apiUrl}/getById/${id}`).pipe(
       map((response: any) => response as WorkspacePopulated),
+      catchError(this.handleError)
+    );
+  }
+  
+  getWorkspaceStats(wsId: string): Observable<any> {
+    if (!wsId) {
+      return throwError(() => new Error('Workspace ID is required'));
+    }
+    return this.http.get(`${this.apiUrl}/stats/${wsId}`).pipe(
       catchError(this.handleError)
     );
   }
@@ -71,6 +80,7 @@ export class WorkspaceService {
       catchError(this.handleError)
     );
   }
+
 
   private handleError = (error: HttpErrorResponse): Observable<never> => {
     let errorMessage = 'An unknown error occurred';
@@ -114,7 +124,6 @@ export class WorkspaceService {
       error: error.error,
     };
 
-    console.error('WorkspaceService Error:', apiError);
     return throwError(() => apiError);
   };
 }

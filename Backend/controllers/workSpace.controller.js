@@ -3,6 +3,9 @@ const User = require("../models/User");
 
 const { sendInvitationEmail } = require("../services/email"); 
 
+const Project = require("../models/Project");
+const Task = require("../models/Task");
+
 
 exports.createWorkSpace = async (req, res) => {
   try {
@@ -276,6 +279,52 @@ exports.getById = async (req, res) => {
 
   } catch (err) {
     res.status(500).json({ message: "Error fetching workSpace", err });
+  }
+};
+
+
+exports.getWorkspaceStats = async (req, res) => {
+  try {
+    const { wsId } = req.params;
+
+    // Get all projects in the workspace
+    const projects = await Project.find({ workspace: wsId });
+    const projectIds = projects.map(p => p._id);
+
+    // Get all tasks for these projects
+    const tasks = await Task.find({ board: { $in: projectIds } });
+
+    // Aggregate stats
+    const taskStatusCount = tasks.reduce((acc, task) => {
+      acc[task.status] = (acc[task.status] || 0) + 1;
+      return acc;
+    }, {});
+
+    const taskPriorityCount = tasks.reduce((acc, task) => {
+      acc[task.priority] = (acc[task.priority] || 0) + 1;
+      return acc;
+    }, {});
+
+    const projectProgress = projects.map(project => {
+      const projectTasks = tasks.filter(t => t.board.equals(project._id));
+      const doneTasks = projectTasks.filter(t => t.status === 'done').length;
+      return {
+        projectId: project._id,
+        projectName: project.name,
+        totalTasks: projectTasks.length,
+        doneTasks
+      };
+    });
+
+    res.status(200).json({
+      totalTasks: tasks.length,
+      taskStatusCount,
+      taskPriorityCount,
+      projectProgress
+    });
+
+  } catch (err) {
+    res.status(500).json({ message: "Error fetching workspace stats", error: err.message });
   }
 };
 
