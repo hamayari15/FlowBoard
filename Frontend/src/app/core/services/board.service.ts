@@ -3,7 +3,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
-import { Board, BoardCreateRequest, BoardUpdateRequest, ApiError } from '../models';
+import { Board, User, BoardCreateRequest, BoardUpdateRequest, ApiError } from '../models';
 
 @Injectable({
   providedIn: 'root'
@@ -41,6 +41,15 @@ export class BoardService {
   //     catchError(this.handleError)
   //   );
   // }
+
+  getMembersByBoardId(boardId: string): Observable<User[]> {
+    if (!boardId) return throwError(() => new Error('Board ID is required'));
+
+    return this.http.get<User[]>(`${this.apiUrl}/getMembersByBoardId/${boardId}/members`).pipe(
+      map((response: any) => response as User[]),
+      catchError(this.handleError)
+    );
+  }
 
   updateBoard(id: string, boardData: BoardUpdateRequest): Observable<Board> {
     if (!id) {

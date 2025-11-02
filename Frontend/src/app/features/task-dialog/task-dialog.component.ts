@@ -4,8 +4,8 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import Swal from 'sweetalert2';
 import { TaskService } from 'src/app/core/services/task.service';
 import { AuthService } from 'src/app/core/services/auth.service';
-import { ProjectService } from 'src/app/core/services/project.service';
 import { User, TaskCreateRequest, TaskUpdateRequest } from 'src/app/core/models';
+import { BoardService } from 'src/app/core/services';
 
 @Component({
   selector: 'app-task-dialog',
@@ -24,7 +24,7 @@ export class TaskDialogComponent implements OnInit {
     private fb: FormBuilder,
     private taskService: TaskService,
     private authService: AuthService,
-    private projectService: ProjectService,
+    private boardService: BoardService,
     public dialogRef: MatDialogRef<TaskDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
@@ -55,17 +55,22 @@ export class TaskDialogComponent implements OnInit {
   }
 
   loadProjectMembers(): void {
-    this.loadingMembers = true;
-    this.projectService.getProjectById(this.data.projectId).subscribe({
-      next: (project: any) => {
-        this.projectMembers = project.members || [];
-        this.loadingMembers = false;
-      },
-      error: () => {
-        this.loadingMembers = false;
-      }
-    });
+  if (!this.data.projectId) return;
+  console.log("hama", this.data); 
+
+  this.boardService.getMembersByBoardId(this.data.boardId).subscribe({
+  next: (members: User[]) => {
+    this.projectMembers = members;
+    this.loadingMembers = false;
+  },
+  error: (err) => {
+    console.log(err);
+    this.loadingMembers = false;
+    Swal.fire('Error', 'Failed to load project members', 'error');
   }
+});
+  };
+
 
   onSubmit(): void {
     if (this.taskForm.invalid) {

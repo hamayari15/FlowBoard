@@ -70,6 +70,25 @@ exports.getById = async (req, res) => {
 // };
 
 
+
+exports.getMembersByBoardId = async (req, res) => {
+  try {
+    const boardId = req.params.id;
+    const board = await Board.findById(boardId);
+    if (!board) return res.status(404).json({ message: "Board not found" });
+
+    const project = await Project.findById(board.project).populate('members', 'firstName lastName email');
+    if (!project) return res.status(404).json({ message: "Project not found" });
+
+    res.status(200).json(project.members);
+
+  } catch (err) {
+    console.error('Error fetching members by board:', err);
+    res.status(500).json({ message: "Failed to fetch project members", error: err.message });
+  }
+};
+
+
 exports.Update = async (req, res) => {
   try {
     const id = req.params.id;

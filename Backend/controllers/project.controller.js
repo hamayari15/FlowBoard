@@ -280,8 +280,9 @@ exports.getById = async (req, res) => {
     const id = req.params.id;
     const project = await Project.findById(id)
       .populate("workspace", "name description")
-      .populate("owner", "name email")
-      .populate("members", "name email");
+      .populate("owner", "firstName lastName email")
+      .populate("members", "firstName lastName email")
+
 
     if (!project) {
       return res.status(404).json({ message: "Project not found" });
