@@ -1,5 +1,5 @@
 <div class="workspace-container">
-  <div class="header-section">
+  <div class="header-section" *ngIf="!loading && !error && workSpaces.length > 0">
     <div class="title-section">
       <mat-icon class="header-icon">workspaces</mat-icon>
       <h1>Workspaces</h1>
@@ -56,6 +56,10 @@
     <mat-icon class="empty-icon">workspace_premium</mat-icon>
     <h2>No workspaces found</h2>
     <p>Create your first workspace to get started</p>
+    <button mat-raised-button color="primary" class="add-button" (click)="openAddDialog()">
+      <mat-icon>add</mat-icon>
+      Add Workspace
+    </button>
   </div>
 
   <div *ngIf="!loading && !error && workSpaces.length > 0 && filteredWorkSpaces.length === 0" class="no-results">

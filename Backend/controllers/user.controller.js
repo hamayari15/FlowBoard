@@ -162,7 +162,7 @@ exports.login = async (req, res) => {
     const user = await User.findOne({ email: email.toLowerCase() });
 
     if (!user) {
-      return res.status(401).json({ message: "Invalid email or password" });
+      return res.status(404).json({ message: "No account found with this email address. Please check your email or create a new account." });
     }
 
     // Check if account is active
@@ -174,7 +174,7 @@ exports.login = async (req, res) => {
     const validPassword = await bcrypt.compare(password, user.password);
 
     if (!validPassword) {
-      return res.status(401).json({ message: "Invalid email or password" });
+      return res.status(401).json({ message: "Incorrect password. Please try again or reset your password." });
     }
 
     // Check if JWT_SECRET is configured
