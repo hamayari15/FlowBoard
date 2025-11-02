@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { Router } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
@@ -33,12 +33,23 @@ export class RegisterComponent implements OnInit {
     });
   }
 
+  // Email validator that matches the backend regex pattern
+  emailValidator(control: AbstractControl): ValidationErrors | null {
+    if (!control.value) {
+      return null; // Don't validate empty values to allow required validator to handle it
+    }
+    // Same regex as backend: /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,})+$/
+    const emailRegex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,})+$/;
+    const valid = emailRegex.test(control.value);
+    return valid ? null : { invalidEmail: true };
+  }
+
   buildForm(): void {
     this.registerForm = this.fb.group({
       firstName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(50)]],
       lastName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(50)]],
       userName: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(30)]],
-      email: ['', [Validators.required, Validators.email]],
+      email: ['', [Validators.required, this.emailValidator.bind(this)]],
       password: ['', [Validators.required, Validators.minLength(6)]],
       confirmPassword: ['', Validators.required],
       wsId: this.wsId,
@@ -77,7 +88,7 @@ export class RegisterComponent implements OnInit {
       return `${fieldNames[controlName]} is required`;
     }
     
-    if (control.hasError('email')) {
+    if (control.hasError('invalidEmail')) {
       return 'Please enter a valid email address';
     }
     
@@ -139,17 +150,45 @@ export class RegisterComponent implements OnInit {
         console.error('❌ Registration failed:', err);
         this.isSubmitting = false;
         
-        // Display user-friendly error message
+        // Display specific error messages based on backend responses
         if (err.message) {
           this.serverError = err.message;
         } else if (err.error?.message) {
-          this.serverError = err.error.message;
+          // Backend error messages
+          const message = err.error.message;
+          
+          // Map backend messages to user-friendly messages with icons
+          if (message.includes('All fields are required')) {
+            this.serverError = '⚠️ All fields are required: firstName, lastName, userName, email, and password.';
+          } else if (message.includes('valid email')) {
+            this.serverError = '📧 Please enter a valid email address.';
+          } else if (message.includes('Username must be between')) {
+            this.serverError = '👤 Username must be between 3 and 30 characters.';
+          } else if (message.includes('Password must be at least')) {
+            this.serverError = '🔒 Password must be at least 6 characters long.';
+          } else if (message.includes('email already exists')) {
+            this.serverError = '❌ An account with this email already exists. Please use a different email or try logging in.';
+          } else if (message.includes('username is already taken')) {
+            this.serverError = '❌ This username is already taken. Please choose a different username.';
+          } else if (message.includes('Workspace not found')) {
+            this.serverError = '🔍 Workspace not found. Please check your invitation link.';
+          } else if (message.includes('Project not found')) {
+            this.serverError = '🔍 Project not found. Please check your invitation link.';
+          } else {
+            this.serverError = message;
+          }
         } else if (err.status === 0) {
-          this.serverError = 'Unable to connect to server. Please check your internet connection.';
+          this.serverError = '🌐 Unable to connect to server. Please check your internet connection.';
         } else if (err.status === 409) {
-          this.serverError = 'An account with this email or username already exists.';
+          this.serverError = '❌ An account with this email or username already exists.';
+        } else if (err.status === 400) {
+          this.serverError = '⚠️ Invalid input. Please check your information and try again.';
+        } else if (err.status === 404) {
+          this.serverError = '🔍 Resource not found. Please check your invitation link.';
+        } else if (err.status === 500) {
+          this.serverError = '⚠️ Server error. Please try again later.';
         } else {
-          this.serverError = 'Registration failed. Please try again later.';
+          this.serverError = '❌ Registration failed. Please try again later.';
         }
       }
     });
