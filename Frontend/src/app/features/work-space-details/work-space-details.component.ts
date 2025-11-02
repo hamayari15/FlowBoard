@@ -128,7 +128,7 @@ export class WorkSpaceDetailsComponent implements OnInit, OnDestroy {
   openEditProjectDialog(project: ProjectPopulated): void {
     const dialogRef = this.dialog.open(ProjectDialogComponent, { width: '550px', data: { mode: 'edit', workspaceId: this.workSpaceId, project } });
     dialogRef.afterClosed().pipe(takeUntil(this.destroy$)).subscribe(result => { if (result) this.refreshProjects(); });
-  }
+  } 
 
   openProjectInviteDialog(project: ProjectPopulated): void {
     const dialogRef = this.dialog.open(ProjectInviteDialogComponent, { width: '600px', data: { projectId: project._id, projectName: project.name, workspaceName: this.workSpaceData.name, type: 'project' } });

@@ -5,9 +5,9 @@ import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/dr
 import Swal from 'sweetalert2';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-
 import { BoardService } from 'src/app/core/services/board.service';
 import { TaskService } from 'src/app/core/services/task.service';
+import { BoardDialogComponent } from '../board-dialog/board-dialog.component';
 import { Board, BoardColumn, TaskPopulated, getColumnId } from 'src/app/core/models';
 import { TaskDialogComponent } from '../task-dialog/task-dialog.component';
 import { TaskDetailDialogComponent } from '../task-detail-dialog/task-detail-dialog.component';
@@ -16,12 +16,12 @@ interface ColumnWithTasks extends BoardColumn {
   id: string;
   tasks: TaskPopulated[];
 }
+
 @Component({
   selector: 'app-board-view',
   templateUrl: './board-view.component.html',
   styleUrls: ['./board-view.component.css']
 })
-
 export class BoardViewComponent implements OnInit, OnDestroy {
   boardId: string = '';
   board: Board | null = null;
@@ -40,9 +40,7 @@ export class BoardViewComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.boardId = this.route.snapshot.paramMap.get('boardId') || '';
-    if (this.boardId) {
-      this.loadBoardData();
-    }
+    if (this.boardId) this.loadBoardData();
   }
 
   ngOnDestroy(): void {
@@ -52,7 +50,6 @@ export class BoardViewComponent implements OnInit, OnDestroy {
 
   loadBoardData(): void {
     this.loading = true;
-    
     this.boardService.getBoardById(this.boardId)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
@@ -60,8 +57,7 @@ export class BoardViewComponent implements OnInit, OnDestroy {
           this.board = board;
           this.loadTasks();
         },
-        error: (error) => {
-          console.error('Error loading board:', error);
+        error: () => {
           Swal.fire('Error', 'Failed to load board', 'error');
           this.loading = false;
         }
@@ -76,8 +72,7 @@ export class BoardViewComponent implements OnInit, OnDestroy {
           this.organizeTasks(tasks);
           this.loading = false;
         },
-        error: (error) => {
-          console.error('Error loading tasks:', error);
+        error: () => {
           Swal.fire('Error', 'Failed to load tasks', 'error');
           this.loading = false;
         }
@@ -86,9 +81,7 @@ export class BoardViewComponent implements OnInit, OnDestroy {
 
   organizeTasks(tasks: TaskPopulated[]): void {
     if (!this.board) return;
-
     this.columnsWithTasks = this.board.columns.map(column => {
-      console.log(this.board);
       const columnId = getColumnId(column);
       return {
         ...column,
@@ -98,61 +91,39 @@ export class BoardViewComponent implements OnInit, OnDestroy {
           .sort((a, b) => a.position - b.position)
       };
     });
-
-    // Update connected drop lists for drag and drop
     this.connectedDropLists = this.columnsWithTasks.map(col => col.id);
   }
 
   onDrop(event: CdkDragDrop<TaskPopulated[]>, columnId: string): void {
     if (event.previousContainer === event.container) {
-      // Reordering within the same column
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
       this.updateTaskPositions(event.container.data, columnId);
     } else {
-      // Moving to a different column
-      transferArrayItem(
-        event.previousContainer.data,
-        event.container.data,
-        event.previousIndex,
-        event.currentIndex
-      );
-      
-      // Update the moved task's status
+      transferArrayItem(event.previousContainer.data, event.container.data, event.previousIndex, event.currentIndex);
       const movedTask = event.container.data[event.currentIndex];
       if (movedTask._id) {
         this.taskService.updateTask(movedTask._id, { status: columnId })
           .pipe(takeUntil(this.destroy$))
           .subscribe({
-            error: (error) => {
-              console.error('Error updating task status:', error);
+            error: () => {
               Swal.fire('Error', 'Failed to move task', 'error');
-              this.loadTasks(); // Reload to reset state
+              this.loadTasks();
             }
           });
       }
-      
-      // Update positions for both columns
       this.updateTaskPositions(event.previousContainer.data, event.previousContainer.id);
       this.updateTaskPositions(event.container.data, columnId);
     }
   }
 
   updateTaskPositions(tasks: TaskPopulated[], columnId: string): void {
-    const updates = tasks.map((task, index) => ({
-      id: task._id!,
-      position: index,
-      status: columnId
-    }));
-
-    // Update positions on the backend
     tasks.forEach((task, index) => {
       if (task._id) {
-        this.taskService.updateTask(task._id, { 
-          position: index,
-          status: columnId 
-        }).pipe(takeUntil(this.destroy$)).subscribe({
-          error: (error) => console.error('Error updating task position:', error)
-        });
+        this.taskService.updateTask(task._id, { position: index, status: columnId })
+          .pipe(takeUntil(this.destroy$))
+          .subscribe({
+            error: () => console.error('Error updating task position')
+          });
       }
     });
   }
@@ -168,37 +139,27 @@ export class BoardViewComponent implements OnInit, OnDestroy {
         board: this.board
       }
     });
-
     dialogRef.afterClosed()
       .pipe(takeUntil(this.destroy$))
       .subscribe(result => {
-        if (result) {
-          this.loadTasks();
-        }
+        if (result) this.loadTasks();
       });
   }
 
   openTaskDetail(task: TaskPopulated): void {
     const dialogRef = this.dialog.open(TaskDetailDialogComponent, {
       width: '600px',
-      data: {
-        task,
-        board: this.board
-      }
+      data: { task, board: this.board }
     });
-
     dialogRef.afterClosed()
       .pipe(takeUntil(this.destroy$))
       .subscribe(result => {
-        if (result?.updated || result?.deleted) {
-          this.loadTasks();
-        }
+        if (result?.updated || result?.deleted) this.loadTasks();
       });
   }
 
   deleteTask(task: TaskPopulated, event: Event): void {
     event.stopPropagation();
-    
     Swal.fire({
       title: 'Delete Task?',
       text: `Are you sure you want to delete "${task.title}"?`,
@@ -217,10 +178,42 @@ export class BoardViewComponent implements OnInit, OnDestroy {
               Swal.fire('Deleted!', 'Task has been deleted.', 'success');
               this.loadTasks();
             },
-            error: (error) => {
-              console.error('Error deleting task:', error);
-              Swal.fire('Error', 'Failed to delete task', 'error');
-            }
+            error: () => Swal.fire('Error', 'Failed to delete task', 'error')
+          });
+      }
+    });
+  }
+
+   openBoardEditDialog(): void {
+    if (!this.board) return;
+    const dialogRef = this.dialog.open(BoardDialogComponent, {
+      width: '500px',
+      data: { mode: 'edit', board: this.board }
+    });
+    dialogRef.afterClosed().pipe(takeUntil(this.destroy$)).subscribe(result => {
+      if (result) this.loadBoardData();
+    });
+  }
+
+  deleteBoard(): void {
+    Swal.fire({
+      title: 'Delete Board?',
+      text: 'Are you sure you want to delete this board?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.boardService.deleteBoard(this.boardId)
+          .pipe(takeUntil(this.destroy$))
+          .subscribe({
+            next: () => {
+              Swal.fire('Deleted!', 'Board has been deleted.', 'success');
+              this.router.navigate(['/workSpaces-list']);
+            },
+            error: () => Swal.fire('Error', 'Failed to delete board', 'error')
           });
       }
     });
@@ -257,5 +250,4 @@ export class BoardViewComponent implements OnInit, OnDestroy {
   getColumnId(column: ColumnWithTasks): string {
     return column.id;
   }
-
-};
+}
