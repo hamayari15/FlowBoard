@@ -1,53 +1,473 @@
-<div class="workspace-stats">
-  <h2>Workspace Stats</h2>
-  <p>Total Tasks: {{ totalTasks }}</p>
-
-  <div class="charts-container">
-    <div class="chart">
-      <h3>Task Status</h3>
-      <canvas baseChart
-              [data]="taskStatusData"
-              [options]="chartOptions"
-              [type]="'doughnut'">
-      </canvas>
-    </div>
-
-    <div class="chart">
-      <h3>Task Priority</h3>
-      <canvas baseChart
-              [data]="taskPriorityData"
-              [options]="chartOptions"
-              [type]="'doughnut'">
-      </canvas>
-    </div>
-
-    <div class="chart">
-      <h3>Tasks by Assignee</h3>
-      <canvas baseChart
-              [data]="assigneeStats"
-              [options]="chartOptions"
-              [type]="'bar'">
-      </canvas>
-    </div>
+<div class="workspace-stats-container">
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading-state">
+    <div class="spinner"></div>
+    <p>Loading workspace statistics...</p>
   </div>
 
-  <div class="project-progress">
-    <h3>Project Progress</h3>
-    <table>
-      <thead>
-        <tr>
-          <th>Project Name</th>
-          <th>Total Tasks</th>
-          <th>Completed Tasks</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let project of projectProgress">
-          <td>{{ project.projectName }}</td>
-          <td>{{ project.totalTasks }}</td>
-          <td>{{ project.doneTasks }}</td>
-        </tr>
-      </tbody>
-    </table>
+  <!-- Error State -->
+  <div *ngIf="error && !loading" class="error-state">
+    <mat-icon class="error-icon-mat">error_outline</mat-icon>
+    <p>{{ error }}</p>
+    <button class="btn-retry" (click)="loadStats()">Retry</button>
+  </div>
+
+  <!-- Main Content -->
+  <div *ngIf="stats && !loading && !error" class="stats-content">
+    <!-- Header -->
+    <mat-card class="stats-header">
+      <mat-card-header class="card-header">
+        <div mat-card-avatar class="workspace-avatar">
+          <mat-icon>assessment</mat-icon>
+        </div>
+        <mat-card-title>{{ stats.workspace.name }}</mat-card-title>
+        <mat-card-subtitle>Workspace Analytics Dashboard</mat-card-subtitle>
+      </mat-card-header>
+
+      <mat-card-content class="workspace-info">
+        <div class="info-item">
+          <mat-icon>person</mat-icon>
+          <span>Owner: {{ stats.workspace.owner }}</span>
+        </div>
+        <div class="info-item">
+          <mat-icon>group</mat-icon>
+          <span>{{ stats.workspace.totalMembers }} Members</span>
+        </div>
+        <div class="info-item">
+          <mat-icon>folder</mat-icon>
+          <span>{{ stats.overview.totalProjects }} Projects</span>
+        </div>
+        <div class="info-item">
+          <mat-icon>dashboard</mat-icon>
+          <span>{{ stats.overview.totalBoards }} Boards</span>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Workspace Overview Section -->
+    <div class="workspace-overview-section">
+      <h2 class="section-title">
+        <mat-icon class="title-icon">assessment</mat-icon>
+        Workspace Overview
+      </h2>
+      
+      <!-- Combined Grid: Overview Cards + Chart (2 rows x 3 columns) -->
+      <div class="overview-grid">
+        <!-- Row 1, Column 1 -->
+        <div class="stat-card card-primary">
+          <div class="card-icon-wrapper">
+            <mat-icon class="card-mat-icon">folder</mat-icon>
+          </div>
+          <div class="card-content">
+            <h3>{{ stats.overview.totalProjects }}</h3>
+            <p>Total Projects</p>
+          </div>
+        </div>
+
+        <!-- Row 1, Column 2 -->
+        <div class="stat-card card-success">
+          <div class="card-icon-wrapper">
+            <mat-icon class="card-mat-icon">check_circle</mat-icon>
+          </div>
+          <div class="card-content">
+            <h3>{{ stats.overview.completedTasks }}</h3>
+            <p>Completed Tasks</p>
+            <span class="card-detail">{{ stats.overview.overallCompletionRate }}% completion rate</span>
+          </div>
+        </div>
+
+        <!-- Row 1, Column 3 - Chart (spans 2 rows) -->
+        <div class="chart-card chart-tall" *ngIf="projectStatusData.labels && projectStatusData.labels.length > 0">
+          <div class="chart-header">
+            <mat-icon class="chart-icon">pie_chart</mat-icon>
+            <div class="chart-title-group">
+              <h3>Project Status Distribution</h3>
+              <p class="chart-description">Status of all projects in workspace</p>
+            </div>
+          </div>
+          <div class="chart-body">
+            <canvas baseChart
+                    [data]="projectStatusData"
+                    [options]="pieOptions"
+                    [type]="'pie'">
+            </canvas>
+          </div>
+        </div>
+
+        <!-- Row 2, Column 1 -->
+        <div class="stat-card card-info">
+          <div class="card-icon-wrapper">
+            <mat-icon class="card-mat-icon">task</mat-icon>
+          </div>
+          <div class="card-content">
+            <h3>{{ stats.overview.totalTasks }}</h3>
+            <p>Total Tasks</p>
+            <span class="card-detail">Across {{ stats.overview.totalBoards }} boards</span>
+          </div>
+        </div>
+
+        <!-- Row 2, Column 2 -->
+        <div class="stat-card" [class.card-warning]="stats.overview.overdueTasks > 0" [class.card-neutral]="stats.overview.overdueTasks === 0">
+          <div class="card-icon-wrapper">
+            <mat-icon class="card-mat-icon" [style.color]="stats.overview.overdueTasks > 0 ? '#f59e0b' : '#10b981'">
+              {{ stats.overview.overdueTasks > 0 ? 'warning' : 'stars' }}
+            </mat-icon>
+          </div>
+          <div class="card-content">
+            <h3>{{ stats.overview.overdueTasks }}</h3>
+            <p>Overdue Tasks</p>
+            <span class="card-detail" *ngIf="stats.overview.overdueTasks > 0">Needs attention</span>
+            <span class="card-detail" *ngIf="stats.overview.overdueTasks === 0">All on track!</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Member Performance Chart (Full Width Below) -->
+      <div class="chart-card chart-full-width" *ngIf="memberPerformanceData.labels && memberPerformanceData.labels.length > 0">
+        <div class="chart-header">
+          <mat-icon class="chart-icon">bar_chart</mat-icon>
+          <div class="chart-title-group">
+            <h3>Team Member Performance</h3>
+            <p class="chart-description">Overall task completion by team members across all projects</p>
+          </div>
+        </div>
+        <div class="chart-body chart-body-wide">
+          <canvas baseChart
+                  [data]="memberPerformanceData"
+                  [options]="barOptions"
+                  [type]="'bar'">
+          </canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Project Tabs Section -->
+    <div class="projects-section" *ngIf="stats.projectProgress && stats.projectProgress.length > 0">
+      <h2 class="section-title">
+        <mat-icon class="title-icon">folder_open</mat-icon>
+        Project Details
+      </h2>
+      
+      <mat-tab-group 
+        class="project-tabs" 
+        [(selectedIndex)]="selectedProjectIndex"
+        (selectedIndexChange)="onProjectTabChange($event)"
+        animationDuration="300ms">
+        
+        <mat-tab *ngFor="let project of stats.projectProgress" [label]="project.projectName">
+          <div class="project-tab-content">
+            
+            <!-- Project Header Info -->
+            <div class="project-header-info">
+              <div class="project-meta">
+                <h3 class="project-name">{{ project.projectName }}</h3>
+                <p class="project-description" *ngIf="project.projectDescription">
+                  {{ project.projectDescription }}
+                </p>
+                <div class="project-meta-items">
+                  <span class="meta-badge">
+                    <mat-icon class="meta-icon">person</mat-icon> Owner: {{ project.owner }}
+                  </span>
+                  <span class="meta-badge" [ngClass]="getStatusBadgeClass(project.projectStatus)">
+                    <mat-icon class="meta-icon">label</mat-icon> {{ formatLabel(project.projectStatus) }}
+                  </span>
+                  <span class="meta-badge">
+                    <mat-icon class="meta-icon">calendar_today</mat-icon> Created: {{ project.createdAt | date: 'MMM d, yyyy' }}
+                  </span>
+                </div>
+              </div>
+
+              <!-- Project Stats Cards -->
+              <div class="project-stat-cards">
+                <div class="mini-stat-card">
+                  <div class="mini-card-icon">
+                    <mat-icon>task_alt</mat-icon>
+                  </div>
+                  <div class="mini-card-content">
+                    <h4>{{ project.totalTasks }}</h4>
+                    <p>Total Tasks</p>
+                  </div>
+                </div>
+                <div class="mini-stat-card">
+                  <div class="mini-card-icon">
+                    <mat-icon>check_circle</mat-icon>
+                  </div>
+                  <div class="mini-card-content">
+                    <h4>{{ project.completedTasks }}</h4>
+                    <p>Completed</p>
+                  </div>
+                </div>
+                <div class="mini-stat-card">
+                  <div class="mini-card-icon">
+                    <mat-icon [style.color]="project.overdueTasks > 0 ? '#f59e0b' : '#10b981'">
+                      {{ project.overdueTasks > 0 ? 'warning' : 'stars' }}
+                    </mat-icon>
+                  </div>
+                  <div class="mini-card-content">
+                    <h4>{{ project.overdueTasks }}</h4>
+                    <p>Overdue</p>
+                  </div>
+                </div>
+                <div class="mini-stat-card">
+                  <div class="mini-card-icon">
+                    <mat-icon>dashboard</mat-icon>
+                  </div>
+                  <div class="mini-card-content">
+                    <h4>{{ project.totalBoards }}</h4>
+                    <p>Boards</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Empty State for projects with no tasks -->
+            <div *ngIf="project.totalTasks === 0" class="project-empty-state">
+              <mat-icon class="empty-icon-mat">assignment</mat-icon>
+              <h3>No Tasks Yet</h3>
+              <p>This project doesn't have any tasks yet. Create boards and add tasks to see analytics here.</p>
+            </div>
+
+            <!-- Project Charts -->
+            <div class="charts-grid" *ngIf="project.totalTasks > 0">
+              <!-- Project Task Status -->
+              <div class="chart-card">
+                <div class="chart-header">
+                  <mat-icon class="chart-icon">donut_large</mat-icon>
+                  <div class="chart-title-group">
+                    <h3>Task Status Distribution</h3>
+                    <p class="chart-description">Current status of tasks in this project</p>
+                  </div>
+                </div>
+                <div class="chart-body">
+                  <canvas baseChart
+                          *ngIf="projectTaskStatusData.labels && projectTaskStatusData.labels.length > 0"
+                          [data]="projectTaskStatusData"
+                          [options]="doughnutOptions"
+                          [type]="'doughnut'">
+                  </canvas>
+                  <p *ngIf="!projectTaskStatusData.labels || projectTaskStatusData.labels.length === 0" class="no-data">
+                    No task data available
+                  </p>
+                </div>
+              </div>
+
+              <!-- Project Task Priority -->
+              <div class="chart-card">
+                <div class="chart-header">
+                  <mat-icon class="chart-icon">priority_high</mat-icon>
+                  <div class="chart-title-group">
+                    <h3>Task Priority Breakdown</h3>
+                    <p class="chart-description">Tasks organized by priority level in this project</p>
+                  </div>
+                </div>
+                <div class="chart-body">
+                  <canvas baseChart
+                          *ngIf="projectTaskPriorityData.labels && projectTaskPriorityData.labels.length > 0"
+                          [data]="projectTaskPriorityData"
+                          [options]="doughnutOptions"
+                          [type]="'doughnut'">
+                  </canvas>
+                  <p *ngIf="!projectTaskPriorityData.labels || projectTaskPriorityData.labels.length === 0" class="no-data">
+                    No priority data available
+                  </p>
+                </div>
+              </div>
+
+              <!-- Project Tasks by Assignee -->
+              <div class="chart-card chart-card-wide">
+                <div class="chart-header">
+                  <mat-icon class="chart-icon">people</mat-icon>
+                  <div class="chart-title-group">
+                    <h3>Tasks by Assignee</h3>
+                    <p class="chart-description">Top contributors with assigned tasks in this project</p>
+                  </div>
+                </div>
+                <div class="chart-body">
+                  <canvas baseChart
+                          *ngIf="projectTasksByAssigneeData.labels && projectTasksByAssigneeData.labels.length > 0"
+                          [data]="projectTasksByAssigneeData"
+                          [options]="barOptions"
+                          [type]="'bar'">
+                  </canvas>
+                  <p *ngIf="!projectTasksByAssigneeData.labels || projectTasksByAssigneeData.labels.length === 0" class="no-data">
+                    No assignee data available
+                  </p>
+                </div>
+              </div>
+
+              <!-- Project Tasks Over Time -->
+              <div class="chart-card chart-card-wide" *ngIf="projectTasksOverTimeData.labels && projectTasksOverTimeData.labels.length > 0">
+                <div class="chart-header">
+                  <mat-icon class="chart-icon">show_chart</mat-icon>
+                  <div class="chart-title-group">
+                    <h3>Task Creation Trend</h3>
+                    <p class="chart-description">Tasks created in the last 30 days for this project</p>
+                  </div>
+                </div>
+                <div class="chart-body">
+                  <canvas baseChart
+                          [data]="projectTasksOverTimeData"
+                          [options]="lineOptions"
+                          [type]="'line'">
+                  </canvas>
+                </div>
+              </div>
+
+              <!-- Board Progress -->
+              <div class="chart-card chart-card-wide" *ngIf="project.boardsBreakdown && project.boardsBreakdown.length > 0">
+                <div class="chart-header">
+                  <mat-icon class="chart-icon">view_kanban</mat-icon>
+                  <div class="chart-title-group">
+                    <h3>Board Progress</h3>
+                    <p class="chart-description">Task completion by board in this project</p>
+                  </div>
+                </div>
+                <div class="chart-body">
+                  <canvas baseChart
+                          [data]="projectBoardProgressData"
+                          [options]="barOptions"
+                          [type]="'bar'">
+                  </canvas>
+                </div>
+              </div>
+            </div>
+
+            <!-- Board Breakdown Table -->
+            <div class="table-card" *ngIf="project.totalTasks > 0 && project.boardsBreakdown && project.boardsBreakdown.length > 0">
+              <div class="table-header">
+                <mat-icon class="table-icon">view_list</mat-icon>
+                <div class="table-title-group">
+                  <h3>Board Breakdown</h3>
+                  <p class="table-description">Detailed view of all boards in this project</p>
+                </div>
+              </div>
+              <div class="table-container">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>Board Name</th>
+                      <th class="text-center">Total Tasks</th>
+                      <th class="text-center">Completed</th>
+                      <th>Progress</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let board of project.boardsBreakdown">
+                      <td class="font-semibold">{{ board.boardName }}</td>
+                      <td class="text-center">{{ board.totalTasks }}</td>
+                      <td class="text-center">{{ board.completedTasks }}</td>
+                      <td>
+                        <div class="progress-cell">
+                          <div class="progress-bar-container">
+                            <div class="progress-bar" 
+                                 [style.width.%]="board.completionPercentage"
+                                 [style.background-color]="getProgressColor(board.completionPercentage)">
+                            </div>
+                          </div>
+                          <span class="progress-text">{{ board.completionPercentage }}%</span>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Team Members Table -->
+            <div class="table-card" *ngIf="project.totalTasks > 0 && project.teamMembers && project.teamMembers.length > 0">
+              <div class="table-header">
+                <mat-icon class="table-icon">leaderboard</mat-icon>
+                <div class="table-title-group">
+                  <h3>Team Performance</h3>
+                  <p class="table-description">Individual contributions to this project</p>
+                </div>
+              </div>
+              <div class="table-container">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>Team Member</th>
+                      <th class="text-center">Assigned Tasks</th>
+                      <th class="text-center">Completed</th>
+                      <th>Completion Rate</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let member of project.teamMembers">
+                      <td class="font-semibold">{{ member.memberName }}</td>
+                      <td class="text-center">{{ member.assignedTasks }}</td>
+                      <td class="text-center">{{ member.completedTasks }}</td>
+                      <td>
+                        <div class="progress-cell">
+                          <div class="progress-bar-container">
+                            <div class="progress-bar" 
+                                 [style.width.%]="member.completionRate"
+                                 [style.background-color]="getProgressColor(member.completionRate)">
+                            </div>
+                          </div>
+                          <span class="progress-text">{{ member.completionRate }}%</span>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+          </div>
+        </mat-tab>
+      </mat-tab-group>
+    </div>
+
+
+    <!-- Member Stats Table -->
+    <div class="table-card" *ngIf="stats.memberStats && stats.memberStats.length > 0">
+      <div class="table-header">
+        <mat-icon class="table-icon">groups</mat-icon>
+        <div class="table-title-group">
+          <h3>Team Member Statistics</h3>
+          <p class="table-description">Individual performance metrics</p>
+        </div>
+      </div>
+      <div class="table-container">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Member Name</th>
+              <th>Email</th>
+              <th class="text-center">Assigned Tasks</th>
+              <th class="text-center">Completed Tasks</th>
+              <th>Completion Rate</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let member of stats.memberStats">
+              <td class="font-semibold">{{ member.memberName }}</td>
+              <td class="text-muted">{{ member.email }}</td>
+              <td class="text-center">{{ member.assignedTasks }}</td>
+              <td class="text-center">{{ member.completedTasks }}</td>
+              <td>
+                <div class="progress-cell">
+                  <div class="progress-bar-container">
+                    <div class="progress-bar" 
+                         [style.width.%]="member.completionRate"
+                         [style.background-color]="getProgressColor(member.completionRate)">
+                    </div>
+                  </div>
+                  <span class="progress-text">{{ member.completionRate }}%</span>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div class="empty-state" *ngIf="stats.overview.totalTasks === 0">
+      <mat-icon class="empty-icon-mat">inbox</mat-icon>
+      <h3>No Tasks Yet</h3>
+      <p>Start creating projects and tasks to see analytics here.</p>
+    </div>
   </div>
 </div>
