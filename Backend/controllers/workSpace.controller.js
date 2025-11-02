@@ -287,44 +287,244 @@ exports.getWorkspaceStats = async (req, res) => {
   try {
     const { wsId } = req.params;
 
+    // Get workspace with populated members
+    const workspace = await workSpace.findById(wsId)
+      .populate('members', 'firstName lastName email')
+      .populate('owner', 'firstName lastName email');
+
+    if (!workspace) {
+      return res.status(404).json({ message: "Workspace not found" });
+    }
+
     // Get all projects in the workspace
-    const projects = await Project.find({ workspace: wsId });
+    const projects = await Project.find({ workspace: wsId })
+      .populate('owner', 'firstName lastName')
+      .populate('members', 'firstName lastName');
+    
     const projectIds = projects.map(p => p._id);
 
-    // Get all tasks for these projects
-    const tasks = await Task.find({ board: { $in: projectIds } });
+    // Get all boards for these projects
+    const Board = require("../models/Board");
+    const boards = await Board.find({ project: { $in: projectIds } });
+    const boardIds = boards.map(b => b._id);
 
-    // Aggregate stats
+    // Get all tasks for these boards
+    const tasks = await Task.find({ board: { $in: boardIds } })
+      .populate('assignee', 'firstName lastName email')
+      .populate('createdBy', 'firstName lastName');
+
+    // Task status breakdown
     const taskStatusCount = tasks.reduce((acc, task) => {
       acc[task.status] = (acc[task.status] || 0) + 1;
       return acc;
     }, {});
 
+    // Task priority breakdown
     const taskPriorityCount = tasks.reduce((acc, task) => {
       acc[task.priority] = (acc[task.priority] || 0) + 1;
       return acc;
     }, {});
 
+    // Tasks by assignee
+    const tasksByAssignee = tasks.reduce((acc, task) => {
+      if (task.assignee) {
+        const name = `${task.assignee.firstName} ${task.assignee.lastName}`;
+        acc[name] = (acc[name] || 0) + 1;
+      } else {
+        acc['Unassigned'] = (acc['Unassigned'] || 0) + 1;
+      }
+      return acc;
+    }, {});
+
+    // Project progress with detailed stats
     const projectProgress = projects.map(project => {
-      const projectTasks = tasks.filter(t => t.board.equals(project._id));
-      const doneTasks = projectTasks.filter(t => t.status === 'done').length;
+      const projectBoards = boards.filter(b => b.project.equals(project._id));
+      const projectBoardIds = projectBoards.map(b => b._id);
+      const projectTasks = tasks.filter(t => projectBoardIds.some(bid => bid.equals(t.board)));
+      
+      // Status breakdown
+      const statusBreakdown = projectTasks.reduce((acc, task) => {
+        acc[task.status] = (acc[task.status] || 0) + 1;
+        return acc;
+      }, {});
+
+      // Priority breakdown
+      const priorityBreakdown = projectTasks.reduce((acc, task) => {
+        acc[task.priority] = (acc[task.priority] || 0) + 1;
+        return acc;
+      }, {});
+
+      // Tasks by assignee for this project
+      const projectTasksByAssignee = projectTasks.reduce((acc, task) => {
+        if (task.assignee) {
+          const name = `${task.assignee.firstName} ${task.assignee.lastName}`;
+          acc[name] = (acc[name] || 0) + 1;
+        } else if (projectTasks.length > 0) {
+          // Only add "Unassigned" if there are actually tasks
+          acc['Unassigned'] = (acc['Unassigned'] || 0) + 1;
+        }
+        return acc;
+      }, {});
+
+      // Overdue tasks for this project
+      const now = new Date();
+      const projectOverdueTasks = projectTasks.filter(t => 
+        t.dueDate && 
+        new Date(t.dueDate) < now && 
+        t.status !== 'done'
+      ).length;
+
+      // Tasks created in last 30 days for this project
+      const thirtyDaysAgo = new Date();
+      thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+      
+      const projectRecentTasks = projectTasks.filter(t => new Date(t.createdAt) >= thirtyDaysAgo);
+      const projectTasksByDate = projectRecentTasks.reduce((acc, task) => {
+        const date = new Date(task.createdAt).toISOString().split('T')[0];
+        acc[date] = (acc[date] || 0) + 1;
+        return acc;
+      }, {});
+
+      // Board breakdown for this project
+      const boardsBreakdown = projectBoards.map(board => {
+        const boardTasks = projectTasks.filter(t => t.board.equals(board._id));
+        const boardCompletedTasks = boardTasks.filter(t => t.status === 'done').length;
+        
+        return {
+          boardId: board._id,
+          boardName: board.name,
+          totalTasks: boardTasks.length,
+          completedTasks: boardCompletedTasks,
+          completionPercentage: boardTasks.length > 0 
+            ? Math.round((boardCompletedTasks / boardTasks.length) * 100) 
+            : 0
+        };
+      });
+
+      // Team members working on this project
+      const projectMembers = project.members.map(member => {
+        const memberTasks = projectTasks.filter(t => 
+          t.assignee && t.assignee._id.equals(member._id)
+        );
+        const memberCompletedTasks = memberTasks.filter(t => t.status === 'done').length;
+        
+        return {
+          memberId: member._id,
+          memberName: `${member.firstName} ${member.lastName}`,
+          assignedTasks: memberTasks.length,
+          completedTasks: memberCompletedTasks,
+          completionRate: memberTasks.length > 0 
+            ? Math.round((memberCompletedTasks / memberTasks.length) * 100) 
+            : 0
+        };
+      }).filter(m => m.assignedTasks > 0); // Only include members with tasks
+
+      const completedTasks = statusBreakdown['done'] || 0;
+      const completionPercentage = projectTasks.length > 0 
+        ? Math.round((completedTasks / projectTasks.length) * 100) 
+        : 0;
+
       return {
         projectId: project._id,
         projectName: project.name,
+        projectDescription: project.description,
+        projectStatus: project.status,
         totalTasks: projectTasks.length,
-        doneTasks
+        completedTasks,
+        completionPercentage,
+        overdueTasks: projectOverdueTasks,
+        totalBoards: projectBoards.length,
+        statusBreakdown,
+        priorityBreakdown,
+        tasksByAssignee: projectTasksByAssignee,
+        tasksByDate: projectTasksByDate,
+        boardsBreakdown,
+        teamMembers: projectMembers,
+        owner: project.owner ? `${project.owner.firstName} ${project.owner.lastName}` : 'Unknown',
+        createdAt: project.createdAt
       };
     });
 
+    // Calculate overdue tasks
+    const now = new Date();
+    const overdueTasks = tasks.filter(t => 
+      t.dueDate && 
+      new Date(t.dueDate) < now && 
+      t.status !== 'done'
+    ).length;
+
+    // Tasks created over time (last 30 days)
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+    
+    const recentTasks = tasks.filter(t => new Date(t.createdAt) >= thirtyDaysAgo);
+    const tasksByDate = recentTasks.reduce((acc, task) => {
+      const date = new Date(task.createdAt).toISOString().split('T')[0];
+      acc[date] = (acc[date] || 0) + 1;
+      return acc;
+    }, {});
+
+    // Project status breakdown
+    const projectStatusCount = projects.reduce((acc, project) => {
+      acc[project.status] = (acc[project.status] || 0) + 1;
+      return acc;
+    }, {});
+
+    // Member activity stats
+    const memberStats = workspace.members.map(member => {
+      const assignedTasks = tasks.filter(t => 
+        t.assignee && t.assignee._id.equals(member._id)
+      );
+      const completedTasks = assignedTasks.filter(t => t.status === 'done').length;
+      
+      return {
+        memberId: member._id,
+        memberName: `${member.firstName} ${member.lastName}`,
+        email: member.email,
+        assignedTasks: assignedTasks.length,
+        completedTasks,
+        completionRate: assignedTasks.length > 0 
+          ? Math.round((completedTasks / assignedTasks.length) * 100) 
+          : 0
+      };
+    });
+
+    // Overall workspace health metrics
+    const totalCompletedTasks = tasks.filter(t => t.status === 'done').length;
+    const overallCompletionRate = tasks.length > 0 
+      ? Math.round((totalCompletedTasks / tasks.length) * 100) 
+      : 0;
+
     res.status(200).json({
-      totalTasks: tasks.length,
+      workspace: {
+        id: workspace._id,
+        name: workspace.name,
+        totalMembers: workspace.members.length,
+        owner: workspace.owner ? `${workspace.owner.firstName} ${workspace.owner.lastName}` : 'Unknown'
+      },
+      overview: {
+        totalProjects: projects.length,
+        totalBoards: boards.length,
+        totalTasks: tasks.length,
+        completedTasks: totalCompletedTasks,
+        overallCompletionRate,
+        overdueTasks
+      },
       taskStatusCount,
       taskPriorityCount,
-      projectProgress
+      tasksByAssignee,
+      projectStatusCount,
+      projectProgress,
+      memberStats,
+      tasksByDate
     });
 
   } catch (err) {
-    res.status(500).json({ message: "Error fetching workspace stats", error: err.message });
+    console.error("Error fetching workspace stats:", err);
+    res.status(500).json({ 
+      message: "Error fetching workspace stats", 
+      error: process.env.NODE_ENV === 'development' ? err.message : undefined 
+    });
   }
 };
 
