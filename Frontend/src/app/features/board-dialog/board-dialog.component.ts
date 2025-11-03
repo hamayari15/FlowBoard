@@ -105,7 +105,7 @@ export class BoardDialogComponent implements OnInit {
         this.loading = false;
         Swal.fire({
           icon: 'success',
-          title: 'Board Updated !',
+          title: 'Updated !',
           text: 'Board updated successfully.',
           timer: 2000,
           showConfirmButton: false

@@ -113,7 +113,7 @@ export class WorkSpaceDialogComponent implements OnInit, OnDestroy {
         this.loading = false;
           Swal.fire({
             icon: 'success',
-            title: 'Workspace Updated !',
+            title: 'Updated !',
             text: 'Workspace updated successfully.',
             timer: 2000,
             showConfirmButton: false

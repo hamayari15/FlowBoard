@@ -162,7 +162,7 @@ export class BoardViewComponent implements OnInit, OnDestroy {
     event.stopPropagation();
     Swal.fire({
       title: 'Delete Task?',
-      text: `Are you sure you want to delete "${task.title}"?`,
+      text: 'You wont be able to revert this action!',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#d33',
@@ -175,8 +175,13 @@ export class BoardViewComponent implements OnInit, OnDestroy {
           .pipe(takeUntil(this.destroy$))
           .subscribe({
             next: () => {
-              Swal.fire('Deleted!', 'Task has been deleted.', 'success');
-              this.loadTasks();
+          Swal.fire({
+          icon: 'success',
+          title: 'Deleted !',
+          text: 'Task deleted successfully.',
+          timer: 2000,
+          showConfirmButton: false
+        });              this.loadTasks();
             },
             error: () => Swal.fire('Error', 'Failed to delete task', 'error')
           });

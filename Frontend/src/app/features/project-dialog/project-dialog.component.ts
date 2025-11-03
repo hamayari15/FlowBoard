@@ -117,14 +117,14 @@ export class ProjectDialogComponent implements OnInit, OnDestroy {
 
       if (this.data.mode === 'add') {
         this.projectService.addProject(projectData).subscribe({
-          next: (res) => {
+          next: (project: Project) => {
             this.loading = false;
             Swal.fire({
           icon: 'success',
           title: 'Project Created !',
           text: 'Your project has been created successfully. You can now invite members using the invite button.',
           showConfirmButton: true
-        });            this.dialogRef.close(res);
+        });            this.dialogRef.close(project);
           },
           error: (error) => {
             this.loading = false;
@@ -144,16 +144,16 @@ export class ProjectDialogComponent implements OnInit, OnDestroy {
         this.projectService
           .updateProject(this.data.project._id, updateData)
           .subscribe({
-            next: (res) => {
+            next: (project: Project) => {
               this.loading = false;
               Swal.fire({
           icon: 'success',
-          title: 'Project Updated !',
+          title: 'Updated !',
           text: 'Project updated successfully.',
           timer: 2000,
           showConfirmButton: false
         });
-        this.dialogRef.close(res);  
+        this.dialogRef.close(project);  
           },
           error: (error) => {
             this.loading = false;
