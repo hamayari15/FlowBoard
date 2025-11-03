@@ -14,6 +14,8 @@ export class BoardDialogComponent implements OnInit {
   boardForm: FormGroup;
   loading = false;
   mode: 'add' | 'edit' = 'add';
+  isSprint = false;
+  minStartDate = new Date();
 
   constructor(
     private fb: FormBuilder,
@@ -22,9 +24,15 @@ export class BoardDialogComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
     this.mode = data.mode || 'add';
+    this.isSprint = data.isSprint || false;
+    
     this.boardForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(100), this.noWhitespaceValidator]],
-      description: ['', [Validators.maxLength(500)]]
+      description: ['', [Validators.maxLength(500)]],
+      goal: ['', [Validators.maxLength(500)]],
+      startDate: [''],
+      endDate: [''],
+      status: ['planning']
     });
   }
 
@@ -32,7 +40,11 @@ export class BoardDialogComponent implements OnInit {
     if (this.mode === 'edit' && this.data.board) {
       this.boardForm.patchValue({
         name: this.data.board.name,
-        description: this.data.board.description || ''
+        description: this.data.board.description || '',
+        goal: this.data.board.goal || '',
+        startDate: this.data.board.startDate || '',
+        endDate: this.data.board.endDate || '',
+        status: this.data.board.status || 'planning'
       });
     }
   }
@@ -73,21 +85,30 @@ export class BoardDialogComponent implements OnInit {
       ]
     };
 
+    // Add sprint-specific fields if in sprint mode
+    if (this.isSprint) {
+      boardData.goal = formValue.goal?.trim() || undefined;
+      boardData.startDate = formValue.startDate || undefined;
+      boardData.endDate = formValue.endDate || undefined;
+      boardData.status = formValue.status || 'planning';
+    }
+
+    console.log('Creating board/sprint with data:', boardData);
     this.boardService.createBoard(boardData).subscribe({
       next: (board: Board) => {
         this.loading = false;
         this.data.board = board;
         Swal.fire({
           icon: 'success',
-          title: 'Board Created !',
-          text: 'Your board has been created successfully.',
+          title: this.isSprint ? 'Sprint Created !' : 'Board Created !',
+          text: this.isSprint ? 'Your sprint has been created successfully.' : 'Your board has been created successfully.',
           showConfirmButton: true
         });
         this.dialogRef.close(board);
       },
       error: (error: ApiError) => {
         this.loading = false;
-        this.showErrorAlert('Creation Failed', error.message || 'Failed to create board');
+        this.showErrorAlert('Creation Failed', error.message || 'Failed to create ' + (this.isSprint ? 'sprint' : 'board'));
       }
     });
   }
@@ -100,13 +121,21 @@ export class BoardDialogComponent implements OnInit {
       description: formValue.description?.trim() || undefined
     };
 
+    // Add sprint-specific fields if in sprint mode
+    if (this.isSprint) {
+      boardData.goal = formValue.goal?.trim() || undefined;
+      boardData.startDate = formValue.startDate || undefined;
+      boardData.endDate = formValue.endDate || undefined;
+      boardData.status = formValue.status || 'planning';
+    }
+
     this.boardService.updateBoard(this.data.board._id, boardData).subscribe({
       next: (board: Board) => {
         this.loading = false;
         Swal.fire({
           icon: 'success',
-          title: 'Board Updated !',
-          text: 'Board updated successfully.',
+          title: this.isSprint ? 'Sprint Updated !' : 'Board Updated !',
+          text: (this.isSprint ? 'Sprint' : 'Board') + ' updated successfully.',
           timer: 2000,
           showConfirmButton: false
         });
@@ -114,7 +143,7 @@ export class BoardDialogComponent implements OnInit {
       },
       error: (error: ApiError) => {
         this.loading = false;
-        this.showErrorAlert('Update Failed', error.message || 'Failed to update board');
+        this.showErrorAlert('Update Failed', error.message || 'Failed to update ' + (this.isSprint ? 'sprint' : 'board'));
       }
     });
   }
