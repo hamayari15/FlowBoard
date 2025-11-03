@@ -6,6 +6,10 @@ const taskController = require('../controllers/task.controller');
 
 Router.post('/Add', taskController.createTask);
 
+Router.get('/getByProject/:projectId', taskController.getByProject);
+
+Router.get('/getUnassigned/:projectId', taskController.getUnassignedTasks);
+
 Router.get('/getById/:id', taskController.getById);
 
 Router.get('/getByBoard/:boardId', taskController.getByBoard);
@@ -16,7 +20,11 @@ Router.delete('/Delete/:id', taskController.Delete);
 
 Router.patch('/updatePosition/:id', taskController.updatePosition);
 
-Router.patch('/assign/:id', taskController.assignTask);
+Router.patch('/assignToBoard/:taskId', taskController.assignToBoard);
+
+Router.patch('/removeFromBoard/:taskId', taskController.removeFromBoard);
+
+Router.patch('/moveToBoard/:taskId', taskController.moveToBoard);
 
 Router.post('/bulkUpdatePositions', taskController.bulkUpdatePositions);
 

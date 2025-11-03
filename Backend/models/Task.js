@@ -4,8 +4,9 @@ const { Schema } = mongoose;
 const taskSchema = new Schema({
   title: { type: String, required: true, trim: true },
   description: String,
-  board: { type: Schema.Types.ObjectId, ref: 'Board', required: true },
-  status: { type: String, default: 'to-do' },
+  board: { type: Schema.Types.ObjectId, ref: 'Board' },
+  project: { type: mongoose.Schema.Types.ObjectId, ref: 'Project', required: true },
+  status: { type: String, enum: ['to-do', 'in-progress', 'in-review', 'done'], default: 'to-do' },
   position: { type: Number, default: 0 },
   assignee: { type: Schema.Types.ObjectId, ref: 'User' },
   createdBy: { type: Schema.Types.ObjectId, ref: 'User', required: true },

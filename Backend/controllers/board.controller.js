@@ -58,17 +58,16 @@ exports.getById = async (req, res) => {
 };
 
 
-// exports.getByProject = async (req, res) => {
-//   try {
-//     const projectId = req.params.projectId;
-//     const boards = await Board.find({ project: projectId }).populate('project', 'name description');
-//     res.status(200).json(boards);
+exports.getByProject = async (req, res) => {
+  try {
+    const projectId = req.params.projectId;
+    const boards = await Board.find({ project: projectId }).populate('project', 'name description');
+    res.status(200).json(boards);
 
-//   } catch (err) {
-//     res.status(500).json({ message: "Error fetching boards by project", err });
-//   }
-// };
-
+  } catch (err) {
+    res.status(500).json({ message: "Error fetching boards by project", err });
+  }
+};
 
 
 exports.getMembersByBoardId = async (req, res) => {
