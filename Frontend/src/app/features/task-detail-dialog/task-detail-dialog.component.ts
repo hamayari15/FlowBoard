@@ -47,8 +47,13 @@ export class TaskDetailDialogComponent implements OnInit {
       next: (res) => {
         this.comments.push(res);
         this.newComment = '';
-        Swal.fire('Success', 'Comment added successfully', 'success');
-      },
+        Swal.fire({
+          icon: 'success',
+          title: 'Comment Added !',
+          text: 'A new comment has been added successfully.',
+          timer: 2000,
+          showConfirmButton: false
+        });        },
       error: () => Swal.fire('Error', 'Failed to add comment', 'error')
     });
   }
@@ -79,7 +84,7 @@ export class TaskDetailDialogComponent implements OnInit {
   deleteComment(comment: any): void {
     Swal.fire({
       title: 'Delete Comment?',
-      text: 'This action cannot be undone!',
+      text: 'You wont be able to revert this action!',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#d33',
@@ -91,7 +96,13 @@ export class TaskDetailDialogComponent implements OnInit {
         this.commentService.deleteComment(comment._id).subscribe({
           next: () => {
             this.comments = this.comments.filter(c => c._id !== comment._id);
-            Swal.fire('Deleted!', 'Comment has been deleted.', 'success');
+            Swal.fire({
+                      icon: 'success',
+                      title: 'Deleted !',
+                      text: 'Comment deleted successfully.',
+                      timer: 2000,
+                      showConfirmButton: false
+                    }); 
           },
           error: () => Swal.fire('Error', 'Failed to delete comment', 'error')
         });
@@ -121,7 +132,7 @@ export class TaskDetailDialogComponent implements OnInit {
   deleteTask(): void {
     Swal.fire({
       title: 'Delete Task?',
-      text: 'This action cannot be undone!',
+      text: 'You wont be able to revert this action!',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#d33',
@@ -132,7 +143,13 @@ export class TaskDetailDialogComponent implements OnInit {
       if (result.isConfirmed && this.task._id) {
         this.taskService.deleteTask(this.task._id).subscribe({
           next: () => {
-            Swal.fire('Deleted!', 'Task has been deleted.', 'success');
+            Swal.fire({
+                      icon: 'success',
+                      title: 'Deleted !',
+                      text: 'Task deleted successfully.',
+                      timer: 2000,
+                      showConfirmButton: false
+                    }); 
             this.dialogRef.close({ deleted: true });
           },
           error: () => Swal.fire('Error', 'Failed to delete task', 'error')

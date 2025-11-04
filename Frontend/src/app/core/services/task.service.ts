@@ -24,8 +24,8 @@ export class TaskService {
     if (!boardId) {
       return throwError(() => new Error('Board ID is required'));
     }
-    return this.http.get<Task[]>(`${this.apiUrl}/getByBoard/${boardId}`).pipe(
-      map((response: any) => response as Task[]),
+    return this.http.patch<Task>(`${this.apiUrl}/assignToBoard/${taskId}`, { boardId }).pipe(
+      map((response: any) => response as Task),
       catchError(this.handleError)
     );
   }
@@ -34,8 +34,41 @@ export class TaskService {
     if (!id) {
       return throwError(() => new Error('Task ID is required'));
     }
+
     return this.http.get<Task>(`${this.apiUrl}/getById/${id}`).pipe(
       map((response: any) => response as Task),
+      catchError(this.handleError)
+    );
+  }
+
+  removeFromBoard(taskId: string): Observable<Task> {
+  if (!taskId) {
+    return throwError(() => new Error('Task ID is required'));
+  }
+  return this.http.patch<Task>(`${this.apiUrl}/removeFromBoard/${taskId}`, {}).pipe(
+    map((response: any) => response as Task),
+    catchError(this.handleError)
+  );
+}
+
+// Get unassigned tasks (tasks not in any board)
+getUnassignedTasks(projectId: string): Observable<Task[]> {
+  if (!projectId) {
+    return throwError(() => new Error('Project ID is required'));
+  }
+  return this.http.get<Task[]>(`${this.apiUrl}/getUnassigned/${projectId}`).pipe(
+    map((response: any) => response as Task[]),
+    catchError(this.handleError)
+  );
+}
+
+  getTasksByBoard(boardId: string): Observable<Task[]> {
+    if (!boardId) {
+      return throwError(() => new Error('Board ID is required'));
+    }
+
+    return this.http.get<Task[]>(`${this.apiUrl}/getByBoard/${boardId}`).pipe(
+      map((response: any) => response as Task[]),
       catchError(this.handleError)
     );
   }
@@ -44,6 +77,7 @@ export class TaskService {
     if (!id) {
       return throwError(() => new Error('Task ID is required'));
     }
+
     return this.http.put<Task>(`${this.apiUrl}/Update/${id}`, taskData).pipe(
       map((response: any) => response as Task),
       catchError(this.handleError)
@@ -54,6 +88,7 @@ export class TaskService {
     if (!id) {
       return throwError(() => new Error('Task ID is required'));
     }
+
     return this.http.delete(`${this.apiUrl}/Delete/${id}`).pipe(
       map(() => true),
       catchError(this.handleError)
@@ -64,7 +99,8 @@ export class TaskService {
     if (!id) {
       return throwError(() => new Error('Task ID is required'));
     }
-    return this.http.patch<Task>(`${this.apiUrl}/updatePosition/${id}`, { position: newPosition }).pipe(
+
+    return this.http.patch<Task>(`${this.apiUrl}/assign/${id}`, { assignee: assigneeId }).pipe(
       map((response: any) => response as Task),
       catchError(this.handleError)
     );
@@ -88,13 +124,26 @@ export class TaskService {
         errorMessage = error.error.message;
       } else {
         switch (error.status) {
-          case 400: errorMessage = 'Bad request. Please check your input.'; break;
-          case 401: errorMessage = 'Unauthorized. Please log in.'; break;
-          case 403: errorMessage = "Forbidden. You don't have permission."; break;
-          case 404: errorMessage = 'Task not found.'; break;
-          case 409: errorMessage = 'Task conflict occurred.'; break;
-          case 500: errorMessage = 'Internal server error. Please try again later.'; break;
-          default: errorMessage = `Error: ${error.status} - ${error.statusText}`;
+          case 400:
+            errorMessage = 'Bad request. Please check your input.';
+            break;
+          case 401:
+            errorMessage = 'Unauthorized. Please log in.';
+            break;
+          case 403:
+            errorMessage = "Forbidden. You don't have permission.";
+            break;
+          case 404:
+            errorMessage = 'Task not found.';
+            break;
+          case 409:
+            errorMessage = 'Task conflict occurred.';
+            break;
+          case 500:
+            errorMessage = 'Internal server error. Please try again later.';
+            break;
+          default:
+            errorMessage = `Error: ${error.status} - ${error.statusText}`;
         }
       }
     }
@@ -105,6 +154,7 @@ export class TaskService {
       error: error.error,
     };
 
+    console.error('TaskService Error:', apiError);
     return throwError(() => apiError);
   };
 }

@@ -4,7 +4,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import Swal from 'sweetalert2';
 import { TaskService } from 'src/app/core/services/task.service';
 import { AuthService } from 'src/app/core/services/auth.service';
-import { User, TaskCreateRequest, TaskUpdateRequest } from 'src/app/core/models';
+import { User, TaskCreateRequest, TaskUpdateRequest, Task } from 'src/app/core/models';
 import { BoardService } from 'src/app/core/services';
 
 @Component({
@@ -102,7 +102,13 @@ export class TaskDialogComponent implements OnInit {
       };
       this.taskService.createTask(taskData).subscribe({
         next: (response) => {
-          Swal.fire('Success', 'Task created successfully', 'success');
+        Swal.fire({
+          icon: 'success',
+          title: 'Task Created !',
+          text: 'A new task has been created successfully.',
+          timer: 2000,
+          showConfirmButton: false
+        });          
           this.dialogRef.close(response);
         },
         error: (error) => {
@@ -120,9 +126,16 @@ export class TaskDialogComponent implements OnInit {
         dueDate: formValue.dueDate
       };
       this.taskService.updateTask(this.data.task._id, updateData).subscribe({
-        next: (response) => {
-          Swal.fire('Success', 'Task updated successfully', 'success');
-          this.dialogRef.close({ updated: true });
+        next: (task: Task) => {
+        this.loading = false;
+        Swal.fire({
+          icon: 'success',
+          title: 'Updated !',
+          text: 'Task updated successfully.',
+          timer: 2000,
+          showConfirmButton: false
+        });          
+          this.dialogRef.close(task);
         },
         error: (error) => {
           Swal.fire('Error', error.message || 'Failed to update task', 'error');

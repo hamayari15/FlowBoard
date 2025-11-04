@@ -33,8 +33,13 @@ export class EditCommentDialogComponent implements OnInit {
 
     this.commentService.updateComment(this.data.comment._id, { content: updatedContent }).subscribe({
       next: (res) => {
-        Swal.fire('Success', 'Comment updated successfully', 'success');
-        this.dialogRef.close({ updated: true, comment: res });
+      Swal.fire({
+          icon: 'success',
+          title: 'Updated !',
+          text: 'Comment updated successfully.',
+          timer: 2000,
+          showConfirmButton: false
+        });         this.dialogRef.close({ updated: true, comment: res });
         this.loading = false;
       },
       error: () => {
