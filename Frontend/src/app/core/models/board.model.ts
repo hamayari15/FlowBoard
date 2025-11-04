@@ -4,6 +4,11 @@ export interface Board {
   description?: string;
   project: string; // Always use string ID to avoid circular dependencies
   columns: BoardColumn[];
+  // Sprint functionality
+  startDate?: Date;
+  endDate?: Date;
+  goal?: string;
+  status?: 'planning' | 'active' | 'completed' | 'archived';
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -19,6 +24,11 @@ export interface BoardPopulated {
     description?: string;
   };
   columns: BoardColumn[];
+  // Sprint functionality
+  startDate?: Date;
+  endDate?: Date;
+  goal?: string;
+  status?: 'planning' | 'active' | 'completed' | 'archived';
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -37,10 +47,28 @@ export interface BoardCreateRequest {
   description?: string;
   project: string;
   columns?: BoardColumn[];
+  startDate?: Date;
+  endDate?: Date;
+  goal?: string;
+  status?: 'planning' | 'active' | 'completed' | 'archived';
 }
 
 export interface BoardUpdateRequest {
   name?: string;
   description?: string;
   columns?: BoardColumn[];
+  startDate?: Date;
+  endDate?: Date;
+  goal?: string;
+  status?: 'planning' | 'active' | 'completed' | 'archived';
+}
+
+export interface SprintStats {
+  total: number;
+  toDo: number;
+  inProgress: number;
+  inReview: number;
+  done: number;
+  overdue: number;
+  sprint: Board;
 }

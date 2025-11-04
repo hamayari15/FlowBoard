@@ -183,6 +183,21 @@ exports.getById = async (req, res) => {
   }
 };
 
+exports.getByBoard = async (req, res) => {
+  try {
+    const boardId = req.params.boardId;
+    const tasks = await Task.find({ board: boardId })
+      .populate('assignee', 'firstName lastName email avatar')
+      .populate('createdBy', 'firstName lastName email avatar')
+      .populate('board', 'name')
+      .populate('project', 'name')
+      .sort({ position: 1 });
+    res.status(200).json(tasks);
+  } catch (err) {
+    res.status(500).json({ message: "Error fetching tasks by board", error: err.message });
+  }
+};
+
 exports.Update = async (req, res) => {
   try {
     const id = req.params.id;

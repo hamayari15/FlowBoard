@@ -8,15 +8,50 @@
         <h1 class="board-title">
           <mat-icon>view_kanban</mat-icon>
           {{ board?.name || 'Loading...' }}
+          <span *ngIf="board?.status" class="sprint-status-badge" [ngClass]="getSprintStatusClass()">
+            {{ getSprintStatusText() }}
+          </span>
         </h1>
         <p class="board-description" *ngIf="board && board.description">
-          {{ board.description }} || 'No description provided'
+          {{ board.description }}
         </p>
+        
+        <!-- Sprint Goal -->
+        <div class="sprint-goal-banner" *ngIf="board && board.goal">
+          <mat-icon>flag</mat-icon>
+          <span><strong>Goal:</strong> {{ board.goal }}</span>
+        </div>
+        
+        <!-- Sprint Dates -->
+        <div class="sprint-dates-info" *ngIf="board && hasSprintDates()">
+          <div class="date-badge" *ngIf="board.startDate">
+            <mat-icon>event</mat-icon>
+            <span>{{ board.startDate | date: 'MMM d, yyyy' }}</span>
+          </div>
+          <mat-icon *ngIf="board.startDate && board.endDate">arrow_forward</mat-icon>
+          <div class="date-badge" *ngIf="board.endDate">
+            <mat-icon>event</mat-icon>
+            <span>{{ board.endDate | date: 'MMM d, yyyy' }}</span>
+          </div>
+          <div 
+            class="time-remaining-badge" 
+            *ngIf="board?.status === 'active'"
+            [class.overdue]="isSprintOverdue()">
+            <mat-icon>{{ isSprintOverdue() ? 'warning' : 'timer' }}</mat-icon>
+            <span>{{ getSprintDaysRemaining() }}</span>
+          </div>
+        </div>
       </div>
     </div>
     <div class="board-actions">
-      <button mat-stroked-button color="primary" (click)="openBoardEditDialog()">Edit Board</button>
-      <button mat-stroked-button color="warn" (click)="deleteBoard()">Delete Board</button>
+      <button mat-stroked-button color="primary" (click)="openBoardEditDialog()">
+        <mat-icon>edit</mat-icon>
+        Edit
+      </button>
+      <button mat-stroked-button color="warn" (click)="deleteBoard()">
+        <mat-icon>delete</mat-icon>
+        Delete
+      </button>
     </div>
   </div>
 

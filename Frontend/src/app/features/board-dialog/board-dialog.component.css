@@ -96,6 +96,31 @@
   margin-top: 8px;
 }
 
+/* Sprint-specific styles */
+.sprint-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 16px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border-left: 4px solid #667eea;
+}
+
+.date-fields {
+  display: flex;
+  gap: 16px;
+  width: 100%;
+}
+
+.half-width {
+  flex: 1;
+}
+
+.date-fields .mat-mdc-form-field {
+  margin-bottom: 0;
+}
+
 .board-form .mat-mdc-form-field-hint-wrapper,
 .board-form .mat-mdc-form-field-error-wrapper {
   padding: 0 16px;
