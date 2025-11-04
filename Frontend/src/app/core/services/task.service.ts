@@ -20,26 +20,6 @@ export class TaskService {
     );
   }
 
-  getTasksByProject(projectId: string): Observable<Task[]> {
-    if (!projectId) {
-      return throwError(() => new Error('Project ID is required'));
-    }
-    return this.http.get<Task[]>(`${this.apiUrl}/getByProject/${projectId}`).pipe(
-      map((response: any) => response as Task[]),
-      catchError(this.handleError)
-    );
-  }
-
-  getUnassignedTasks(projectId: string): Observable<Task[]> {
-    if (!projectId) {
-      return throwError(() => new Error('Project ID is required'));
-    }
-    return this.http.get<Task[]>(`${this.apiUrl}/getUnassigned/${projectId}`).pipe(
-      map((response: any) => response as Task[]),
-      catchError(this.handleError)
-    );
-  }
-
   getTasksByBoard(boardId: string): Observable<Task[]> {
     if (!boardId) {
       return throwError(() => new Error('Board ID is required'));
@@ -76,36 +56,6 @@ export class TaskService {
     }
     return this.http.delete(`${this.apiUrl}/Delete/${id}`).pipe(
       map(() => true),
-      catchError(this.handleError)
-    );
-  }
-
-  assignTaskToBoard(taskId: string, boardId: string): Observable<Task> {
-    if (!taskId || !boardId) {
-      return throwError(() => new Error('Task ID and Board ID are required'));
-    }
-    return this.http.patch<Task>(`${this.apiUrl}/assignToBoard/${taskId}`, { boardId }).pipe(
-      map((response: any) => response as Task),
-      catchError(this.handleError)
-    );
-  }
-
-  removeFromBoard(taskId: string): Observable<Task> {
-    if (!taskId) {
-      return throwError(() => new Error('Task ID is required'));
-    }
-    return this.http.patch<Task>(`${this.apiUrl}/removeFromBoard/${taskId}`, {}).pipe(
-      map((response: any) => response as Task),
-      catchError(this.handleError)
-    );
-  }
-
-  moveToBoard(taskId: string, boardId: string, position?: number): Observable<Task> {
-    if (!taskId || !boardId) {
-      return throwError(() => new Error('Task ID and Board ID are required'));
-    }
-    return this.http.patch<Task>(`${this.apiUrl}/moveToBoard/${taskId}`, { boardId, position }).pipe(
-      map((response: any) => response as Task),
       catchError(this.handleError)
     );
   }

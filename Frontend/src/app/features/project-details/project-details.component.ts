@@ -315,6 +315,26 @@ export class ProjectDetailsComponent implements OnInit {
     return `${diffDays} days`;
   }
 
+  getSprintProgress(sprint: Board): number {
+    if (!sprint.startDate || !sprint.endDate || sprint.status === 'planning') return 0;
+    if (sprint.status === 'completed') return 100;
+    
+    const start = new Date(sprint.startDate);
+    const end = new Date(sprint.endDate);
+    const today = new Date();
+    
+    // If hasn't started yet
+    if (today < start) return 0;
+    // If overdue
+    if (today > end) return 100;
+    
+    const totalDuration = end.getTime() - start.getTime();
+    const elapsedDuration = today.getTime() - start.getTime();
+    const progress = (elapsedDuration / totalDuration) * 100;
+    
+    return Math.min(Math.max(Math.round(progress), 0), 100);
+  }
+
   getDaysRemaining(sprint: Board): string {
     if (!sprint.endDate) return 'No end date';
     
