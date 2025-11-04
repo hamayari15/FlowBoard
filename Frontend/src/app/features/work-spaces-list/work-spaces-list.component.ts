@@ -47,7 +47,7 @@ export class WorkspaceListComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (workspaces: WorkspacePopulated[]) => {
-          this.workSpaces = workspaces?.filter(ws => ws.owner && ws.owner._id.toString() === this.currentUserId) || [];
+          this.workSpaces = workspaces?.filter(ws => ws.owner && ws.owner._id.toString() === this.currentUserId || ws.members?.some(member => member._id.toString() === this.currentUserId)) || [];
           this.filteredWorkSpaces = [...this.workSpaces];
           this.loading = false;
         },
