@@ -31,17 +31,6 @@ export class BoardService {
     );
   }
 
-  getBoardsByProject(projectId: string): Observable<Board[]> {
-    if (!projectId) {
-      return throwError(() => new Error('Project ID is required'));
-    }
-
-    return this.http.get<Board[]>(`${this.apiUrl}/getByProject/${projectId}`).pipe(
-      map((response: any) => response as Board[]),
-      catchError(this.handleError)
-    );
-  }
-
   getMembersByBoardId(boardId: string): Observable<User[]> {
     if (!boardId) return throwError(() => new Error('Board ID is required'));
 
@@ -69,6 +58,62 @@ export class BoardService {
 
     return this.http.delete(`${this.apiUrl}/Delete/${id}`).pipe(
       map(() => true),
+      catchError(this.handleError)
+    );
+  }
+
+  // Sprint-specific methods
+  getActiveSprints(projectId: string): Observable<Board[]> {
+    if (!projectId) {
+      return throwError(() => new Error('Project ID is required'));
+    }
+
+    return this.http.get<Board[]>(`${this.apiUrl}/active/${projectId}`).pipe(
+      map((response: any) => response as Board[]),
+      catchError(this.handleError)
+    );
+  }
+
+  getSprintsByStatus(projectId: string, status: string = 'all'): Observable<Board[]> {
+    if (!projectId) {
+      return throwError(() => new Error('Project ID is required'));
+    }
+
+    return this.http.get<Board[]>(`${this.apiUrl}/status/${projectId}/${status}`).pipe(
+      map((response: any) => response as Board[]),
+      catchError(this.handleError)
+    );
+  }
+
+  completeSprint(sprintId: string): Observable<Board> {
+    if (!sprintId) {
+      return throwError(() => new Error('Sprint ID is required'));
+    }
+
+    return this.http.put<Board>(`${this.apiUrl}/complete/${sprintId}`, {}).pipe(
+      map((response: any) => response as Board),
+      catchError(this.handleError)
+    );
+  }
+
+  startSprint(sprintId: string): Observable<Board> {
+    if (!sprintId) {
+      return throwError(() => new Error('Sprint ID is required'));
+    }
+
+    return this.http.put<Board>(`${this.apiUrl}/start/${sprintId}`, {}).pipe(
+      map((response: any) => response as Board),
+      catchError(this.handleError)
+    );
+  }
+
+  getSprintStats(sprintId: string): Observable<any> {
+    if (!sprintId) {
+      return throwError(() => new Error('Sprint ID is required'));
+    }
+
+    return this.http.get<any>(`${this.apiUrl}/stats/${sprintId}`).pipe(
+      map((response: any) => response),
       catchError(this.handleError)
     );
   }

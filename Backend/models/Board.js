@@ -10,6 +10,15 @@ const boardSchema = new Schema({
     order: Number,
     _id: false
   }],
+  // Sprint-like functionality
+  startDate: { type: Date },
+  endDate: { type: Date },
+  goal: { type: String, trim: true },
+  status: { 
+    type: String, 
+    enum: ['planning', 'active', 'completed', 'archived'], 
+    default: 'planning' 
+  },
 }, { timestamps: true });
 
 const Board = mongoose.model('Board', boardSchema);

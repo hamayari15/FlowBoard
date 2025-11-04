@@ -249,10 +249,57 @@ export class BoardViewComponent implements OnInit, OnDestroy {
   }
 
   goBack(): void {
-    this.router.navigate(['/workSpaces-list']);
+    if (this.board?.project) {
+      // Navigate back to project details
+      const projectId = typeof this.board.project === 'string' 
+        ? this.board.project 
+        : (this.board.project as any)._id;
+      this.router.navigate([`/project-details/${projectId}`]);
+    } else {
+      this.router.navigate(['/workSpaces-list']);
+    }
   }
 
   getColumnId(column: ColumnWithTasks): string {
     return column.id;
+  }
+
+  // Sprint-specific helper methods
+  getSprintStatusText(): string {
+    if (!this.board?.status) return '';
+    return this.board.status.charAt(0).toUpperCase() + this.board.status.slice(1);
+  }
+
+  getSprintStatusClass(): string {
+    switch (this.board?.status) {
+      case 'planning': return 'sprint-status-planning';
+      case 'active': return 'sprint-status-active';
+      case 'completed': return 'sprint-status-completed';
+      case 'archived': return 'sprint-status-archived';
+      default: return '';
+    }
+  }
+
+  getSprintDaysRemaining(): string {
+    if (!this.board?.endDate) return '';
+    
+    const end = new Date(this.board.endDate);
+    const today = new Date();
+    const diffTime = end.getTime() - today.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    
+    if (diffDays < 0) return 'Overdue';
+    if (diffDays === 0) return 'Due today';
+    if (diffDays === 1) return '1 day left';
+    return `${diffDays} days left`;
+  }
+
+  isSprintOverdue(): boolean {
+    if (!this.board?.endDate || this.board.status === 'completed') return false;
+    return new Date(this.board.endDate) < new Date();
+  }
+
+  hasSprintDates(): boolean {
+    return !!(this.board?.startDate || this.board?.endDate);
   }
 }

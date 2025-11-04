@@ -20,19 +20,9 @@ export class TaskService {
     );
   }
 
-   getTasksByProject(projectId: string): Observable<Task[]> {
-    if (!projectId) {
-      return throwError(() => new Error('Project ID is required'));
-    }
-    return this.http.get<Task[]>(`${this.apiUrl}/getByProject/${projectId}`).pipe(
-      map((response: any) => response as Task[]),
-      catchError(this.handleError)
-    );
-  }
-
-  assignTaskToBoard(taskId: string, boardId: string): Observable<Task> {
-    if (!taskId || !boardId) {
-      return throwError(() => new Error('Task ID and Board ID are required'));
+  getTasksByBoard(boardId: string): Observable<Task[]> {
+    if (!boardId) {
+      return throwError(() => new Error('Board ID is required'));
     }
     return this.http.patch<Task>(`${this.apiUrl}/assignToBoard/${taskId}`, { boardId }).pipe(
       map((response: any) => response as Task),
@@ -108,17 +98,6 @@ getUnassignedTasks(projectId: string): Observable<Task[]> {
   updateTaskPosition(id: string, newPosition: number): Observable<Task> {
     if (!id) {
       return throwError(() => new Error('Task ID is required'));
-    }
-
-    return this.http.patch<Task>(`${this.apiUrl}/updatePosition/${id}`, { position: newPosition }).pipe(
-      map((response: any) => response as Task),
-      catchError(this.handleError)
-    );
-  }
-
-  assignTask(id: string, assigneeId: string): Observable<Task> {
-    if (!id || !assigneeId) {
-      return throwError(() => new Error('Task ID and assignee ID are required'));
     }
 
     return this.http.patch<Task>(`${this.apiUrl}/assign/${id}`, { assignee: assigneeId }).pipe(

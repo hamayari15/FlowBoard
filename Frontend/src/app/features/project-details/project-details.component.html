@@ -1,5 +1,6 @@
 <div class="project-details-container">
 
+  <!-- Project Header -->
   <mat-card class="project-header-card" *ngIf="!loading">
     <mat-card-header class="card-header">
       <div mat-card-avatar class="project-avatar">
@@ -45,5 +46,168 @@
       </div>
     </mat-card-content>
   </mat-card>
+
+  <!-- Sprints Section -->
+  <div class="sprints-section" *ngIf="!loading">
+    <div class="sprints-header">
+      <div class="sprints-title">
+        <mat-icon class="sprints-icon">view_kanban</mat-icon>
+        <h2>Sprints</h2>
+      </div>
+      <button mat-raised-button color="primary" (click)="openCreateSprintDialog()">
+        <mat-icon>add</mat-icon>
+        Create Sprint
+      </button>
+    </div>
+
+    <!-- Filter Buttons -->
+    <div class="sprint-filters">
+      <button 
+        mat-stroked-button 
+        [class.active]="selectedFilter === 'all'"
+        (click)="filterSprints('all')">
+        All Sprints
+      </button>
+      <button 
+        mat-stroked-button 
+        [class.active]="selectedFilter === 'planning'"
+        (click)="filterSprints('planning')">
+        Planning
+      </button>
+      <button 
+        mat-stroked-button 
+        [class.active]="selectedFilter === 'active'"
+        (click)="filterSprints('active')">
+        Active
+      </button>
+      <button 
+        mat-stroked-button 
+        [class.active]="selectedFilter === 'completed'"
+        (click)="filterSprints('completed')">
+        Completed
+      </button>
+      <button 
+        mat-stroked-button 
+        [class.active]="selectedFilter === 'archived'"
+        (click)="filterSprints('archived')">
+        Archived
+      </button>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="sprintsLoading" class="loading-container">
+      <mat-spinner diameter="50"></mat-spinner>
+      <p>Loading sprints...</p>
+    </div>
+
+    <!-- Sprints Table -->
+    <div *ngIf="!sprintsLoading" class="sprints-table">
+      <!-- No Sprints Message -->
+      <div *ngIf="sprints.length === 0" class="no-sprints-row">
+        <div class="empty-state">
+          <mat-icon class="empty-icon">inbox</mat-icon>
+          <h3>No sprints found</h3>
+          <p>Create your first sprint to start organizing your work</p>
+          <button mat-raised-button color="primary" (click)="openCreateSprintDialog()">
+            <mat-icon>add</mat-icon>
+            Create Sprint
+          </button>
+        </div>
+      </div>
+
+      <!-- Sprint Rows -->
+      <div class="sprints-list">
+        <div *ngFor="let sprint of sprints" 
+             class="sprint-row"
+             [class.overdue]="isSprintOverdue(sprint)"
+             [class.active]="sprint.status === 'active'"
+             [class.completed]="sprint.status === 'completed'">
+          
+          <!-- Main Sprint Info -->
+          <div class="sprint-row-content" (click)="viewSprint(sprint)">
+            <div class="sprint-primary-info">
+              <div class="sprint-icon-wrapper">
+                <mat-icon class="sprint-icon">view_kanban</mat-icon>
+              </div>
+              <div class="sprint-title-container">
+                <h3>{{ sprint.name }}</h3>
+                <p class="sprint-description-text">{{ sprint.description || 'No description available' }}</p>
+              </div>
+            </div>
+
+            <div class="sprint-info-row">
+              <div class="sprint-info-group">
+                <span class="status-badge" [ngClass]="getSprintStatusBadgeClass(sprint.status)">
+                  {{ sprint.status || 'planning' }}
+                </span>
+
+                <div *ngIf="sprint.goal" class="sprint-goal-chip">
+                  <mat-icon>flag</mat-icon>
+                  <span>{{ sprint.goal }}</span>
+                </div>
+
+                <div class="sprint-dates-inline">
+                  <mat-icon>event</mat-icon>
+                  <span>{{ sprint.startDate | date: 'MMM d' }}</span>
+                  <mat-icon class="arrow-icon">arrow_forward</mat-icon>
+                  <span>{{ sprint.endDate | date: 'MMM d, yyyy' }}</span>
+                </div>
+
+                <span class="duration-chip">
+                  <mat-icon>schedule</mat-icon>
+                  <span>{{ getSprintDuration(sprint) }}</span>
+                </span>
+              </div>
+
+              <div class="progress-bar-container">
+                <div class="progress-bar" 
+                     [style.width.%]="getSprintProgress(sprint)"
+                     [class.overdue]="isSprintOverdue(sprint)">
+                </div>
+              </div>
+            </div>
+
+            <!-- Right Section: Actions -->
+            <div class="sprint-actions" (click)="$event.stopPropagation()">
+              <button 
+                *ngIf="sprint.status === 'planning'"
+                mat-stroked-button 
+                color="primary"
+                (click)="startSprint(sprint, $event)">
+                <mat-icon>play_arrow</mat-icon>
+                Start
+              </button>
+              <button 
+                *ngIf="sprint.status === 'active'"
+                mat-stroked-button 
+                color="accent"
+                (click)="completeSprint(sprint, $event)">
+                <mat-icon>check_circle</mat-icon>
+                Complete
+              </button>
+              <button mat-icon-button [matMenuTriggerFor]="menu">
+                <mat-icon>more_vert</mat-icon>
+              </button>
+              <mat-menu #menu="matMenu">
+                <button mat-menu-item (click)="viewSprint(sprint)">
+                  <mat-icon>visibility</mat-icon>
+                  <span>View Board</span>
+                </button>
+                <button mat-menu-item (click)="openEditSprintDialog(sprint)">
+                  <mat-icon>edit</mat-icon>
+                  <span>Edit</span>
+                </button>
+                <button mat-menu-item class="delete-option" (click)="deleteSprint(sprint, $event)">
+                  <mat-icon color="warn">delete</mat-icon>
+                  <span>Delete</span>
+                </button>
+              </mat-menu>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
 
 </div>
