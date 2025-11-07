@@ -175,13 +175,14 @@ export class BoardViewComponent implements OnInit, OnDestroy {
           .pipe(takeUntil(this.destroy$))
           .subscribe({
             next: () => {
-          Swal.fire({
-          icon: 'success',
-          title: 'Deleted !',
-          text: 'Task deleted successfully.',
-          timer: 2000,
-          showConfirmButton: false
-        });              this.loadTasks();
+            Swal.fire({
+              icon: 'success',
+              title: 'Deleted !',
+              text: 'Task deleted successfully.',
+              timer: 2000,
+              showConfirmButton: false,
+            });                
+            this.loadTasks();
             },
             error: () => Swal.fire('Error', 'Failed to delete task', 'error')
           });
@@ -192,8 +193,9 @@ export class BoardViewComponent implements OnInit, OnDestroy {
    openBoardEditDialog(): void {
     if (!this.board) return;
     const dialogRef = this.dialog.open(BoardDialogComponent, {
-      width: '500px',
-      data: { mode: 'edit', board: this.board }
+      width: '600px',
+      data: { mode: 'edit', board: this.board, isSprint: true // 🔹 أضف هذا السطر باش يظهرلك goal, dates, status, ...
+ }
     });
     dialogRef.afterClosed().pipe(takeUntil(this.destroy$)).subscribe(result => {
       if (result) this.loadBoardData();
@@ -202,12 +204,13 @@ export class BoardViewComponent implements OnInit, OnDestroy {
 
   deleteBoard(): void {
     Swal.fire({
-      title: 'Delete Board?',
-      text: 'Are you sure you want to delete this board?',
+      title: 'Are you sure?',
+      text: `You won't be able to revert this action!`,
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#d33',
       cancelButtonColor: '#3085d6',
+      reverseButtons: true,
       confirmButtonText: 'Yes, delete it!'
     }).then((result) => {
       if (result.isConfirmed) {
@@ -215,8 +218,14 @@ export class BoardViewComponent implements OnInit, OnDestroy {
           .pipe(takeUntil(this.destroy$))
           .subscribe({
             next: () => {
-              Swal.fire('Deleted!', 'Board has been deleted.', 'success');
-              this.router.navigate(['/workSpaces-list']);
+            Swal.fire({
+              icon: 'success',
+              title: 'Deleted !',
+              text: 'Sprint deleted successfully.',
+              timer: 2000,
+              showConfirmButton: false,
+            });              
+            this.router.navigate(['/project-details']);
             },
             error: () => Swal.fire('Error', 'Failed to delete board', 'error')
           });

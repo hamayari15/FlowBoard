@@ -54,7 +54,7 @@ exports.getCommentsByTask = async (req, res) => {
     const { taskId } = req.params;
 
     const comments = await Comment.find({ task: taskId })
-      .populate('author', 'username email')
+      .populate('author', 'firstName lastName email')
       .sort({ createdAt: -1 });
 
     res.status(200).json(comments);

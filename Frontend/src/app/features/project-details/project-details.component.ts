@@ -102,7 +102,7 @@ export class ProjectDetailsComponent implements OnInit {
           next: () => {
             Swal.fire({
               icon: 'success',
-              title: 'Archived !',
+              title: 'Archived!',
               text: 'Project archived successfully.',
               timer: 2000,
               showConfirmButton: false,
@@ -119,7 +119,7 @@ export class ProjectDetailsComponent implements OnInit {
     Swal.fire({
       icon: 'warning',
       title: 'Are you sure?',
-      text: 'You wont be able to revert this action!',
+      text: 'You won’t be able to revert this action!',
       confirmButtonText: 'Yes, delete it!',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
@@ -144,7 +144,7 @@ export class ProjectDetailsComponent implements OnInit {
     });
   }
 
-  // Sprint management methods
+  // === Sprint Management ===
   loadSprints() {
     this.sprintsLoading = true;
     this.boardService.getSprintsByStatus(this.projectId, this.selectedFilter).subscribe({
@@ -205,7 +205,7 @@ export class ProjectDetailsComponent implements OnInit {
     Swal.fire({
       icon: 'question',
       title: 'Start Sprint',
-      text: `Are you sure you want to start "${sprint.name}"?`,
+      text: `Start "${sprint.name}"?`,
       showCancelButton: true,
       confirmButtonColor: '#4caf50',
       cancelButtonColor: '#3085d6',
@@ -218,7 +218,6 @@ export class ProjectDetailsComponent implements OnInit {
             Swal.fire({
               icon: 'success',
               title: 'Sprint Started!',
-              text: 'Sprint is now active.',
               timer: 2000,
               showConfirmButton: false,
             });
@@ -237,7 +236,7 @@ export class ProjectDetailsComponent implements OnInit {
     Swal.fire({
       icon: 'question',
       title: 'Complete Sprint',
-      text: `Are you sure you want to complete "${sprint.name}"?`,
+      text: `Complete "${sprint.name}"?`,
       showCancelButton: true,
       confirmButtonColor: '#2196f3',
       cancelButtonColor: '#3085d6',
@@ -250,7 +249,6 @@ export class ProjectDetailsComponent implements OnInit {
             Swal.fire({
               icon: 'success',
               title: 'Sprint Completed!',
-              text: 'Sprint marked as completed.',
               timer: 2000,
               showConfirmButton: false,
             });
@@ -268,8 +266,8 @@ export class ProjectDetailsComponent implements OnInit {
 
     Swal.fire({
       icon: 'warning',
-      title: 'Delete Sprint',
-      text: `Are you sure you want to delete "${sprint.name}"? This will also delete all tasks in this sprint.`,
+      title: 'Are you sure?',
+      text: `You won't be able to revert this action!`,
       showCancelButton: true,
       confirmButtonColor: '#d33',
       cancelButtonColor: '#3085d6',
@@ -281,7 +279,7 @@ export class ProjectDetailsComponent implements OnInit {
           next: () => {
             Swal.fire({
               icon: 'success',
-              title: 'Deleted!',
+              title: 'Deleted !',
               text: 'Sprint deleted successfully.',
               timer: 2000,
               showConfirmButton: false,
@@ -306,47 +304,26 @@ export class ProjectDetailsComponent implements OnInit {
 
   getSprintDuration(sprint: Board): string {
     if (!sprint.startDate || !sprint.endDate) return 'No dates set';
-    
     const start = new Date(sprint.startDate);
     const end = new Date(sprint.endDate);
-    const diffTime = Math.abs(end.getTime() - start.getTime());
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    
-    return `${diffDays} days`;
+    const diff = Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24));
+    return `${diff} days`;
   }
 
   getSprintProgress(sprint: Board): number {
     if (!sprint.startDate || !sprint.endDate || sprint.status === 'planning') return 0;
     if (sprint.status === 'completed') return 100;
-    
+
     const start = new Date(sprint.startDate);
     const end = new Date(sprint.endDate);
-    const today = new Date();
-    
-    // If hasn't started yet
-    if (today < start) return 0;
-    // If overdue
-    if (today > end) return 100;
-    
-    const totalDuration = end.getTime() - start.getTime();
-    const elapsedDuration = today.getTime() - start.getTime();
-    const progress = (elapsedDuration / totalDuration) * 100;
-    
-    return Math.min(Math.max(Math.round(progress), 0), 100);
-  }
+    const now = new Date();
 
-  getDaysRemaining(sprint: Board): string {
-    if (!sprint.endDate) return 'No end date';
-    
-    const end = new Date(sprint.endDate);
-    const today = new Date();
-    const diffTime = end.getTime() - today.getTime();
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    
-    if (diffDays < 0) return 'Overdue';
-    if (diffDays === 0) return 'Due today';
-    if (diffDays === 1) return '1 day left';
-    return `${diffDays} days left`;
+    if (now < start) return 0;
+    if (now > end) return 100;
+
+    const total = end.getTime() - start.getTime();
+    const elapsed = now.getTime() - start.getTime();
+    return Math.round((elapsed / total) * 100);
   }
 
   isSprintOverdue(sprint: Board): boolean {

@@ -75,7 +75,7 @@
     <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="!taskForm.valid || loading">
       <mat-spinner *ngIf="loading" diameter="16"></mat-spinner>
       <mat-icon *ngIf="!loading">{{ mode === 'create' ? 'add' : 'save' }}</mat-icon>
-      {{ mode === 'create' ? 'Create' : 'Update' }}
+      {{ mode === 'create' ? 'Create Task' : 'Update Task' }}
     </button>
   </mat-dialog-actions>
 </div>

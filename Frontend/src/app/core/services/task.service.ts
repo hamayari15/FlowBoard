@@ -20,15 +20,7 @@ export class TaskService {
     );
   }
 
-  getTasksByBoard(boardId: string): Observable<Task[]> {
-    if (!boardId) {
-      return throwError(() => new Error('Board ID is required'));
-    }
-    return this.http.patch<Task>(`${this.apiUrl}/assignToBoard/${taskId}`, { boardId }).pipe(
-      map((response: any) => response as Task),
-      catchError(this.handleError)
-    );
-  }
+
 
   getTaskById(id: string): Observable<Task> {
     if (!id) {
@@ -100,10 +92,11 @@ getUnassignedTasks(projectId: string): Observable<Task[]> {
       return throwError(() => new Error('Task ID is required'));
     }
 
-    return this.http.patch<Task>(`${this.apiUrl}/assign/${id}`, { assignee: assigneeId }).pipe(
-      map((response: any) => response as Task),
-      catchError(this.handleError)
-    );
+   return this.http.patch<Task>(`${this.apiUrl}/updatePosition/${id}`, { position: newPosition }).pipe(
+  map((response: any) => response as Task),
+  catchError(this.handleError)
+);
+
   }
 
   bulkUpdatePositions(tasks: Array<{ id: string; position: number; status?: string }>): Observable<any> {

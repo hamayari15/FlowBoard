@@ -149,7 +149,7 @@ export class WorkSpaceDetailsComponent implements OnInit, OnDestroy {
         .catch(error => { Swal.showValidationMessage(`Request failed: ${error.message}`); throw error; }),
     }).then(result => {
       if (result.isConfirmed) {
-        Swal.fire({ icon: 'success', title: `${action}d !`, text: `Project ${action.toLowerCase()}ed successfully.`, timer: 2000, showConfirmButton: false });
+        Swal.fire({ icon: 'success', title: `${action}d !`, text: `Project ${action.toLowerCase()}d successfully.`, timer: 2000, showConfirmButton: false });
         this.refreshProjects();
       }
     });
@@ -182,7 +182,7 @@ export class WorkSpaceDetailsComponent implements OnInit, OnDestroy {
   getStatusColor(status: string): string {
     switch (status) {
       case 'active': return '#4caf50';
-      case 'completed': return '#2196f3';
+      case 'completed': return '#2f99efff';
       case 'on-hold': return '#ff9800';
       default: return '#757575';
     }

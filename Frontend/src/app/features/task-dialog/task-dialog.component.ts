@@ -105,9 +105,9 @@ export class TaskDialogComponent implements OnInit {
         Swal.fire({
           icon: 'success',
           title: 'Task Created !',
-          text: 'A new task has been created successfully.',
-          timer: 2000,
-          showConfirmButton: false
+          text: 'New task has been created successfully.',
+          showConfirmButton: false,
+          timer: 2000
         });          
           this.dialogRef.close(response);
         },
@@ -126,16 +126,15 @@ export class TaskDialogComponent implements OnInit {
         dueDate: formValue.dueDate
       };
       this.taskService.updateTask(this.data.task._id, updateData).subscribe({
-        next: (task: Task) => {
-        this.loading = false;
+        next: (response) => {
         Swal.fire({
           icon: 'success',
           title: 'Updated !',
           text: 'Task updated successfully.',
-          timer: 2000,
-          showConfirmButton: false
+          showConfirmButton: false,
+          timer: 2000
         });          
-          this.dialogRef.close(task);
+          this.dialogRef.close({ updated: true });
         },
         error: (error) => {
           Swal.fire('Error', error.message || 'Failed to update task', 'error');

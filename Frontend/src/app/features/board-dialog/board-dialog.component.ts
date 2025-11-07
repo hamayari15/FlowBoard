@@ -100,15 +100,16 @@ export class BoardDialogComponent implements OnInit {
         this.data.board = board;
         Swal.fire({
           icon: 'success',
-          title: this.isSprint ? 'Sprint Created !' : 'Board Created !',
-          text: this.isSprint ? 'Your sprint has been created successfully.' : 'Your board has been created successfully.',
-          showConfirmButton: true
+          title: 'Sprint Created !',
+          text: 'New sprint has been created successfully.',
+          showConfirmButton: false,
+          timer: 2000
         });
         this.dialogRef.close(board);
       },
       error: (error: ApiError) => {
         this.loading = false;
-        this.showErrorAlert('Creation Failed', error.message || 'Failed to create ' + (this.isSprint ? 'sprint' : 'board'));
+        this.showErrorAlert('Creation Failed', error.message || 'Failed to create sprint');
       }
     });
   }
@@ -135,7 +136,7 @@ export class BoardDialogComponent implements OnInit {
         Swal.fire({
           icon: 'success',
           title: 'Updated !',
-          text: 'Board updated successfully.',
+          text: 'Sprint updated successfully.',
           timer: 2000,
           showConfirmButton: false
         });

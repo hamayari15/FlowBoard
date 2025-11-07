@@ -47,103 +47,114 @@
     </mat-card-content>
   </mat-card>
 
-  <mat-card class="projects-section-card">
-    <div class="projects-header-first-line">
-      <mat-icon class="header-icon">folder</mat-icon>
-      <h1>"{{ workSpaceData.name }}" Projects</h1>
-      <span class="workspace-count" *ngIf="!loadingProjects && filteredProjects.length > 0">
-        ({{ filteredProjects.length }})
-      </span>
+  <div class="projects-header" *ngIf="projects.length > 0 || searchTerm || archiveFilter !== 'all'">
+    <div class="projects-title">
+      <mat-icon class="header-icon">assignment</mat-icon>
+      <h1>Projects</h1>
+      <span class="projects-count">({{ filteredProjects.length }})</span>
     </div>
+    <mat-form-field appearance="outline" class="search-field">
+      <mat-label>Search project</mat-label>
+      <input matInput [(ngModel)]="searchTerm" (input)="searchProjects()" placeholder="Enter project name">
+      <button mat-icon-button matSuffix *ngIf="searchTerm" (click)="searchTerm=''; searchProjects()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-form-field>
+    <mat-button-toggle-group class="filter" [(ngModel)]="archiveFilter" (change)="setArchiveFilter(archiveFilter)">
+      <mat-button-toggle value="all">All</mat-button-toggle>
+      <mat-button-toggle value="active">Unarchived</mat-button-toggle>
+      <mat-button-toggle value="archived">Archived</mat-button-toggle>
+    </mat-button-toggle-group>
+    <button mat-icon-button color="primary" class="refresh" (click)="refreshProjects()">
+      <mat-icon>refresh</mat-icon>
+    </button>
+    <button mat-raised-button color="primary" class="add-button" (click)="openAddProjectDialog()">
+      <mat-icon>add</mat-icon>
+      Add Project
+    </button>
+  </div>
 
-    <div class="projects-header-second-line">
-      <mat-form-field appearance="outline" class="search-field">
-        <mat-label>Search project</mat-label>
-        <input matInput [(ngModel)]="searchTerm" (input)="searchProjects()" placeholder="Enter project name" [disabled]="!projects.length">
-        <button mat-icon-button matSuffix *ngIf="searchTerm" (click)="searchTerm=''; searchProjects()">
-          <mat-icon>close</mat-icon>
+  <div *ngIf="!loadingProjects && projects.length === 0" class="empty-state">
+  <mat-icon class="empty-icon">assignment</mat-icon>
+  <h2>No projects found</h2>
+  <p>Create your first project to start organizing your work</p>
+  <button mat-raised-button color="primary" class="add-button" (click)="openAddProjectDialog()">
+    <mat-icon>add</mat-icon>
+    Add Project
+  </button>
+</div>
+
+<div *ngIf="!loadingProjects && filteredProjects.length === 0 && projects.length > 0 && !searchTerm && archiveFilter === 'archived'" class="empty-state">
+  <mat-icon class="empty-icon">inventory_2</mat-icon>
+  <h2>No archived projects found</h2>
+  <p>You haven’t archived any projects yet.</p>
+</div>
+
+<div *ngIf="!loadingProjects && filteredProjects.length === 0 && projects.length > 0 && !searchTerm && archiveFilter === 'active'" class="empty-state">
+  <mat-icon class="empty-icon">work_off</mat-icon>
+  <h2>No unarchived projects found</h2>
+  <p>All projects might be archived or deleted.</p>
+</div>
+
+<div *ngIf="!loadingProjects && filteredProjects.length === 0 && projects.length > 0 && searchTerm" class="no-results">
+  <mat-icon class="empty-icon">search_off</mat-icon>
+  <h2>No project found with name <span class="highlight">"{{ searchTerm }}"</span></h2>
+  <p>Try adjusting your search or filter criteria</p>
+</div>
+
+  <div *ngIf="!loadingProjects && filteredProjects.length > 0" class="projects-grid">
+    <mat-card class="project-card" *ngFor="let project of filteredProjects">
+      <mat-card-header class="card-header">
+        <div mat-card-avatar class="workspace-avatar">
+          <mat-icon>assignment</mat-icon>
+        </div>
+        <mat-card-title>{{ project.name }}</mat-card-title>
+        <mat-card-subtitle>{{ project.description || 'No description provided' }}</mat-card-subtitle>
+      </mat-card-header>
+
+      <mat-card-content class="project-info">
+        <div class="info-item">
+          <mat-chip [style.background-color]="getStatusColor(project.status)" class="status-chip">
+            {{ project.status | titlecase }}
+          </mat-chip>
+        </div>
+        <div class="info-item">
+          <mat-icon>group</mat-icon>
+          <span>{{ getMembersCount(project) }} Members</span>
+        </div>
+        <div class="info-item">
+          <mat-icon>schedule</mat-icon>
+          <span>{{ project.createdAt | date: 'shortDate' }}</span>
+        </div>
+      </mat-card-content>
+
+      <mat-card-actions class="card-actions">
+        <button mat-icon-button color="primary" (click)="openProjectInviteDialog(project)">
+          <mat-icon>person_add</mat-icon>
         </button>
-      </mat-form-field>
+        <button mat-button color="primary" (click)="goToDetails(project._id!)" [disabled]="!project._id">
+          <mat-icon>visibility</mat-icon>
+          View
+        </button>
+        <button mat-button class="edit-btn" (click)="openEditProjectDialog(project)">
+          <mat-icon>edit</mat-icon>
+          Edit
+        </button>
+        <button mat-button class="archive-btn" (click)="archiveProject(project)">
+          <mat-icon>archive</mat-icon>
+          {{ project.isArchived ? 'Unarchive' : 'Archive' }}
+        </button>
+        <button mat-button color="warn" (click)="deleteProject(project)">
+          <mat-icon>delete</mat-icon>
+          Delete
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
 
-      <mat-button-toggle-group class="filter" [(ngModel)]="archiveFilter" (change)="setArchiveFilter(archiveFilter)" aria-label="Project Archive Filter" [disabled]="!projects.length">
-        <mat-button-toggle value="all">All</mat-button-toggle>
-        <mat-button-toggle value="active">Active</mat-button-toggle>
-        <mat-button-toggle value="archived">Archived</mat-button-toggle>
-      </mat-button-toggle-group>
-
-      <button mat-icon-button color="primary" class="refresh" matTooltip="Refresh projects" (click)="refreshProjects()" [disabled]="loadingProjects || !projects.length">
-        <mat-icon>refresh</mat-icon>
-      </button>
-
-      <button mat-raised-button color="primary" class="add-button" (click)="openAddProjectDialog()" [disabled]="loadingProjects">
-        <mat-icon>add</mat-icon>
-        Add Project
-      </button>
-    </div>
-
-    <div *ngIf="!loadingProjects && projects.length === 0" class="projects-empty-state empty-state">
-      <mat-icon class="empty-icon">assignment_turned_in</mat-icon>
-      <h2>No projects found</h2>
-      <p>Create your first project to get started</p>
-    </div>
-
-    <div *ngIf="!loadingProjects && projects.length > 0 && filteredProjects.length === 0" class="projects-no-results no-results">
-      <mat-icon class="empty-icon">search_off</mat-icon>
-      <h2>
-        No project found with name
-        <span class="highlight">"{{ searchTerm }}"</span>
-      </h2>
-    </div>
-
-    <div *ngIf="!loadingProjects && filteredProjects.length > 0" class="projects-grid">
-      <mat-card class="project-card" *ngFor="let project of filteredProjects">
-        <mat-card-header class="card-header">
-          <div mat-card-avatar class="workspace-avatar">
-            <mat-icon>assignment</mat-icon>
-          </div>
-          <mat-card-title>{{ project.name }}</mat-card-title>
-          <mat-card-subtitle>{{ project.description || 'No description provided' }}</mat-card-subtitle>
-        </mat-card-header>
-
-        <mat-card-content class="project-info">
-          <div class="info-item">
-            <mat-chip [style.background-color]="getStatusColor(project.status)" class="status-chip">
-              {{ project.status | titlecase }}
-            </mat-chip>
-          </div>
-          <div class="info-item">
-            <mat-icon>group</mat-icon>
-            <span>{{ getMembersCount(project) }} Members</span>
-          </div>
-          <div class="info-item">
-            <mat-icon>schedule</mat-icon>
-            <span>{{ project.createdAt | date: 'shortDate' }}</span>
-          </div>
-        </mat-card-content>
-
-        <mat-card-actions class="card-actions">
-          <button mat-icon-button color="primary" (click)="openProjectInviteDialog(project)" matTooltip="Invite members">
-            <mat-icon>person_add</mat-icon>
-          </button>
-          <button mat-button color="primary" (click)="goToDetails(project._id!)" [disabled]="!project._id">
-            <mat-icon>visibility</mat-icon>
-            View
-          </button>
-          <button mat-button class="edit-btn" (click)="openEditProjectDialog(project)">
-            <mat-icon>edit</mat-icon>
-            Edit
-          </button>
-          <button mat-button class="archive-btn" (click)="archiveProject(project)">
-            <mat-icon>archive</mat-icon>
-            {{ project.isArchived ? 'Unarchive' : 'Archive' }}
-          </button>
-          <button mat-button color="warn" (click)="deleteProject(project)">
-            <mat-icon>delete</mat-icon>
-            Delete
-          </button>
-        </mat-card-actions>
-      </mat-card>
-    </div>
-  </mat-card>
+  <div *ngIf="loadingProjects" class="loading-container">
+    <mat-spinner diameter="50"></mat-spinner>
+    <p>Loading projects...</p>
+  </div>
 
 </div>

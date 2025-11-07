@@ -171,24 +171,23 @@
                 />
                 <span *ngIf="!comment.createdBy?.avatar?.url">{{
                   getInitials(
-                    comment.createdBy?.firstName,
-                    comment.createdBy?.lastName
+                    comment.author?.firstName,
+                    comment.author?.lastName
                   )
                 }}</span>
               </div>
-              <div class="comment-author-name">
-                {{ comment.createdBy?.firstName }}
-                {{ comment.createdBy?.lastName }}
-              </div>
-              <div class="comment-date">
-                {{ comment.createdAt | date : "short" }}
+              <div class="author-details">
+                <div class="comment-author-name">
+                  {{ comment.author?.firstName }}
+                  {{ comment.author?.lastName }}
+                </div>
+                <div class="comment-author-email">{{ comment.author?.email }}</div>
               </div>
             </div>
             <div class="comment-actions">
               <button
                 mat-icon-button
                 matTooltip="Edit Comment"
-                color="primary"
                 (click)="editComment(comment)"
               >
                 <mat-icon>edit</mat-icon>
@@ -203,7 +202,10 @@
               </button>
             </div>
           </div>
-          <div class="comment-content">{{ comment.content }}</div>
+          <div class="comment-content"><strong>{{ comment.content }}</strong></div>
+          <div class="comment-date">
+                <strong>{{ comment.createdAt | date : "medium" }}</strong>
+              </div>
         </div>
       </div>
     </div>

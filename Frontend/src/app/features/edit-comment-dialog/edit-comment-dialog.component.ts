@@ -37,9 +37,10 @@ export class EditCommentDialogComponent implements OnInit {
           icon: 'success',
           title: 'Updated !',
           text: 'Comment updated successfully.',
-          timer: 2000,
-          showConfirmButton: false
-        });         this.dialogRef.close({ updated: true, comment: res });
+          showConfirmButton: false,
+          timer: 2000
+        }); 
+        this.dialogRef.close({ updated: true, comment: res });
         this.loading = false;
       },
       error: () => {

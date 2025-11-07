@@ -1,14 +1,14 @@
 <div class="workspace-container">
   <div class="header-section" *ngIf="!loading && !error && workSpaces.length > 0">
     <div class="title-section">
-      <mat-icon class="header-icon">workspaces</mat-icon>
+      <mat-icon class="header-icon">folder</mat-icon>
       <h1>Workspaces</h1>
       <span class="workspace-count">({{ filteredWorkSpaces.length }})</span>
     </div>
 
     <div class="header-actions">
       <mat-form-field appearance="outline" class="search-field">
-        <mat-label>Search workspace</mat-label>
+        <mat-label>Search workspace...</mat-label>
         <input
           matInput
           [(ngModel)]="searchTerm"
@@ -68,6 +68,7 @@
       No workspace found with name
       <span class="highlight">"{{ searchTerm }}"</span>
     </h2>
+      <p>Try adjusting your search or filter criteria</p>
   </div>
 
   <div *ngIf="!loading && !error && filteredWorkSpaces.length > 0" class="workspaces-grid">

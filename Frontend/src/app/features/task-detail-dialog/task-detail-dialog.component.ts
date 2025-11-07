@@ -49,10 +49,10 @@ export class TaskDetailDialogComponent implements OnInit {
         this.newComment = '';
         Swal.fire({
           icon: 'success',
-          title: 'Comment Added !',
-          text: 'A new comment has been added successfully.',
-          timer: 2000,
-          showConfirmButton: false
+          title: 'Created !',
+          text: 'Comment has been added to task successfully.',
+          showConfirmButton: false,
+          timer: 2000
         });        },
       error: () => Swal.fire('Error', 'Failed to add comment', 'error')
     });
@@ -62,6 +62,7 @@ export class TaskDetailDialogComponent implements OnInit {
     if (!this.task._id) return;
     this.commentService.getCommentsByTask(this.task._id).subscribe({
       next: (res) => {
+        console.log(res)
         this.comments = res;
       },
       error: () => Swal.fire('Error', 'Failed to load comments', 'error')
@@ -83,8 +84,8 @@ export class TaskDetailDialogComponent implements OnInit {
 
   deleteComment(comment: any): void {
     Swal.fire({
-      title: 'Delete Comment?',
-      text: 'You wont be able to revert this action!',
+      title: 'Are you sure?',
+      text: `You won't be able to revert this action!`,
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#d33',
@@ -97,13 +98,12 @@ export class TaskDetailDialogComponent implements OnInit {
           next: () => {
             this.comments = this.comments.filter(c => c._id !== comment._id);
             Swal.fire({
-                      icon: 'success',
-                      title: 'Deleted !',
-                      text: 'Comment deleted successfully.',
-                      timer: 2000,
-                      showConfirmButton: false
-                    }); 
-          },
+          icon: 'success',
+          title: 'Deleted !',
+          text: 'Comment deleted successfully.',
+          showConfirmButton: false,
+          timer: 2000
+        });           },
           error: () => Swal.fire('Error', 'Failed to delete comment', 'error')
         });
       }
@@ -123,7 +123,6 @@ export class TaskDetailDialogComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        Swal.fire('Success', 'Task updated successfully', 'success');
         this.dialogRef.close({ updated: true });
       }
     });

@@ -101,15 +101,10 @@
 
   <mat-dialog-actions align="end" class="dialog-actions">
     <button mat-button (click)="onCancel()" [disabled]="loading">Cancel</button>
-    <button
-      mat-raised-button
-      color="primary"
-      (click)="onSubmit()"
-      [disabled]="loading"
-    >
-      <mat-spinner diameter="16" *ngIf="loading"></mat-spinner>
+    <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="!boardForm.valid || loading">
+      <mat-spinner *ngIf="loading" diameter="16"></mat-spinner>
       <mat-icon *ngIf="!loading">{{ mode === 'add' ? 'add' : 'save' }}</mat-icon>
-      {{ mode === 'add' ? (isSprint ? 'Create Sprint' : 'Create Board') : (isSprint ? 'Update Sprint' : 'Update Board') }}
+      <span>{{ mode === 'add' ? (isSprint ? 'Create Sprint' : 'Create Board') : (isSprint ? 'Update Sprint' : 'Update Board') }}</span>
     </button>
   </mat-dialog-actions>
 </div>
