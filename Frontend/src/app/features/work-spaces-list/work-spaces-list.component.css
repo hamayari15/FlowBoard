@@ -2,7 +2,7 @@
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  padding: 2.5rem 8rem;
+  padding: 2.5rem 2rem;
   background-color: #f9fafb;
   min-height: 100vh;
   color: #333;
@@ -270,7 +270,7 @@
 /* ✅ Responsive adjustments */
 @media (max-width: 1200px) {
   .workspace-container {
-    padding: 2rem 4rem;
+    padding: 2rem 2rem;
   }
   
   .workspaces-grid {
@@ -280,7 +280,7 @@
 
 @media (max-width: 992px) {
   .workspace-container {
-    padding: 1.5rem 3rem;
+    padding: 1.5rem 2rem;
   }
   
   .workspaces-grid {
@@ -290,7 +290,7 @@
 
 @media (max-width: 768px) {
   .workspace-container {
-    padding: 1rem 2rem;
+    padding: 1rem;
     margin-top: 16px;
   }
 
@@ -317,9 +317,8 @@
   }
 
   .search-field ::ng-deep .mat-mdc-form-field-infix {
-    padding-top: 8px !important;
-    padding-bottom: 14px !important;
-    max-height: 42px !important;
+    padding-top: 10px !important;
+    padding-bottom: 16px !important;
   }
 
   .search-field ::ng-deep .mat-mdc-text-field-wrapper {

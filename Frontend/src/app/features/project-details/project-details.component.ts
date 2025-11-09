@@ -86,6 +86,19 @@ export class ProjectDetailsComponent implements OnInit {
     return this.projectData.members?.length || 0;
   }
 
+  getStatusColor(status: string): string {
+    switch (status) {
+      case 'active':
+        return '#4caf50';
+      case 'completed':
+        return '#2196f3';
+      case 'on-hold':
+        return '#ff9800';
+      default:
+        return '#9e9e9e';
+    }
+  }
+
   archiveProject(project: ProjectPopulated) {
     Swal.fire({
       icon: 'question',
