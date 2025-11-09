@@ -1,11 +1,11 @@
 .navbar {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 3px 15px rgba(0, 0, 0, 0.1);
   position: sticky;
   top: 0;
   z-index: 1000;
   backdrop-filter: blur(10px);
-  padding: 0 40px;
+  padding: 0 30px;
 }
 
 .navbar-container {
@@ -13,13 +13,13 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 75px;
+  height: 60px;
 }
 
 .navbar-brand {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   color: white;
   cursor: pointer;
 }
@@ -30,25 +30,25 @@
 } */
 
 .brand-text {
-  font-size: 24px;
+  font-size: 20px;
   font-weight: 700;
   color: white;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  letter-spacing: 1px;
+  letter-spacing: 0.5px;
 }
 
 .navbar-actions {
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 15px;
 }
 
 .navbar-actions a.btn-link {
   color: rgba(255, 255, 255, 0.9);
   text-decoration: none;
-  font-size: 16px;
-  padding: 8px 20px;
-  border-radius: 20px;
+  font-size: 14px;
+  padding: 6px 16px;
+  border-radius: 18px;
   font-weight: 500;
   transition: all 0.3s ease;
 }
@@ -62,23 +62,24 @@
 .navbar-actions .user-info {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   color: white;
   font-weight: 500;
-  letter-spacing: 1px;
+  font-size: 14px;
+  letter-spacing: 0.5px;
 }
 
 .btn-primary, .btn-secondary {
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 8px 20px;
+  gap: 5px;
+  padding: 6px 16px;
   border: none;
-  border-radius: 25px;
+  border-radius: 20px;
   font-weight: 600;
   text-decoration: none;
   cursor: pointer;
-  font-size: 15px;
+  font-size: 13px;
   transition: all 0.3s ease;
 }
 
@@ -86,7 +87,7 @@
   background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
   color: white;
   border: 2px solid rgba(255, 255, 255, 0.3);
-  box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+  box-shadow: 0 3px 12px rgba(255, 107, 107, 0.3);
 }
 
 .btn-primary:hover {
@@ -135,16 +136,16 @@
 
 .mobile-menu {
   position: absolute;
-  top: 70px;
+  top: 60px;
   left: 0;
   right: 0;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  padding: 15px;
+  padding: 12px;
   transform: translateY(-100%);
   opacity: 0;
   visibility: hidden;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 3px 15px rgba(0, 0, 0, 0.2);
 }
 
 .mobile-menu.active {
@@ -156,14 +157,14 @@
 .mobile-nav-item {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 10px 12px;
+  gap: 6px;
+  padding: 8px 10px;
   color: rgba(255, 255, 255, 0.9);
   text-decoration: none;
-  border-radius: 8px;
-  font-size: 14px;
+  border-radius: 6px;
+  font-size: 13px;
   cursor: pointer;
-  margin-bottom: 6px;
+  margin-bottom: 5px;
   background: none;
   border: none;
 }
@@ -174,10 +175,11 @@
 }
 
 .mobile-user-info {
-  padding: 10px 12px;
+  padding: 8px 10px;
   color: rgba(255, 255, 255, 0.9);
   font-weight: 500;
-  margin-bottom: 8px;
+  font-size: 13px;
+  margin-bottom: 6px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.2);
 }
 

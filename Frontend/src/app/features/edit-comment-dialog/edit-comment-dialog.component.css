@@ -5,36 +5,36 @@
 .comment-edit-form {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 12px;
 }
 
 mat-dialog-content {
-  padding: 20px 0;
+  padding: 16px 0;
 }
 
 .dialog-title {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 20px 20px 16px;
+  gap: 10px;
+  padding: 18px 18px 14px;
   margin: 0;
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 600;
   color: #333;
 }
 
 .dialog-title mat-icon {
   color: #667eea;
-  font-size: 28px;
-  height: 28px;
-  width: 28px;
+  font-size: 24px;
+  height: 24px;
+  width: 24px;
 }
 
 mat-dialog-actions {
-  padding: 16px 20px 20px;
+  padding: 14px 18px 18px;
   border-top: 1px solid #e0e0e0;
   margin: 0;
-  gap: 12px;
+  gap: 10px;
 }
 
 mat-spinner {
