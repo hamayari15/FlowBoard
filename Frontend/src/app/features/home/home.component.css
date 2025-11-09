@@ -1,5 +1,5 @@
 .home-container {
-  min-height: calc(100vh - 140px); 
+  min-height: calc(100vh - 140px);
   background: #ffffff;
   padding: 16px;
 }
@@ -467,6 +467,14 @@
   }
 
   .card-1 {
+    display: flex;
+    margin-right:-60px;
+  }
+
+  .card-2 {
+    display: flex;
+  }
+  .card-3 {
     display: flex;
   }
 
