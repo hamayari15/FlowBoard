@@ -71,7 +71,7 @@ export class TaskDetailDialogComponent implements OnInit {
   
   editComment(comment: any): void {
     const dialogRef = this.dialog.open(EditCommentDialogComponent, {
-      width: '500px',
+      width: '400px',
       data: { comment }
     });
     dialogRef.afterClosed().subscribe(result => {
@@ -112,7 +112,7 @@ export class TaskDetailDialogComponent implements OnInit {
 
   openEditTaskDialog(): void {
     const dialogRef = this.dialog.open(TaskDialogComponent, {
-      width: '600px',
+      width: '500px',
       data: {
         mode: 'edit',
         task: this.task,

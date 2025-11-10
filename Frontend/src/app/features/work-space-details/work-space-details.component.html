@@ -107,7 +107,7 @@
   <div *ngIf="!loadingProjects && filteredProjects.length > 0" class="projects-grid">
     <mat-card class="project-card" *ngFor="let project of filteredProjects">
       <mat-card-header class="card-header">
-        <div mat-card-avatar class="workspace-avatar">
+        <div mat-card-avatar class="project-avatar">
           <mat-icon>assignment</mat-icon>
         </div>
         <mat-card-title>{{ project.name }}</mat-card-title>
@@ -133,6 +133,7 @@
       <mat-card-actions class="card-actions">
         <button mat-icon-button color="primary" (click)="openProjectInviteDialog(project)">
           <mat-icon>person_add</mat-icon>
+          
         </button>
         <button mat-button color="primary" (click)="goToDetails(project._id!)" [disabled]="!project._id">
           <mat-icon>visibility</mat-icon>

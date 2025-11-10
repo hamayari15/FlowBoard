@@ -76,7 +76,7 @@ export class WorkspaceListComponent implements OnInit, OnDestroy {
 
   openAddDialog(): void {
     const dialogRef = this.dialog.open(WorkSpaceDialogComponent, {
-      width: '500px',
+      width: '400px',
       maxWidth: '90vw',
       data: { mode: 'add', workspace: null },
       disableClose: true,
@@ -89,7 +89,7 @@ export class WorkspaceListComponent implements OnInit, OnDestroy {
   openEditDialog(workspace: WorkspacePopulated): void {
     if (!workspace?._id) return;
     const dialogRef = this.dialog.open(WorkSpaceDialogComponent, {
-      width: '500px',
+      width: '400px',
       maxWidth: '90vw',
       data: { mode: 'edit', workspace },
       disableClose: true,
@@ -101,7 +101,7 @@ export class WorkspaceListComponent implements OnInit, OnDestroy {
 
   openInviteDialog(workspace: WorkspacePopulated): void {
     const dialogRef = this.dialog.open(WorkspaceInviteDialogComponent, {
-      width: '600px',
+      width: '500px',
       data: { workspaceId: workspace._id, workspaceName: workspace.name, type: 'workspace' },
     });
     dialogRef.afterClosed().subscribe(result => {

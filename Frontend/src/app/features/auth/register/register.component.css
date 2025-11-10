@@ -8,11 +8,11 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: calc(100vh - 70px);
+  min-height: calc(100vh - 60px);
 }
 
 form {
-  width: 480px;
+  width: 450px;
   background-color: #fff;
   padding: 20px;
   border-radius: 10px;

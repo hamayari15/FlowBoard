@@ -49,9 +49,6 @@
       <div class="mobile-user-info" *ngIf="currentUser">
         <span>Welcome, {{ currentUser.userName }}</span>
       </div>
-      <a routerLink="/workSpaces-list" class="mobile-nav-item" (click)="toggleMobileMenu()">
-        <i class="fas fa-folder"></i> Workspaces
-      </a>
       <button class="mobile-nav-item logout-btn" (click)="logout(); toggleMobileMenu()">
         <i class="fas fa-sign-out-alt"></i> Logout
       </button>

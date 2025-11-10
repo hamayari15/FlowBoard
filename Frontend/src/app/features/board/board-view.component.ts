@@ -130,7 +130,7 @@ export class BoardViewComponent implements OnInit, OnDestroy {
 
   openCreateTaskDialog(columnId: string): void {
     const dialogRef = this.dialog.open(TaskDialogComponent, {
-      width: '600px',
+      width: '500px',
       data: {
         mode: 'create',
         boardId: this.boardId,
@@ -148,7 +148,7 @@ export class BoardViewComponent implements OnInit, OnDestroy {
 
   openTaskDetail(task: TaskPopulated): void {
     const dialogRef = this.dialog.open(TaskDetailDialogComponent, {
-      width: '600px',
+      width: '550px',
       data: { task, board: this.board }
     });
     dialogRef.afterClosed()
@@ -193,7 +193,7 @@ export class BoardViewComponent implements OnInit, OnDestroy {
    openBoardEditDialog(): void {
     if (!this.board) return;
     const dialogRef = this.dialog.open(BoardDialogComponent, {
-      width: '600px',
+      width: '500px',
       data: { mode: 'edit', board: this.board, isSprint: true // 🔹 أضف هذا السطر باش يظهرلك goal, dates, status, ...
  }
     });

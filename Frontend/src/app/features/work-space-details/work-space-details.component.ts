@@ -93,12 +93,12 @@ export class WorkSpaceDetailsComponent implements OnInit, OnDestroy {
 
   openEditWorkspaceDialog(workspace: WorkspacePopulated): void {
     if (!workspace?._id) return;
-    const dialogRef = this.dialog.open(WorkSpaceDialogComponent, { width: '500px', maxWidth: '90vw', data: { mode: 'edit', workspace }, disableClose: true });
+    const dialogRef = this.dialog.open(WorkSpaceDialogComponent, { width: '400px', maxWidth: '90vw', data: { mode: 'edit', workspace }, disableClose: true });
     dialogRef.afterClosed().pipe(takeUntil(this.destroy$)).subscribe(result => { if (result) this.getWorkSpaceById(); });
   }
 
   openWorkspaceInviteDialog(): void {
-    const dialogRef = this.dialog.open(WorkspaceInviteDialogComponent, { width: '600px', data: { workspaceId: this.workSpaceId, workspaceName: this.workSpaceData.name, type: 'workspace' } });
+    const dialogRef = this.dialog.open(WorkspaceInviteDialogComponent, { width: '500px', data: { workspaceId: this.workSpaceId, workspaceName: this.workSpaceData.name, type: 'workspace' } });
     dialogRef.afterClosed().pipe(takeUntil(this.destroy$)).subscribe(result => { if (result?.success) this.getWorkSpaceById(); });
   }
 
@@ -121,17 +121,17 @@ export class WorkSpaceDetailsComponent implements OnInit, OnDestroy {
   goToDetails(id: string): void { if (!id) return; this.router.navigate(['/project-details', id]); }
 
   openAddProjectDialog(): void {
-    const dialogRef = this.dialog.open(ProjectDialogComponent, { width: '550px', data: { mode: 'add', workspaceId: this.workSpaceId, project: null } });
+    const dialogRef = this.dialog.open(ProjectDialogComponent, { width: '450px', data: { mode: 'add', workspaceId: this.workSpaceId, project: null } });
     dialogRef.afterClosed().pipe(takeUntil(this.destroy$)).subscribe(result => { if (result) this.refreshProjects(); });
   }
 
   openEditProjectDialog(project: ProjectPopulated): void {
-    const dialogRef = this.dialog.open(ProjectDialogComponent, { width: '550px', data: { mode: 'edit', workspaceId: this.workSpaceId, project } });
+    const dialogRef = this.dialog.open(ProjectDialogComponent, { width: '450px', data: { mode: 'edit', workspaceId: this.workSpaceId, project } });
     dialogRef.afterClosed().pipe(takeUntil(this.destroy$)).subscribe(result => { if (result) this.refreshProjects(); });
   } 
 
   openProjectInviteDialog(project: ProjectPopulated): void {
-    const dialogRef = this.dialog.open(ProjectInviteDialogComponent, { width: '600px', data: { projectId: project._id, projectName: project.name, workspaceName: this.workSpaceData.name, type: 'project' } });
+    const dialogRef = this.dialog.open(ProjectInviteDialogComponent, { width: '500px', data: { projectId: project._id, projectName: project.name, workspaceName: this.workSpaceData.name, type: 'project' } });
     dialogRef.afterClosed().pipe(takeUntil(this.destroy$)).subscribe(result => { if (result?.success) this.refreshProjects(); });
   }
 

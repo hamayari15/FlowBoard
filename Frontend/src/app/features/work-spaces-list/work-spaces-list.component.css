@@ -2,7 +2,7 @@
   display: flex;
   flex-direction: column;
   gap: 0.8rem;
-  padding: 1.5rem 1.5rem;
+  padding: 2rem 2.5rem;
   background-color: #f9fafb;
   min-height: 100vh;
   color: #333;
@@ -29,13 +29,13 @@
 
 .title-section h1 {
   margin: 0;
-  font-size: 1.3rem;
+  font-size: 1.1rem;
   font-weight: 600;
   color: #5a5a5a;
 }
 
 .workspace-count {
-  font-size: 1rem;
+  font-size: 0.9rem;
   color: #777;
 }
 
@@ -163,8 +163,8 @@
 
 .workspaces-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
-  gap: 1.2rem;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1rem;
   width: 100%;
   justify-content: center;
   margin: 0 auto;
@@ -187,6 +187,8 @@
 
 .card-header {
   background: #eef6fb;
+  padding: 10px;
+  max-height: 38px;
 }
 
 .workspace-avatar {
@@ -198,7 +200,18 @@
 }
 
 .workspace-avatar mat-icon {
+  font-size: 1.4rem;
   color: #1976d2;
+}
+
+.card-header mat-card-title {
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
+.card-header mat-card-subtitle {
+  font-size: 0.8rem;
+  color: #555;
 }
 
 .card-content {
@@ -227,12 +240,13 @@
 }
 
 .owner-name {
+  font-size: 0.85rem;
   font-weight: 500;
   color: #222;
 }
 
 .owner-email {
-  font-size: 0.85rem;
+  font-size: 0.75rem;
   color: #777;
 }
 
@@ -253,10 +267,12 @@
   flex-wrap: wrap;
   gap: 0.4rem;
   padding: 0.6rem;
+  margin-top: -12px;
 }
 
 .card-actions button {
   font-weight: 500;
+  font-size: 0.8rem;
 }
 
 .edit-btn {
