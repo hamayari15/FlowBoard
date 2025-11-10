@@ -1,17 +1,17 @@
 .invite-dialog-container {
   padding: 0;
   margin: 0;
-  min-width: 500px;
-  max-width: 600px;
+  min-width: 450px;
+  max-width: 550px;
 }
 
 .dialog-title {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 24px 24px 16px;
+  gap: 10px;
+  padding: 18px 20px 14px;
   margin: 0;
-  font-size: 24px;
+  font-size: 20px;
   font-weight: 600;
   color: #333;
   border-bottom: 1px solid #e0e0e0;
@@ -20,55 +20,56 @@
 
 .dialog-title mat-icon {
   color: #667eea;
-  font-size: 28px;
-  height: 28px;
-  width: 28px;
+  font-size: 24px;
+  height: 24px;
+  width: 24px;
 }
 
 .dialog-content {
-  padding: 24px;
+  padding: 20px;
   max-height: 70vh;
   overflow-y: auto;
 }
 
 .intro-text {
   background: #f0f4ff;
-  padding: 16px;
-  border-radius: 8px;
-  margin-bottom: 24px;
-  border-left: 4px solid #667eea;
+  padding: 14px;
+  border-radius: 6px;
+  margin-bottom: 20px;
+  border-left: 3px solid #667eea;
 }
 
 .intro-text p {
   margin: 0;
   color: #555;
+  font-size: 13px;
   line-height: 1.5;
 }
 
 .invite-form {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 20px;
 }
 
 .emails-section h3,
 .message-section h3 {
   color: #333;
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 600;
-  margin: 0 0 16px 0;
+  margin: 0 0 14px 0;
 }
 
 .emails-container {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
 }
 
 .email-row {
   display: flex;
   align-items: flex-start;
-  gap: 8px;
+  gap: 6px;
 }
 
 .email-field {
@@ -76,14 +77,14 @@
 }
 
 .remove-btn {
-  margin-top: 8px;
-  width: 40px;
-  height: 40px;
+  margin-top: 6px;
+  width: 36px;
+  height: 36px;
 }
 
 .add-email-btn {
   align-self: flex-start;
-  margin-top: 8px;
+  margin-top: 6px;
   color: #667eea;
   border-color: #667eea;
 }

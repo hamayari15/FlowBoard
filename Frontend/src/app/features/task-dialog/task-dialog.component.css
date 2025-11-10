@@ -7,10 +7,10 @@
 .dialog-title {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 24px 24px 16px;
+  gap: 10px;
+  padding: 18px 20px 14px;
   margin: 0;
-  font-size: 24px;
+  font-size: 20px;
   font-weight: 600;
   color: #333;
   border-bottom: 1px solid #e0e0e0;
@@ -18,15 +18,15 @@
 
 .dialog-title mat-icon {
   color: #667eea;
-  font-size: 28px;
-  height: 28px;
-  width: 28px;
+  font-size: 24px;
+  height: 24px;
+  width: 24px;
 }
 
 /* Content */
 .dialog-content {
-  padding: 24px;
-  min-height: 400px;
+  padding: 20px;
+  min-height: 350px;
   max-height: 70vh;
   overflow-y: auto;
 }
@@ -35,7 +35,7 @@
 .task-form {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 16px;
 }
 
 .full-width {
@@ -51,20 +51,20 @@
 .assignee-option {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 8px 0;
+  gap: 10px;
+  padding: 6px 0;
 }
 
 .priority-option mat-icon,
 .assignee-option mat-icon {
-  font-size: 20px;
-  height: 20px;
-  width: 20px;
+  font-size: 18px;
+  height: 18px;
+  width: 18px;
 }
 
 .assignee-avatar {
-  width: 36px;
-  height: 36px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
   background: #1976d2;
   color: white;
@@ -72,7 +72,7 @@
   align-items: center;
   justify-content: center;
   font-weight: 600;
-  font-size: 14px;
+  font-size: 13px;
   flex-shrink: 0;
 }
 
@@ -84,11 +84,11 @@
 .assignee-name {
   font-weight: 600;
   color: #333;
-  font-size: 14px;
+  font-size: 13px;
 }
 
 .assignee-email {
-  font-size: 12px;
+  font-size: 11px;
   color: #666;
 }
 

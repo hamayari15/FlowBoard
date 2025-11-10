@@ -12,32 +12,32 @@
 }
 
 form {
-  width: 480px;
+  width: 400px;
   background-color: #fff; 
-  padding: 24px;
-  border-radius: 12px;  
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  border-radius: 10px;  
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 12px;
 }
 
 .form-title {
   text-align: center;
-  font-size: 30px;
+  font-size: 24px;
   font-style: italic;
   font-weight: 700;
   color: #2c3e50;
-  margin-bottom: 24px;
+  margin-bottom: 18px;
   position: relative;
-  padding-bottom: 10px;
-  letter-spacing: 1px;
+  padding-bottom: 8px;
+  letter-spacing: 0.5px;
 }
 
 .form-title::after {
   content: '';
-  width: 150px;
-  height: 4px;
+  width: 120px;
+  height: 3px;
   background-color: #007bff;
   position: absolute;
   bottom: 0;
@@ -52,16 +52,17 @@ form {
 }
 
 .form-group label {
-  margin-bottom: 6px;
+  margin-bottom: 5px;
   margin-left: 2px;
   color: #333;
   font-weight: 500;
-  letter-spacing: 1px;
+  font-size: 14px;
+  letter-spacing: 0.5px;
 }
 
 .form-group label span {
   color: red;
-  font-size: 20px;
+  font-size: 16px;
 }
 
 .input-icon {
@@ -72,27 +73,27 @@ form {
 
 .input-icon .lock,.envelop {
   position: absolute;
-  left: 12px;
-  font-size: 18px;
+  left: 10px;
+  font-size: 15px;
   color: #666;
 }
 
 .toggle-password {
   position: absolute !important;
-  right: 12px !important;
-  font-size: 18px;
+  right: 10px !important;
+  font-size: 15px;
   cursor: pointer;
   color: #666;
 }
 
 .input-icon input {
   width: 100%;
-  padding: 12px 16px 12px 40px; 
+  padding: 10px 12px 10px 35px; 
   border: 1px solid #ccc;
-  border-radius: 8px;
-  font-size: 15px;
+  border-radius: 6px;
+  font-size: 14px;
   transition: all 0.3s ease;
-  letter-spacing: 1px;
+  letter-spacing: 0.5px;
 }
 
 .form-group input:focus {
@@ -112,15 +113,15 @@ form {
 
 .error-text {
   color: #e53935;
-  margin-top: 4px;
-  font-size: 16px;
+  margin-top: 3px;
+  font-size: 13px;
 }
 
 .alert {
-  padding: 12px;
-  border-radius: 8px;
-  font-size: 14px;
-  letter-spacing: 1px;
+  padding: 10px;
+  border-radius: 6px;
+  font-size: 13px;
+  letter-spacing: 0.5px;
 }
 
 .error-alert {
@@ -132,12 +133,12 @@ form {
 button[type="submit"],
 .register {
   border: none;
-  border-radius: 8px;
-  padding: 14px;
-  font-size: 16px;
+  border-radius: 6px;
+  padding: 11px;
+  font-size: 14px;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  letter-spacing: 1px;
+  letter-spacing: 0.5px;
 }
 
 button[type="submit"] {
@@ -148,7 +149,7 @@ button[type="submit"] {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 46px;
+  min-height: 40px;
 }
 
 button[type="submit"]:not([disabled]):hover {
@@ -174,9 +175,9 @@ button[type="submit"].loading {
 }
 
 .spinner {
-  width: 16px;
-  height: 16px;
-  border: 3px solid rgba(255, 255, 255, 0.3);
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
   border-top-color: white;
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
@@ -206,13 +207,14 @@ button[type="submit"].loading {
 .divider span {
   padding: 0 10px;
   color: #555;
+  font-size: 13px;
   font-weight: 600;
 }
 
 .register {
   background-color: rgb(115, 198, 115);
   color: white;
-  letter-spacing: 1px;
+  letter-spacing: 0.5px;
 }
 
 .register:hover:not([disabled]) {

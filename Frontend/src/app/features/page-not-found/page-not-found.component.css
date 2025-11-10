@@ -11,39 +11,39 @@
 }
 
 .page-not-found-container .error-icon {
-  font-size: 80px;
+  font-size: 60px;
   color: #ff6b6b;
   animation: bounce 1.5s infinite;
 }
 
 .page-not-found-container h1 {
-  font-size: 120px;
-  margin: 10px 0;
+  font-size: 80px;
+  margin: 8px 0;
   color: #222;
 }
 
 .page-not-found-container h2 {
-  font-size: 32px;
-  margin: 10px 0 20px;
+  font-size: 24px;
+  margin: 8px 0 16px;
   color: #555;
 }
 
 .page-not-found-container p {
-  font-size: 18px;
+  font-size: 15px;
   color: #777;
-  margin-bottom: 30px;
-  max-width: 400px;
+  margin-bottom: 24px;
+  max-width: 380px;
 }
 
 .page-not-found-container button {
-  padding: 12px 28px;
-  font-size: 16px;
+  padding: 10px 24px;
+  font-size: 14px;
   border-radius: 6px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
   transition: all 0.3s ease;
 }
 
 .page-not-found-container button:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 12px rgba(0, 0, 0, 0.2);
 }

@@ -1,31 +1,31 @@
 .task-detail-dialog {
-  min-width: 600px;
+  min-width: 550px;
 }
 
 .dialog-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 20px 24px;
+  padding: 16px 20px;
   border-bottom: 1px solid #e0e0e0;
 }
 
 .dialog-header h2 {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   margin: 0;
-  font-size: 20px;
+  font-size: 18px;
   color: #333;
 }
 
 .header-actions {
   display: flex;
-  gap: 8px;
+  gap: 6px;
 }
 
 mat-dialog-content {
-  padding: 24px;
+  padding: 20px;
   max-height: 70vh;
   overflow-y: auto;
 }
@@ -33,25 +33,25 @@ mat-dialog-content {
 .task-content {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 20px;
 }
 
 .task-section {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
 }
 
 .section-label {
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 600;
   text-transform: uppercase;
   color: #666;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.3px;
 }
 
 .task-title-display {
-  font-size: 24px;
+  font-size: 20px;
   font-weight: 600;
   color: #333;
   margin: 0;
@@ -59,7 +59,7 @@ mat-dialog-content {
 }
 
 .task-description-display {
-  font-size: 14px;
+  font-size: 13px;
   color: #666;
   line-height: 1.6;
   margin: 0;
@@ -68,23 +68,23 @@ mat-dialog-content {
 
 .task-metadata-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
 }
 
 .metadata-item {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
 }
 
 .task-priority-display {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 8px 12px;
-  border-radius: 6px;
-  font-size: 13px;
+  gap: 6px;
+  padding: 6px 10px;
+  border-radius: 5px;
+  font-size: 12px;
   font-weight: 600;
   text-transform: uppercase;
   width: fit-content;
