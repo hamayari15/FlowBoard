@@ -89,7 +89,8 @@
 
 .loading-container p {
   color: #666;
-  font-size: 1rem;
+  font-size: 15px;
+  letter-spacing: 0.5px;
   margin: 0;
 }
 
