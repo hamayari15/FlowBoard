@@ -45,10 +45,8 @@ exports.getByBoard = async (req, res) => {
   try {
     const boardId = req.params.boardId;
     const tasks = await Task.find({ board: boardId })
-      .populate('assignee', 'firstName lastName email avatar')
-      .populate('createdBy', 'firstName lastName email avatar')
-      .populate('board', 'name')
-      .populate('project', 'name')
+      .populate('assignee', 'firstName lastName email')
+      .populate('createdBy', 'firstName lastName email')
       .sort({ position: 1 });
     res.status(200).json(tasks);
   } catch (err) {
@@ -61,10 +59,8 @@ exports.getById = async (req, res) => {
   try {
     const taskId = req.params.id;
     const task = await Task.findById(taskId)
-      .populate('board', 'name description')
       .populate('assignee', 'firstName lastName email avatar')
       .populate('createdBy', 'firstName lastName email avatar')
-      .populate('project', 'name');
 
     if (!task) {
       return res.status(404).json({ message: "Task not found" });

@@ -1,65 +1,85 @@
   <div class="board-view-container">
-    <div class="board-header">
-      <div class="board-info">
-        <button mat-icon-button (click)="goBack()" class="back-button">
-          <mat-icon>arrow_back</mat-icon>
-        </button>
-        <div class="board-title-section">
-          <h1 class="board-title">
-            <mat-icon>view_kanban</mat-icon>
-            {{ board?.name || 'Loading...' }}
-            <span *ngIf="board?.status" class="sprint-status-badge" [ngClass]="getSprintStatusClass()">
-              {{ getSprintStatusText() }}
-            </span>
-          </h1>
-          <p class="board-description" *ngIf="board && board.description">
-            {{ board.description }}
-          </p>
-          
-          <!-- Sprint Goal -->
-          <div class="sprint-goal-banner" *ngIf="board && board.goal">
-            <mat-icon>flag</mat-icon>
-            <span><strong>Goal:</strong> {{ board.goal }}</span>
-          </div>
-          
-          <!-- Sprint Dates -->
-          <div class="sprint-dates-info" *ngIf="board && hasSprintDates()">
-            <div class="date-badge" *ngIf="board.startDate">
-              <mat-icon>event</mat-icon>
-              <span>{{ board.startDate | date: 'MMM d, yyyy' }}</span>
-            </div>
-            <mat-icon *ngIf="board.startDate && board.endDate">arrow_forward</mat-icon>
-            <div class="date-badge" *ngIf="board.endDate">
-              <mat-icon>event</mat-icon>
-              <span>{{ board.endDate | date: 'MMM d, yyyy' }}</span>
-            </div>
-            <div 
-              class="time-remaining-badge" 
-              *ngIf="board?.status === 'active'"
-              [class.overdue]="isSprintOverdue()">
-              <mat-icon>{{ isSprintOverdue() ? 'warning' : 'timer' }}</mat-icon>
-              <span>{{ getSprintDaysRemaining() }}</span>
-            </div>
-          </div>
-        </div>
 
-      </div>
-      <div class="board-actions">
-        <button mat-stroked-button color="primary" (click)="openBoardEditDialog()">
-          <mat-icon>edit</mat-icon>
-          Edit
-        </button>
-        <button mat-stroked-button color="warn" (click)="deleteBoard()">
-          <mat-icon>delete</mat-icon>
-          Delete
-        </button>
-      </div>
+
+
+<div class="board-header">
+  <button mat-icon-button (click)="goBack()" class="back-button">
+    <mat-icon>arrow_back</mat-icon>
+  </button>
+
+  <div class="board-info">
+      <h1 class="board-title">
+        <mat-icon>view_kanban</mat-icon>
+        {{ board?.name || 'Loading...' }}
+      </h1>
+    <span *ngIf="board?.status" class="sprint-status-badge" [ngClass]="getSprintStatusClass()">
+      {{ getSprintStatusText() }}
+    </span>
+    
+    <div class="sprint-goal-banner" *ngIf="board && board.goal">
+      <mat-icon>flag</mat-icon>
+      <span>Goal: {{ board.goal }}</span>
     </div>
+
+      <div class="sprint-dates-info" *ngIf="board && hasSprintDates()">
+        <div class="date-badge" *ngIf="board.startDate">
+          <mat-icon>event</mat-icon>
+          <span>{{ board.startDate | date: 'MMM d, yyyy' }}</span>
+        </div>
+        <mat-icon *ngIf="board.startDate && board.endDate">arrow_forward</mat-icon>
+        <div class="date-badge" *ngIf="board.endDate">
+          <mat-icon>event</mat-icon>
+          <span>{{ board.endDate | date: 'MMM d, yyyy' }}</span>
+        </div>
+        <div
+          class="time-remaining-badge"
+          *ngIf="board?.status === 'active'"
+          [class.overdue]="isSprintOverdue()"
+        >
+          <mat-icon>{{ isSprintOverdue() ? 'warning' : 'timer' }}</mat-icon>
+          <span>{{ getSprintDaysRemaining() }}</span>
+        </div>
+      </div>
+
+<div class="board-assignees" *ngIf="board && columnsWithTasks?.length">
+  <p *ngIf="getAllAssignees().length > 0">Contributors:</p>
+  <ng-container *ngFor="let assignee of getAllAssignees(); let i = index">
+    <div 
+      class="assignee-avatar" 
+      [ngClass]="'assignee-' + (i + 1)" 
+      matTooltip="{{ assignee.firstName + ' ' + assignee.lastName }}"
+    >
+      <span *ngIf="!assignee.avatar">
+        {{ getInitials(assignee.firstName, assignee.lastName) }}
+      </span>
+      <img *ngIf="assignee.avatar" [src]="assignee.avatar" alt="Avatar">
+    </div>
+  </ng-container>
+</div>
+
+  </div>
+
+  <div class="board-actions">
+    <button mat-stroked-button color="primary" (click)="openBoardEditDialog()">
+      <mat-icon>edit</mat-icon>
+      Edit
+    </button>
+    <button mat-stroked-button color="warn" (click)="deleteBoard()">
+      <mat-icon>delete</mat-icon>
+      Delete
+    </button>
+  </div>
+</div>
 
     <div *ngIf="loading" class="loading-container">
       <mat-spinner diameter="45"></mat-spinner>
       <p>Loading board...</p>
     </div>
+
+
+
+
+
 
     <div *ngIf="!loading" class="board-content">
       <div class="columns-container">
@@ -91,12 +111,7 @@
             [cdkDropListConnectedTo]="connectedDropLists"
             (cdkDropListDropped)="onDrop($event, getColumnId(column))"
           >
-            <div 
-  *ngFor="let task of column.tasks" 
-  class="task-card"
-  cdkDrag
-  (click)="openTaskDetail(task)"
->
+<div *ngFor="let task of column.tasks" class="task-card" cdkDrag (click)="openTaskDetail(task)">
   <div class="task-header">
     <div class="task-title">{{ task.title }}</div>
     <button 
@@ -110,6 +125,11 @@
   </div>
 
   <div class="task-meta">
+    <div class="task-assignee" *ngIf="task.assignee" matTooltip="{{ getAssigneeTooltip(task.assignee) }}">
+      <span *ngIf="!task.assignee.avatar" class="assignee-initials">
+        {{ getInitials(task.assignee.firstName, task.assignee.lastName) }}
+      </span>
+    </div>
     <div class="task-priority" *ngIf="task.priority">
       <mat-icon class="priority-icon">{{ getPriorityIcon(task.priority) }}</mat-icon>
       <span>{{ task.priority }}</span>
@@ -119,8 +139,10 @@
       <mat-icon class="due-date-icon">schedule</mat-icon>
       <span>{{ task.dueDate | date: 'MMM d' }}</span>
     </div>
+
   </div>
 </div>
+
 
 <div class="empty-column" *ngIf="column.tasks.length === 0">
   <mat-icon>inbox</mat-icon>
@@ -138,4 +160,9 @@
         </div>
       </div>
     </div>
+
+
+
+
+    
   </div>
