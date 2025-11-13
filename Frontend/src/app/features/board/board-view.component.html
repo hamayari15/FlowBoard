@@ -42,7 +42,7 @@
       </div>
 
 <div class="board-assignees" *ngIf="board && columnsWithTasks?.length">
-  <p *ngIf="getAllAssignees().length > 0">Contributors:</p>
+  <p *ngIf="getAllAssignees().length > 0">Contributors: </p>
   <ng-container *ngFor="let assignee of getAllAssignees(); let i = index">
     <div 
       class="assignee-avatar" 
@@ -60,11 +60,11 @@
   </div>
 
   <div class="board-actions">
-    <button mat-stroked-button color="primary" (click)="openBoardEditDialog()">
+    <button mat-stroked-button class="edit" (click)="openBoardEditDialog()">
       <mat-icon>edit</mat-icon>
       Edit
     </button>
-    <button mat-stroked-button color="warn" (click)="deleteBoard()">
+    <button mat-stroked-button class="delete" color="warn" (click)="deleteBoard()">
       <mat-icon>delete</mat-icon>
       Delete
     </button>
@@ -125,20 +125,28 @@
   </div>
 
   <div class="task-meta">
-    <div class="task-assignee" *ngIf="task.assignee" matTooltip="{{ getAssigneeTooltip(task.assignee) }}">
-      <span *ngIf="!task.assignee.avatar" class="assignee-initials">
-        {{ getInitials(task.assignee.firstName, task.assignee.lastName) }}
-      </span>
+    <div class="task-due-date" *ngIf="task.dueDate">
+      <mat-icon class="due-date-icon">schedule</mat-icon>
+      <span>{{ task.dueDate | date: 'MMM d' }}</span>
     </div>
     <div class="task-priority" *ngIf="task.priority">
       <mat-icon class="priority-icon">{{ getPriorityIcon(task.priority) }}</mat-icon>
       <span>{{ task.priority }}</span>
     </div>
+    <!-- Task Assignee inside task-meta -->
+<div 
+  class="task-assignee" 
+  *ngIf="task.assignee" 
+  matTooltip="{{ getAssigneeTooltip(task.assignee) }}"
+  [ngClass]="'assignee-' + getAssigneeIndex(task.assignee)"
+>
+  <span *ngIf="!task.assignee.avatar" class="assignee-initials">
+    {{ getInitials(task.assignee.firstName, task.assignee.lastName) }}
+  </span>
+  <img *ngIf="task.assignee.avatar" [src]="task.assignee.avatar" alt="Avatar">
+</div>
 
-    <div class="task-due-date" *ngIf="task.dueDate">
-      <mat-icon class="due-date-icon">schedule</mat-icon>
-      <span>{{ task.dueDate | date: 'MMM d' }}</span>
-    </div>
+
 
   </div>
 </div>
