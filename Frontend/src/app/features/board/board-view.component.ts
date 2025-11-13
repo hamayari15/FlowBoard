@@ -257,6 +257,24 @@ export class BoardViewComponent implements OnInit, OnDestroy {
     return `${assignee.firstName} ${assignee.lastName}`;
   }
 
+  getAllAssignees() {
+  const assigneesMap = new Map<string, any>();
+
+  this.columnsWithTasks?.forEach(column => {
+    column.tasks?.forEach(task => {
+      if (task.assignee) {
+        const key = task.assignee.email || task.assignee._id || task.assignee.firstName + task.assignee.lastName;
+        if (!assigneesMap.has(key)) {
+          assigneesMap.set(key, task.assignee);
+        }
+      }
+    });
+  });
+
+  return Array.from(assigneesMap.values());
+}
+
+
   goBack(): void {
     if (this.board?.project) {
       // Navigate back to project details
