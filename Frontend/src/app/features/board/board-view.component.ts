@@ -64,6 +64,12 @@ export class BoardViewComponent implements OnInit, OnDestroy {
       });
   }
 
+  truncateBoardName(name: string | undefined, maxLength: number): string {
+    if (!name) return 'Loading...';
+    return name.length > maxLength ? name.slice(0, maxLength) + '...' : name;
+  }
+
+
   loadTasks(): void {
     this.taskService.getTasksByBoard(this.boardId)
       .pipe(takeUntil(this.destroy$))
@@ -332,7 +338,7 @@ export class BoardViewComponent implements OnInit, OnDestroy {
 
   getAssigneeIndex(user: any): number {
     const allAssignees = this.getAllAssignees();
-    return allAssignees.findIndex(a => a._id === user._id) + 1;
+    return allAssignees.findIndex(a => a._id === user._id) + 1; // +1 for assignee-1 class
   }
 
 }
