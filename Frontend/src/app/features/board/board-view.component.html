@@ -1,8 +1,5 @@
-  <div class="board-view-container">
-
-
-
-<div class="board-header">
+<div class="board-view-container">
+  <div class="board-header">
   <button mat-icon-button (click)="goBack()" class="back-button">
     <mat-icon>arrow_back</mat-icon>
   </button>
@@ -10,30 +7,36 @@
   <div class="board-info">
       <h1 class="board-title">
         <mat-icon>view_kanban</mat-icon>
-        {{ board?.name || 'Loading...' }}
+            {{ truncateBoardName(board?.name, 8) }}
       </h1>
+
     <span *ngIf="board?.status" class="sprint-status-badge" [ngClass]="getSprintStatusClass()">
       {{ getSprintStatusText() }}
     </span>
     
-    <div class="sprint-goal-banner" *ngIf="board && board.goal">
-      <mat-icon>flag</mat-icon>
-      <span>Goal: {{ board.goal }}</span>
-    </div>
+    <div class="sprint-goal-banner" *ngIf="board">
+  <mat-icon [ngClass]="board?.goal ? '' : 'icon-disabled'">flag</mat-icon>
+  <span>{{ board?.goal ? board?.goal : 'No goal set' }}</span>
+</div>
 
-      <div class="sprint-dates-info" *ngIf="board && hasSprintDates()">
-        <div class="date-badge" *ngIf="board.startDate">
-          <mat-icon>event</mat-icon>
-          <span>{{ board.startDate | date: 'MMM d, yyyy' }}</span>
-        </div>
-        <mat-icon *ngIf="board.startDate && board.endDate">arrow_forward</mat-icon>
-        <div class="date-badge" *ngIf="board.endDate">
-          <mat-icon>event</mat-icon>
-          <span>{{ board.endDate | date: 'MMM d, yyyy' }}</span>
-        </div>
+
+      <div class="sprint-dates-info" *ngIf="board">
+ <div class="date-badge">
+    <mat-icon [ngClass]="board.startDate ? '' : 'icon-disabled'">event</mat-icon>
+    <span>{{ board.startDate ? (board.startDate | date: 'MMM d, yyyy') : 'No start date set' }}</span>
+  </div>
+
+<mat-icon>arrow_forward</mat-icon>
+
+<div class="date-badge">
+    <mat-icon [ngClass]="board.endDate ? '' : 'icon-disabled'">event</mat-icon>
+    <span>{{ board.endDate ? (board.endDate | date: 'MMM d, yyyy') : 'No end date set' }}</span>
+  </div>
+
+       
         <div
           class="time-remaining-badge"
-          *ngIf="board?.status === 'active'"
+          *ngIf="board?.status === 'active' && board?.endDate"
           [class.overdue]="isSprintOverdue()"
         >
           <mat-icon>{{ isSprintOverdue() ? 'warning' : 'timer' }}</mat-icon>
@@ -43,7 +46,7 @@
 
 <div class="board-assignees" *ngIf="board && columnsWithTasks?.length">
   <p *ngIf="getAllAssignees().length > 0">Contributors: </p>
-  <ng-container *ngFor="let assignee of getAllAssignees(); let i = index">
+  <ng-container *ngFor="let assignee of getAllAssignees() | slice:0:3; let i = index">
     <div 
       class="assignee-avatar" 
       [ngClass]="'assignee-' + (i + 1)" 
@@ -55,7 +58,12 @@
       <img *ngIf="assignee.avatar" [src]="assignee.avatar" alt="Avatar">
     </div>
   </ng-container>
+
+  <div *ngIf="getAllAssignees().length > 3" class="assignee-avatar extra">
+    +{{ getAllAssignees().length - 3 }}
+  </div>
 </div>
+
 
   </div>
 
@@ -69,17 +77,12 @@
       Delete
     </button>
   </div>
-</div>
+  </div>
 
     <div *ngIf="loading" class="loading-container">
       <mat-spinner diameter="45"></mat-spinner>
       <p>Loading board...</p>
     </div>
-
-
-
-
-
 
     <div *ngIf="!loading" class="board-content">
       <div class="columns-container">
