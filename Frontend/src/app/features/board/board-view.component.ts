@@ -130,7 +130,7 @@ export class BoardViewComponent implements OnInit, OnDestroy {
 
   openCreateTaskDialog(columnId: string): void {
     const dialogRef = this.dialog.open(TaskDialogComponent, {
-      width: '500px',
+      width: '450px',
       data: {
         mode: 'create',
         boardId: this.boardId,
@@ -193,7 +193,7 @@ export class BoardViewComponent implements OnInit, OnDestroy {
    openBoardEditDialog(): void {
     if (!this.board) return;
     const dialogRef = this.dialog.open(BoardDialogComponent, {
-      width: '500px',
+      width: '450px',
       data: { mode: 'edit', board: this.board, isSprint: true // 🔹 أضف هذا السطر باش يظهرلك goal, dates, status, ...
  }
     });
@@ -329,4 +329,10 @@ export class BoardViewComponent implements OnInit, OnDestroy {
   hasSprintDates(): boolean {
     return !!(this.board?.startDate || this.board?.endDate);
   }
+
+  getAssigneeIndex(user: any): number {
+    const allAssignees = this.getAllAssignees();
+    return allAssignees.findIndex(a => a._id === user._id) + 1;
+  }
+
 }

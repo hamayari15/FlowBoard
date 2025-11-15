@@ -75,7 +75,7 @@
   display: flex;
   align-items: center;
   font-weight: 500;
-  height: 36px;
+  height: 32px;
 }
 
 .loading-container {
@@ -121,7 +121,6 @@
   max-width: 400px;
 }
 
-/* ✅ Clean centered "No workspaces found" (no card) */
 .empty-state {
   display: flex;
   flex-direction: column;
@@ -137,9 +136,9 @@
 }
 
 .empty-state h2 {
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   font-weight: 600;
-  margin: 0.5rem 0;
+  margin: 0.5rem 0 0.2rem 0;
 }
 
 .no-results {
@@ -258,8 +257,8 @@
 
 .stat-chip {
   font-weight: 500;
-  background: #e7f3fb;
-  color: #1976d2;
+  background: #e7f3fb !important;
+  color: #1976d2 !important;
 }
 
 .card-actions {
@@ -277,7 +276,7 @@
 }
 
 .edit-btn {
-  color: green;
+  color: green !important;
 }
 
 .insight-btn {

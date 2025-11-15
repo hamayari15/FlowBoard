@@ -112,7 +112,7 @@ export class TaskDetailDialogComponent implements OnInit {
 
   openEditTaskDialog(): void {
     const dialogRef = this.dialog.open(TaskDialogComponent, {
-      width: '500px',
+      width: '450px',
       data: {
         mode: 'edit',
         task: this.task,
@@ -131,7 +131,7 @@ export class TaskDetailDialogComponent implements OnInit {
   deleteTask(): void {
     Swal.fire({
       title: 'Delete Task?',
-      text: 'You wont be able to revert this action!',
+      text: `You won't be able to revert this action!`,
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#d33',

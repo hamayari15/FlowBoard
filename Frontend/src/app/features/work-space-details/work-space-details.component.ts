@@ -98,7 +98,7 @@ export class WorkSpaceDetailsComponent implements OnInit, OnDestroy {
   }
 
   openWorkspaceInviteDialog(): void {
-    const dialogRef = this.dialog.open(WorkspaceInviteDialogComponent, { width: '500px', data: { workspaceId: this.workSpaceId, workspaceName: this.workSpaceData.name, type: 'workspace' } });
+    const dialogRef = this.dialog.open(WorkspaceInviteDialogComponent, { width: '450px', data: { workspaceId: this.workSpaceId, workspaceName: this.workSpaceData.name, type: 'workspace' } });
     dialogRef.afterClosed().pipe(takeUntil(this.destroy$)).subscribe(result => { if (result?.success) this.getWorkSpaceById(); });
   }
 
@@ -131,7 +131,7 @@ export class WorkSpaceDetailsComponent implements OnInit, OnDestroy {
   } 
 
   openProjectInviteDialog(project: ProjectPopulated): void {
-    const dialogRef = this.dialog.open(ProjectInviteDialogComponent, { width: '500px', data: { projectId: project._id, projectName: project.name, workspaceName: this.workSpaceData.name, type: 'project' } });
+    const dialogRef = this.dialog.open(ProjectInviteDialogComponent, { width: '450px', data: { projectId: project._id, projectName: project.name, workspaceName: this.workSpaceData.name, type: 'project' } });
     dialogRef.afterClosed().pipe(takeUntil(this.destroy$)).subscribe(result => { if (result?.success) this.refreshProjects(); });
   }
 

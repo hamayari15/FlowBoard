@@ -101,7 +101,7 @@ export class WorkspaceListComponent implements OnInit, OnDestroy {
 
   openInviteDialog(workspace: WorkspacePopulated): void {
     const dialogRef = this.dialog.open(WorkspaceInviteDialogComponent, {
-      width: '500px',
+      width: '450px',
       data: { workspaceId: workspace._id, workspaceName: workspace.name, type: 'workspace' },
     });
     dialogRef.afterClosed().subscribe(result => {
