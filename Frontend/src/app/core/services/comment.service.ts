@@ -20,13 +20,6 @@ export class CommentService {
     );
   }
 
-  getComments(): Observable<Comment[]> {
-    return this.http.get<Comment[]>(`${this.apiUrl}/getAll`).pipe(
-      map((response: any) => response as Comment[]),
-      catchError(this.handleError)
-    );
-  }
-
   getCommentById(id: string): Observable<Comment> {
     if (!id) {
       return throwError(() => new Error('Comment ID is required'));

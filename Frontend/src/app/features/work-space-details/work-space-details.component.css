@@ -171,7 +171,6 @@
 .card-header {
   background: #eef6fb;
   padding: 10px;
-  max-height: 38px;
 }
 
 .workspace-avatar, .project-avatar {
@@ -182,7 +181,8 @@
   justify-content: center;
 }
 
-.workspace-avatar .project-avatar mat-icon {
+.workspace-avatar mat-icon,
+.project-avatar mat-icon {
   font-size: 1.4rem;
   color: #1976d2;
 }
@@ -213,15 +213,32 @@
 
 .card-actions {
   display: flex;
-  justify-content: space-between;
-  flex-wrap: nowrap;
-  gap: 0.4rem;
-  padding: 0.6rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.3rem 0.1rem;
+  padding: 0.5rem 0.4rem;
 }
 
 .card-actions button {
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   font-weight: 500;
+  min-width: 0;
+  padding: 0 6px;
+  letter-spacing: 0;
+}
+
+.card-actions button.mat-mdc-icon-button {
+  padding: 0;
+  width: 32px;
+  height: 32px;
+}
+
+.card-actions ::ng-deep .mat-icon {
+  margin-right: 3px;
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  vertical-align: middle;
 }
 
 .project-card .edit-btn {

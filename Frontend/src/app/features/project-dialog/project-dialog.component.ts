@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ProjectService } from 'src/app/core/services/project.service';
 import { WorkspaceService } from 'src/app/core/services/workspace.service';
+import { AuthService } from 'src/app/core/services/auth.service';
 import { Project, ProjectPopulated, ProjectCreateRequest, ApiError } from 'src/app/core/models';
 import { Subject, takeUntil } from 'rxjs';
 import Swal from 'sweetalert2';
@@ -45,6 +46,7 @@ export class ProjectDialogComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private projectService: ProjectService,
     private workspaceService: WorkspaceService,
+    private authService: AuthService,
     public dialogRef: MatDialogRef<ProjectDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DialogData
   ) {
@@ -103,6 +105,11 @@ export class ProjectDialogComponent implements OnInit, OnDestroy {
 
   onSubmit() {
     if (this.projectForm.valid) {
+      if (this.data.mode === 'add' && !this.authService.getCurrentUser()?._id) {
+        Swal.fire('Authentication Error', 'Unable to identify user. Please log in again.', 'error');
+        return;
+      }
+
       this.loading = true;
       const formData = this.projectForm.value;
 
@@ -112,7 +119,7 @@ export class ProjectDialogComponent implements OnInit, OnDestroy {
         status: formData.status,
         members: this.selectedMembers,
         workspace: this.data.workspaceId,
-        owner: this.data.project?.owner || this.availableMembers[0]?._id,
+        owner: this.authService.getCurrentUser()?._id,
       };
 
       if (this.data.mode === 'add') {

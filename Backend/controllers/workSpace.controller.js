@@ -36,7 +36,7 @@ exports.createWorkSpace = async (req, res) => {
     res.status(201).json(savedWorkSpace);
 
   } catch (err) {
-    res.status(500).json({ message: "Error creating workspace", err });
+    res.status(500).json({ message: "Error creating workspace", error: err.message });
   }
 };
 
@@ -266,7 +266,7 @@ exports.getAll = async (req, res) => {
     res.status(200).json(workSpaces);
 
   } catch (err) {
-    res.status(500).json({ message: "Error fetching workSpaces", err });
+    res.status(500).json({ message: "Error fetching workSpaces", error: err.message });
   }
 };  
 
@@ -278,7 +278,7 @@ exports.getById = async (req, res) => {
     res.status(200).json(workSpaceData);
 
   } catch (err) {
-    res.status(500).json({ message: "Error fetching workSpace", err });
+    res.status(500).json({ message: "Error fetching workSpace", error: err.message });
   }
 };
 
@@ -542,7 +542,7 @@ exports.Update = async (req, res) => {
     res.status(200).json(updatedWorkSpace);
 
   } catch (err) {
-    res.status(500).json({ message: "Error updating workSpace", err });
+    res.status(500).json({ message: "Error updating workSpace", error: err.message });
   }
 };
 
@@ -558,6 +558,6 @@ exports.Delete = async (req, res) => {
     res.status(200).json(deletedWorkSpace);
 
   } catch (err) {
-    res.status(500).json({ message: "Error Deleting Workspace", err });
+    res.status(500).json({ message: "Error Deleting Workspace", error: err.message });
   }
 };

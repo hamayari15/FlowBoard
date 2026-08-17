@@ -33,27 +33,6 @@ export class TaskService {
     );
   }
 
-  removeFromBoard(taskId: string): Observable<Task> {
-  if (!taskId) {
-    return throwError(() => new Error('Task ID is required'));
-  }
-  return this.http.patch<Task>(`${this.apiUrl}/removeFromBoard/${taskId}`, {}).pipe(
-    map((response: any) => response as Task),
-    catchError(this.handleError)
-  );
-}
-
-// Get unassigned tasks (tasks not in any board)
-getUnassignedTasks(projectId: string): Observable<Task[]> {
-  if (!projectId) {
-    return throwError(() => new Error('Project ID is required'));
-  }
-  return this.http.get<Task[]>(`${this.apiUrl}/getUnassigned/${projectId}`).pipe(
-    map((response: any) => response as Task[]),
-    catchError(this.handleError)
-  );
-}
-
   getTasksByBoard(boardId: string): Observable<Task[]> {
     if (!boardId) {
       return throwError(() => new Error('Board ID is required'));

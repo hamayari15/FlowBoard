@@ -68,7 +68,7 @@ exports.getById = async (req, res) => {
     res.status(200).json(board);
 
   } catch (err) {
-    res.status(500).json({ message: "Error fetching board", err });
+    res.status(500).json({ message: "Error fetching board", error: err.message });
   }
 };
 
@@ -104,7 +104,7 @@ exports.Update = async (req, res) => {
     res.status(200).json(updatedBoard);
 
   } catch (err) {
-    res.status(500).json({ message: "Error updating board", err });
+    res.status(500).json({ message: "Error updating board", error: err.message });
   }
 };
 
@@ -120,7 +120,7 @@ exports.Delete = async (req, res) => {
     res.status(200).json(deletedBoard);
 
   } catch (err) {
-    res.status(500).json({ message: "Error Deleting Board", err });
+    res.status(500).json({ message: "Error Deleting Board", error: err.message });
   }
 };
 

@@ -17,7 +17,6 @@
 .card-header {
   background: #eef6fb;
   padding: 10px;
-  max-height: 38px;
 }
 
 .project-avatar {
@@ -614,6 +613,7 @@
 .sprint-actions {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 0.5rem;
   margin-left: auto;
   margin-top: 4px;
