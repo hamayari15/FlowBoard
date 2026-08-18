@@ -1,3 +1,0 @@
-- Responsive design for the ws details page to be the same as the previous one
-- Responsive design for the board-view page (header only) - try with mobile simulator
-- try to fix all of the search input && 3 filter buttons height && font-size in ws details page
