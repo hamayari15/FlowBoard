@@ -1,64 +1,42 @@
-.privacy-container {
-  font-family: 'Poppins', sans-serif;
-  color: #2c3e50;
-  line-height: 1.7;
-  padding: 25px;
+.privacy {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #f8fafc;
+  padding: 40px 15px;
+}
+
+.wrapper {
   max-width: 900px;
-  margin: 0 auto;
+  width: 100%;
 }
 
-.privacy-header {
-  text-align: center;
-  margin-bottom: 35px;
-}
-
-.privacy-header h1 {
-  font-size: 2rem;
-  margin-bottom: 8px;
-  color: #1e293b;
-}
-
-.privacy-header p {
-  font-size: 0.9rem;
-  color: #6b7280;
-}
-
-.privacy-content h2 {
-  font-size: 1.3rem;
-  margin-top: 30px;
-  margin-bottom: 10px;
+h1 {
+  font-size: 38px;
   color: #0f172a;
+  margin-bottom: 10px;
 }
 
-.privacy-content p {
-  font-size: 0.95rem;
-  color: #374151;
+.subtitle {
+  font-size: 16px;
+  color: #64748b;
+  margin-bottom: 25px;
+  line-height: 1.6;
+}
+
+.section {
   margin-bottom: 16px;
 }
 
-.privacy-content a {
-  color: #2563eb;
-  text-decoration: none;
+.section h2 {
+  font-size: 18px;
+  color: #1e293b;
+  margin-bottom: 5px;
 }
 
-.privacy-content a:hover {
-  text-decoration: underline;
-}
-
-@media (max-width: 768px) {
-  .privacy-container {
-    padding: 40px 20px;
-  }
-
-  .privacy-header h1 {
-    font-size: 1.7rem;
-  }
-
-  .privacy-content h2 {
-    font-size: 1.2rem;
-  }
-
-  .privacy-content p {
-    font-size: 0.9rem;
-  }
+.section p {
+  font-size: 15px;
+  color: #475569;
+  line-height: 1.6;
 }
