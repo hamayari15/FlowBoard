@@ -97,7 +97,7 @@
 }
 
 .hero-title-accent {
-  color: var(--accent);
+  color: #ff6b6b;
 }
 
 .hero-sub {
@@ -139,22 +139,61 @@
   font-size: 12px;
 }
 
-.story-grid {
-  max-width: 780px;
+.values-grid {
+  max-width: 1000px;
   margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.value-card {
+  padding: 30px 26px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 16px;
   text-align: center;
+  transition: all 0.3s ease;
 }
 
-.story-text {
-  font-size: 20px;
-  line-height: 1.7;
-  color: var(--ink);
-  margin: 12px 0 0;
+.value-card:hover {
+  transform: translateY(-5px);
+  border-color: rgba(47, 111, 237, 0.25);
+  box-shadow: 0 12px 30px rgba(16, 24, 40, 0.08);
 }
 
-.story-text strong {
+.value-icon {
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 18px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--accent-tint);
   color: var(--accent);
-  font-weight: 600;
+}
+
+.value-icon i {
+  font-size: 18px;
+}
+
+.value-card h3 {
+  font-size: 18px;
+  margin: 0 0 10px;
+}
+
+.value-card p {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--slate);
+  margin: 0;
+}
+
+@media (max-width: 800px) {
+  .values-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .compare-grid {
