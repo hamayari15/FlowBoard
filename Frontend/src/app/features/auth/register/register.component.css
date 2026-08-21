@@ -8,13 +8,15 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: calc(100vh - 60px);
+  min-height: calc(100vh - 50px);
+  background-color: #f4f6f8;
 }
 
 form {
-  width: 450px;
+  width: 540px;
   background-color: #fff;
   padding: 20px;
+  margin: auto;
   border-radius: 10px;
   box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
   display: flex;
@@ -36,7 +38,7 @@ form {
 
 .form-title::after {
   content: '';
-  width: 140px;
+  width: 160px;
   height: 3px;
   background-color: #007bff;
   position: absolute;
@@ -114,13 +116,13 @@ form {
 .error-text {
   color: #e53935;
   margin-top: 3px;
-  font-size: 13px;
+  font-size: 14px;
 }
 
 .alert {
   padding: 10px;
   border-radius: 6px;
-  font-size: 13px;
+  font-size: 0.85rem;
   letter-spacing: 0.5px;
 }
 

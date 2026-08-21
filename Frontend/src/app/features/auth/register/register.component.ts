@@ -33,12 +33,10 @@ export class RegisterComponent implements OnInit {
     });
   }
 
-  // Email validator that matches the backend regex pattern
   emailValidator(control: AbstractControl): ValidationErrors | null {
     if (!control.value) {
-      return null; // Don't validate empty values to allow required validator to handle it
+      return null;
     }
-    // Same regex as backend: /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,})+$/
     const emailRegex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,})+$/;
     const valid = emailRegex.test(control.value);
     return valid ? null : { invalidEmail: true };
@@ -46,10 +44,10 @@ export class RegisterComponent implements OnInit {
 
   buildForm(): void {
     this.registerForm = this.fb.group({
-      firstName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(50)]],
-      lastName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(50)]],
+      firstName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(30)]],
+      lastName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(30)]],
       userName: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(30)]],
-      email: ['', [Validators.required, this.emailValidator.bind(this)]],
+      email: ['', [Validators.required, this.emailValidator.bind(this), Validators.minLength(12)]],
       password: ['', [Validators.required, Validators.minLength(6)]],
       confirmPassword: ['', Validators.required],
       wsId: this.wsId,
@@ -62,13 +60,18 @@ export class RegisterComponent implements OnInit {
   passwordsMatchValidator(form: FormGroup) {
     const password = form.get('password')?.value;
     const confirmPassword = form.get('confirmPassword')?.value;
+    const confirmControl = form.get('confirmPassword');
+
     if (password !== confirmPassword) {
-      form.get('confirmPassword')?.setErrors({ passwordsMismatch: true });
+      confirmControl?.setErrors({ ...confirmControl.errors, passwordsMismatch: true });
+    } else if (confirmControl?.hasError('passwordsMismatch')) {
+      const { passwordsMismatch, ...rest } = confirmControl.errors ?? {};
+      confirmControl.setErrors(Object.keys(rest).length ? rest : null);
     }
+
     return null;
   }
 
-  // Helper method to get form control errors
   getErrorMessage(controlName: string): string {
     const control = this.registerForm.get(controlName);
     
@@ -109,18 +112,15 @@ export class RegisterComponent implements OnInit {
     return '';
   }
 
-  // Helper method to check if field should show error
   shouldShowError(controlName: string): boolean {
     const control = this.registerForm.get(controlName);
     return !!(control && control.invalid && (control.dirty || control.touched));
   }
 
   onSubmit(): void {
-    // Clear previous messages
     this.serverError = '';
     this.successMessage = '';
 
-    // Check if form is valid
     if (this.registerForm.invalid) {
       Object.keys(this.registerForm.controls).forEach(key => {
         this.registerForm.get(key)?.markAsTouched();
@@ -128,7 +128,6 @@ export class RegisterComponent implements OnInit {
       return;
     }
 
-    // Prevent multiple submissions
     if (this.isSubmitting) {
       return;
     }
@@ -141,7 +140,6 @@ export class RegisterComponent implements OnInit {
         this.isSubmitting = false;
         this.successMessage = 'Registration successful! Redirecting to login...';
         
-        // Redirect after a brief delay to show success message
         setTimeout(() => {
           this.router.navigate(['/login']);
         }, 1500);
@@ -150,14 +148,11 @@ export class RegisterComponent implements OnInit {
         console.error('❌ Registration failed:', err);
         this.isSubmitting = false;
         
-        // Display specific error messages based on backend responses
         if (err.message) {
           this.serverError = err.message;
         } else if (err.error?.message) {
-          // Backend error messages
           const message = err.error.message;
           
-          // Map backend messages to user-friendly messages with icons
           if (message.includes('All fields are required')) {
             this.serverError = '⚠️ All fields are required: firstName, lastName, userName, email, and password.';
           } else if (message.includes('valid email')) {
