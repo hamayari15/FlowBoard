@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 
 require('dotenv').config()
-require('./config/connect')
+require('./db/connect')
 
 app.use(express.json())
 
@@ -28,6 +28,6 @@ app.use('/commentRouter', commentRouter)
 app.use('/getImages', express.static('uploads'))
 
 
-app.listen('3000', () => {
+app.listen(`${PROCESS.ENV.PORT}`, () => {
     console.log("Server works !")
 });

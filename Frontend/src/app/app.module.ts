@@ -7,6 +7,9 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { NgChartsModule } from 'ng2-charts';
 
+import { Router, NavigationEnd } from '@angular/router';
+import { filter } from 'rxjs/operators';
+
 
 // Angular Material Modules
 import { MatDialogModule } from '@angular/material/dialog';
@@ -47,19 +50,19 @@ import { RegisterComponent } from './features/auth/register/register.component';
 import { LoginComponent } from './features/auth/login/login.component';
 import { FooterComponent } from './features/footer/footer.component';
 import { WorkspaceListComponent } from './features/work-spaces-list/work-spaces-list.component';
+import { WorkSpaceStatsComponent } from './features/work-space-stats/work-space-stats.component';
 import { WorkSpaceDetailsComponent } from './features/work-space-details/work-space-details.component';
 import { WorkSpaceDialogComponent } from './features/work-space-dialog/work-space-dialog.component';
 import { ProjectDialogComponent } from './features/project-dialog/project-dialog.component';
 import { WorkspaceInviteDialogComponent } from './features/workspace-invite-dialog/workspace-invite-dialog.component';
 import { ProjectInviteDialogComponent } from './features/project-invite-dialog/project-invite-dialog.component';
 import { ProjectDetailsComponent } from './features/project-details/project-details.component';
+import { BoardViewComponent } from './features/board-view/board-view.component';
 import { BoardDialogComponent } from './features/board-dialog/board-dialog.component';
-import { BoardViewComponent } from './features/board/board-view.component';
 import { TaskDialogComponent } from './features/task-dialog/task-dialog.component';
 import { TaskDetailDialogComponent } from './features/task-detail-dialog/task-detail-dialog.component';
 import { EditCommentDialogComponent } from './features/edit-comment-dialog/edit-comment-dialog.component';
 import { PageNotFoundComponent } from './features/page-not-found/page-not-found.component';
-import { WorkSpaceStatsComponent } from './features/work-space-stats/work-space-stats.component';
 
 @NgModule({
   declarations: [
@@ -80,7 +83,6 @@ import { WorkSpaceStatsComponent } from './features/work-space-stats/work-space-
     ProjectInviteDialogComponent,
     BoardViewComponent,
     BoardDialogComponent,
-    BoardViewComponent,
     TaskDialogComponent,
     TaskDetailDialogComponent,
     EditCommentDialogComponent,
@@ -129,4 +131,12 @@ import { WorkSpaceStatsComponent } from './features/work-space-stats/work-space-
   providers: [],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule {
+  constructor(private router: Router) {
+    this.router.events
+      .pipe(filter(event => event instanceof NavigationEnd))
+      .subscribe(() => {
+        window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+    });
+  }
+}

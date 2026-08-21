@@ -152,7 +152,7 @@ exports.login = async (req, res) => {
     const user = await User.findOne({ email: email.toLowerCase() });
 
     if (!user) {
-      return res.status(404).json({ message: "No account found with this email address. Please check your email or create a new account." });
+      return res.status(401).json({ message: "Invalid email or password." });
     }
 
     if (user.isActive === false) {
@@ -162,7 +162,7 @@ exports.login = async (req, res) => {
     const validPassword = await bcrypt.compare(password, user.password);
 
     if (!validPassword) {
-      return res.status(401).json({ message: "Incorrect password. Please try again or reset your password." });
+      return res.status(401).json({ message: "Invalid email or password." });
     }
 
     if (!process.env.JWT_SECRET) {

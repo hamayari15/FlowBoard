@@ -22,12 +22,10 @@ export class LoginComponent {
     this.buildForm()
   }
 
-  // Email validator that matches the backend regex pattern
   emailValidator(control: AbstractControl): ValidationErrors | null {
     if (!control.value) {
-      return null; // Don't validate empty values to allow required validator to handle it
+      return null;
     }
-    // Same regex as backend: /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,})+$/
     const emailRegex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,})+$/;
     const valid = emailRegex.test(control.value);
     return valid ? null : { invalidEmail: true };
@@ -42,10 +40,8 @@ export class LoginComponent {
 
 
   onSubmit(): void {
-    // Clear previous errors
     this.serverError = '';
 
-    // Check if form is valid
     if (this.loginForm.invalid) {
       Object.keys(this.loginForm.controls).forEach(key => {
         this.loginForm.get(key)?.markAsTouched();
@@ -53,7 +49,6 @@ export class LoginComponent {
       return;
     }
 
-    // Prevent multiple submissions
     if (this.isSubmitting) {
       return;
     }
@@ -65,13 +60,11 @@ export class LoginComponent {
         console.log('✅ Login successful:', res);
         this.isSubmitting = false;
         
-        // Check for redirect URL
         const redirectUrl = this.authService.getAndClearRedirectUrl();
         if (redirectUrl) {
           console.log('🔄 Redirecting to stored URL:', redirectUrl);
           this.router.navigateByUrl(redirectUrl);
         } else {
-          // Default redirect
           this.router.navigate(['/workSpaces-list']); 
         }
       },
@@ -79,18 +72,13 @@ export class LoginComponent {
         console.error('❌ Login failed:', err);
         this.isSubmitting = false;
         
-        // Display specific error messages based on backend responses
         if (err.message) {
           this.serverError = err.message;
         } else if (err.error?.message) {
-          // Backend error messages
           const message = err.error.message;
           
-          // Map backend messages to user-friendly messages
-          if (message.includes('No account found')) {
-            this.serverError = '❌ No account found with this email address. Please check your email or create a new account.';
-          } else if (message.includes('Incorrect password')) {
-            this.serverError = '🔒 Incorrect password. Please try again or reset your password.';
+          if (message.includes('Invalid email or password')) {
+            this.serverError = '❌ Invalid email or password.';
           } else if (message.includes('deactivated')) {
             this.serverError = '🚫 Your account has been deactivated. Please contact support.';
           } else if (message.includes('Email and password are required')) {
@@ -102,10 +90,8 @@ export class LoginComponent {
           }
         } else if (err.status === 0) {
           this.serverError = '🌐 Unable to connect to server. Please check your internet connection.';
-        } else if (err.status === 404) {
-          this.serverError = '❌ No account found with this email address. Please check your email or create a new account.';
         } else if (err.status === 401) {
-          this.serverError = '🔒 Incorrect password. Please try again or reset your password.';
+          this.serverError = '❌ Invalid email or password.';
         } else if (err.status === 403) {
           this.serverError = '🚫 Your account has been deactivated. Please contact support.';
         } else if (err.status === 500) {
@@ -117,7 +103,6 @@ export class LoginComponent {
     });
   }
 
-  // Helper method to check if field should show error
   shouldShowError(controlName: string): boolean {
     const control = this.loginForm.get(controlName);
     return !!(control && control.invalid && (control.dirty || control.touched));

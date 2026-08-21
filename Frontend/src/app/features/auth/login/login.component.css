@@ -9,17 +9,18 @@
   justify-content: center;
   align-items: center;
   min-height: calc(100vh - 60px);
+  background-color: #f4f6f8;
 }
 
 form {
-  width: 360px;
+  width: 380px;
   background-color: #fff; 
   padding: 20px;
   border-radius: 10px;  
   box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 16px;
 }
 
 .form-title {
@@ -36,7 +37,7 @@ form {
 
 .form-title::after {
   content: '';
-  width: 120px;
+  width: 160px;
   height: 3px;
   background-color: #007bff;
   position: absolute;
@@ -114,13 +115,13 @@ form {
 .error-text {
   color: #e53935;
   margin-top: 3px;
-  font-size: 13px;
+  font-size: 14px;
 }
 
 .alert {
   padding: 10px;
   border-radius: 6px;
-  font-size: 13px;
+  font-size: 0.85rem;
   letter-spacing: 0.5px;
 }
 
@@ -193,7 +194,8 @@ button[type="submit"].loading {
   display: flex;
   align-items: center;
   justify-content: center;
-  position: relative;
+  gap: 12px;
+  margin: 4px 0;
 }
 
 .divider::before,
@@ -201,14 +203,16 @@ button[type="submit"].loading {
   content: "";
   flex: 1;
   height: 1px;
-  background: #ccc;
+  background: linear-gradient(to right, transparent, #d1d5db, transparent);
 }
 
 .divider span {
-  padding: 0 10px;
-  color: #555;
-  font-size: 13px;
-  font-weight: 600;
+  padding: 0 4px;
+  color: #9ca3af;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
 }
 
 .register {

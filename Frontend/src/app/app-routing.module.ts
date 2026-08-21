@@ -9,10 +9,10 @@ import { PrivacyComponent } from './features/privacy/privacy.component';
 import { RegisterComponent } from './features/auth/register/register.component';
 import { LoginComponent } from './features/auth/login/login.component';
 import { WorkspaceListComponent } from './features/work-spaces-list/work-spaces-list.component';
+import { WorkSpaceStatsComponent } from './features/work-space-stats/work-space-stats.component';
 import { WorkSpaceDetailsComponent } from './features/work-space-details/work-space-details.component';
 import { ProjectDetailsComponent } from './features/project-details/project-details.component';
-import { WorkSpaceStatsComponent } from './features/work-space-stats/work-space-stats.component';
-import { BoardViewComponent } from './features/board/board-view.component';
+import { BoardViewComponent } from './features/board-view/board-view.component';
 import { PageNotFoundComponent } from './features/page-not-found/page-not-found.component';
 
 const routes: Routes = [
