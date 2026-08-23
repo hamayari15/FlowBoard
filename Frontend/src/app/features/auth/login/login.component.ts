@@ -71,12 +71,12 @@ export class LoginComponent {
       error: (err) => {
         console.error('❌ Login failed:', err);
         this.isSubmitting = false;
-        
-        if (err.message) {
-          this.serverError = err.message;
+
+        if (err.status === 0) {
+          this.serverError = '🌐 Unable to reach the server. Please check your connection or try again later.';
         } else if (err.error?.message) {
           const message = err.error.message;
-          
+
           if (message.includes('Invalid email or password')) {
             this.serverError = '❌ Invalid email or password.';
           } else if (message.includes('deactivated')) {
@@ -88,12 +88,6 @@ export class LoginComponent {
           } else {
             this.serverError = message;
           }
-        } else if (err.status === 0) {
-          this.serverError = '🌐 Unable to connect to server. Please check your internet connection.';
-        } else if (err.status === 401) {
-          this.serverError = '❌ Invalid email or password.';
-        } else if (err.status === 403) {
-          this.serverError = '🚫 Your account has been deactivated. Please contact support.';
         } else if (err.status === 500) {
           this.serverError = '⚠️ Server error. Please try again later.';
         } else {

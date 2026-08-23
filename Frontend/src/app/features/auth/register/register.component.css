@@ -10,10 +10,11 @@
   align-items: center;
   min-height: calc(100vh - 60px);
   background-color: #f4f6f8;
+  padding: 20px 16px;
 }
 
 form {
-  width: 540px;
+  width: 520px;
   background-color: #fff;
   padding: 20px;
   margin: auto;

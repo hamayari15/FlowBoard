@@ -54,7 +54,6 @@ export class WorkspaceListComponent implements OnInit, OnDestroy {
         error: (error: ApiError) => {
           this.error = error.message || 'Failed to load workspaces';
           this.loading = false;
-          this.showErrorAlert('Failed to Load', this.error);
         },
       });
   }
@@ -157,7 +156,4 @@ export class WorkspaceListComponent implements OnInit, OnDestroy {
     return members.length === 1 ? '1 member' : `${members.length} members`;
   }
 
-  private showErrorAlert(title: string, message: string): void {
-    Swal.fire({ icon: 'error', title, text: message, confirmButtonColor: '#3085d6' });
-  }
 }

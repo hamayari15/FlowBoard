@@ -147,16 +147,20 @@ export class RegisterComponent implements OnInit {
       error: (err) => {
         console.error('❌ Registration failed:', err);
         this.isSubmitting = false;
-        
-        if (err.message) {
-          this.serverError = err.message;
+
+        if (err.status === 0) {
+          this.serverError = '🌐 Unable to reach the server. Please check your connection or try again later.';
         } else if (err.error?.message) {
           const message = err.error.message;
-          
+
           if (message.includes('All fields are required')) {
             this.serverError = '⚠️ All fields are required: firstName, lastName, userName, email, and password.';
           } else if (message.includes('valid email')) {
             this.serverError = '📧 Please enter a valid email address.';
+          } else if (message.includes('First name must be between')) {
+            this.serverError = '👤 First name must be between 2 and 30 characters.';
+          } else if (message.includes('Last name must be between')) {
+            this.serverError = '👤 Last name must be between 2 and 30 characters.';
           } else if (message.includes('Username must be between')) {
             this.serverError = '👤 Username must be between 3 and 30 characters.';
           } else if (message.includes('Password must be at least')) {
@@ -172,14 +176,6 @@ export class RegisterComponent implements OnInit {
           } else {
             this.serverError = message;
           }
-        } else if (err.status === 0) {
-          this.serverError = '🌐 Unable to connect to server. Please check your internet connection.';
-        } else if (err.status === 409) {
-          this.serverError = '❌ An account with this email or username already exists.';
-        } else if (err.status === 400) {
-          this.serverError = '⚠️ Invalid input. Please check your information and try again.';
-        } else if (err.status === 404) {
-          this.serverError = '🔍 Resource not found. Please check your invitation link.';
         } else if (err.status === 500) {
           this.serverError = '⚠️ Server error. Please try again later.';
         } else {

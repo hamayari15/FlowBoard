@@ -5,13 +5,12 @@ export interface Workspace {
   _id?: string;
   name: string;
   description?: string;
-  owner: string; // Always use string ID to avoid circular dependencies
-  members: string[]; // Always use string IDs to avoid circular dependencies
+  owner: string;
+  members: string[];
   createdAt?: Date;
   updatedAt?: Date;
 }
 
-// For populated responses from backend
 export interface WorkspacePopulated {
   _id?: string;
   name: string;
@@ -35,5 +34,4 @@ export interface WorkspaceUpdateRequest {
   members?: string[];
 }
 
-// Re-export for backward compatibility
 export { ApiResponse, ApiError };

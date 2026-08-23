@@ -10,6 +10,7 @@
   align-items: center;
   min-height: calc(100vh - 60px);
   background-color: #f4f6f8;
+  padding: 20px 16px;
 }
 
 form {
@@ -194,7 +195,7 @@ button[type="submit"].loading {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 12px;
+  gap: 6;
   margin: 4px 0;
 }
 

@@ -28,6 +28,6 @@ app.use('/commentRouter', commentRouter)
 app.use('/getImages', express.static('uploads'))
 
 
-app.listen(`${PROCESS.ENV.PORT}`, () => {
+app.listen(`${process.env.PORT}`, () => {
     console.log("Server works !")
 });
