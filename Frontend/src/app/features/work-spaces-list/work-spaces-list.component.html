@@ -75,13 +75,13 @@
       *ngFor="let ws of filteredWorkSpaces; trackBy: trackByWorkspaceId"
       class="workspace-card"
     >
-      <mat-card-header class="card-header">
-        <div mat-card-avatar class="workspace-avatar">
-          <mat-icon>view_kanban</mat-icon>
+      <div class="card-header">
+        <mat-icon class="avatar-icon">view_kanban</mat-icon>
+        <div class="card-header-text">
+          <h3 class="card-title">{{ ws.name }}</h3>
+          <p class="card-subtitle">{{ ws.description || 'No description available' }}</p>
         </div>
-        <mat-card-title>{{ ws.name }}</mat-card-title>
-        <mat-card-subtitle>{{ ws.description || 'No description available' }}</mat-card-subtitle>
-      </mat-card-header>
+      </div>
 
       <mat-card-content class="card-content">
         <div class="owner-section" *ngIf="ws.owner">
