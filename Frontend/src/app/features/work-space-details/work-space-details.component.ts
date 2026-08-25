@@ -24,6 +24,8 @@ export class WorkSpaceDetailsComponent implements OnInit, OnDestroy {
   filteredProjects: ProjectPopulated[] = [];
   loading = true;
   loadingProjects = true;
+  error: string | null = null;
+  projectsError: string | null = null;
   searchTerm = '';
   archiveFilter: 'all' | 'archived' | 'active' = 'all';
   private destroy$ = new Subject<void>();
@@ -50,21 +52,29 @@ export class WorkSpaceDetailsComponent implements OnInit, OnDestroy {
 
   getWorkSpaceById(): void {
     this.loading = true;
+    this.error = null;
     this.wsService.getWorkSpaceById(this.workSpaceId)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: data => { this.workSpaceData = data; this.loading = false; },
-        error: (err: ApiError) => { this.loading = false; this.showErrorAlert('Failed to load workspace', err.message); }
+        error: (err: ApiError) => {
+          this.loading = false;
+          this.error = err.message || 'Failed to load workspace';
+        }
       });
   }
 
   getProjectsByWorkspace(): void {
     this.loadingProjects = true;
+    this.projectsError = null;
     this.projectService.getProjectsByWorkspace(this.workSpaceId)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: projects => { this.projects = projects; this.applyFilters(); this.loadingProjects = false; },
-        error: (err: ApiError) => { this.loadingProjects = false; this.showErrorAlert('Failed to load projects', err.message); }
+        error: (err: ApiError) => {
+          this.loadingProjects = false;
+          this.projectsError = err.message || 'Failed to load projects';
+        }
       });
   }
 
@@ -189,8 +199,4 @@ export class WorkSpaceDetailsComponent implements OnInit, OnDestroy {
   }
 
   getMembersCount(project: ProjectPopulated): number { return project.members?.length || 0; }
-
-  private showErrorAlert(title: string, message: string): void {
-    Swal.fire({ icon: 'error', title, text: message, confirmButtonColor: '#3085d6' });
-  }
 }

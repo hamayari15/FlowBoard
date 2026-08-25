@@ -56,6 +56,10 @@
     <mat-icon class="state-icon error-icon">error_outline</mat-icon>
     <h2 class="state-title error-title">Unable to Load Workspaces</h2>
     <p class="state-text error-text">{{ error }}</p>
+    <button type="button" class="retry-btn" (click)="getAllWorkSpaces()">
+      <mat-icon>refresh</mat-icon>
+      Try Again
+    </button>
   </div>
 
   <div *ngIf="!loading && !error && workSpaces.length === 0" class="state-container">
@@ -66,7 +70,7 @@
 
   <div *ngIf="!loading && !error && workSpaces.length > 0 && filteredWorkSpaces.length === 0" class="state-container">
     <mat-icon class="state-icon">search_off</mat-icon>
-    <h2 class="state-title">No workspace found with name "{{ searchTerm }}"</h2>
+    <h2 class="state-title">No workspace found with name <span class="highlight">"{{ searchTerm }}"</span></h2>
     <p class="state-text">Try adjusting your search</p>
   </div>
 

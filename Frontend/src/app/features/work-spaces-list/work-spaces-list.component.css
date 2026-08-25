@@ -151,6 +151,21 @@
   gap: 0.6rem;
 }
 
+.spinner {
+  width: 24px;
+  height: 24px;
+  border: 3px solid #dcdcdc;
+  border-top-color: #1976d2;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 .state-icon {
   font-size: 2.5rem;
   height: 2.5rem;
@@ -176,6 +191,11 @@
   color: #d32f2f;
 }
 
+.state-container .highlight {
+  color: #1976d2;
+  font-weight: 600;
+}
+
 .state-text {
   font-size: 0.9rem;
   color: #777;
@@ -186,37 +206,31 @@
   color: #3A3A3A;
 }
 
-.spinner {
-  width: 24px;
-  height: 24px;
-  border: 3px solid #dcdcdc;
-  border-top-color: #1976d2;
-  border-radius: 50%;
-  animation: spin 0.8s linear infinite;
+.retry-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 0.5rem;
+  padding: 8px 16px;
+  border: 1px solid #d32f2f;
+  border-radius: 8px;
+  background: #fdf6f6;
+  color: #d32f2f;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s ease;
 }
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
+ 
+.retry-btn:hover {
+  background: #fdecea;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+ 
+.retry-btn mat-icon {
+  font-size: 1.1rem;
+  height: 1.1rem;
+  width: 1.1rem;
+}
 
 
 
