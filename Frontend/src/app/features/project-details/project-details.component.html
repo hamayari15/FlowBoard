@@ -1,222 +1,607 @@
 <div class="project-details-container">
 
-  <!-- Project Header -->
-  <mat-card class="project-header-card" *ngIf="!loading">
-    <mat-card-header class="card-header">
-      <div mat-card-avatar class="project-avatar">
-        <mat-icon>assignment</mat-icon>
-      </div>
-      <mat-card-title [title]="projectData.name">{{ projectData.name }}</mat-card-title>
-      <mat-card-subtitle [title]="projectData.description || 'No description available'">
-        {{ projectData.description || 'No description available' }}
-      </mat-card-subtitle>
-
-      <div class="info-item">
-        <mat-chip [style.background-color]="getStatusColor(projectData.status)" class="status-chip">
-          {{ projectData.status | titlecase }}
-        </mat-chip>
-      </div>
-
-      <div class="project-header-actions">
-        <button mat-icon-button color="primary" (click)="goBackToWorkspace()" matTooltip="Back to workspace">
-          <mat-icon>arrow_back</mat-icon>
-        </button>
-        <button mat-icon-button color="primary" (click)="openProjectInviteDialog()" matTooltip="Invite members to project">
-          <mat-icon>person_add</mat-icon>
-        </button>
-        <button mat-button class="edit-btn" (click)="openEditProjectDialog(projectData)" matTooltip="Edit project">
-          <mat-icon>edit</mat-icon>
-          Edit
-        </button>
-        <button mat-button class="archive-btn" (click)="archiveProject(projectData)" matTooltip="Archive project">
-          <mat-icon>archive</mat-icon>
-          {{ projectData.isArchived ? 'Unarchive' : 'Archive' }}
-        </button>
-        <button mat-button color="warn" (click)="deleteProject(projectData)" matTooltip="Delete project">
-          <mat-icon>delete</mat-icon>
-          Delete
-        </button>
-      </div>
-    </mat-card-header>
-
-    <mat-card-content class="project-info">
-      <div class="info-item" *ngIf="projectData.owner">
-        <mat-icon>person</mat-icon>
-        <span>{{ projectData.owner.firstName }} {{ projectData.owner.lastName }} ({{ projectData.owner.email }})</span>
-      </div>
-    
-      <div class="info-item">
-        <mat-icon>group</mat-icon>
-        <span>{{ getMembersCount() }} Members</span>
-      </div>
-      <div class="info-item" *ngIf="projectData.createdAt">
-        <mat-icon>schedule</mat-icon>
-        <span>Created: {{ projectData.createdAt | date: 'medium' }}</span>
-      </div>
-    </mat-card-content>
-  </mat-card>
-
-  <!-- Sprints Section -->
-  <div class="sprints-header" *ngIf="sprints.length > 0 || selectedFilter !== 'all'">
-    <div class="sprints-title">
-      <mat-icon class="header-icon">view_kanban</mat-icon>
-      <h1>Sprints</h1>
-      <span class="sprints-count">({{ sprints.length }})</span>
-    </div>
-    <mat-button-toggle-group class="filter" [(ngModel)]="selectedFilter" (change)="filterSprints(selectedFilter)">
-      <mat-button-toggle value="all">All</mat-button-toggle>
-      <mat-button-toggle value="planning">Planning</mat-button-toggle>
-      <mat-button-toggle value="active">Active</mat-button-toggle>
-      <mat-button-toggle value="completed">Completed</mat-button-toggle>
-      <mat-button-toggle value="archived">Archived</mat-button-toggle>
-    </mat-button-toggle-group>
-    <div class="actions-group">
-      <button mat-raised-button color="primary" class="add-button" (click)="openCreateSprintDialog()">
-        <mat-icon>add</mat-icon>
-        Create Sprint
-      </button>
-      <button mat-icon-button color="primary" class="refresh" (click)="loadSprints()">
-        <mat-icon>refresh</mat-icon>
-      </button>
-    </div>
+  <!-- Page Heading -->
+  <div class="page-heading">
+    <h1 class="page-title">Project Details</h1>
+    <p class="page-subtitle">
+      View project information, members, and manage its sprints.
+    </p>
   </div>
 
-  <!-- No Sprints State -->
-  <div *ngIf="!sprintsLoading && sprints.length === 0 && selectedFilter === 'all'" class="empty-state">
-    <mat-icon class="empty-icon">view_kanban</mat-icon>
-    <h2>No sprints found</h2>
-    <p>Create your first sprint to start organizing your work</p>
-    <button mat-raised-button color="primary" class="add-button" (click)="openCreateSprintDialog()">
-      <mat-icon>add</mat-icon>
-      Create Sprint
+
+  <!-- Project Loading State -->
+  <div *ngIf="loading" class="state-container">
+    <span class="spinner"></span>
+    <p class="state-text">Loading project...</p>
+  </div>
+
+
+  <!-- Project Error State -->
+  <div *ngIf="error && !loading" class="state-container">
+    <mat-icon class="state-icon error-icon">error_outline</mat-icon>
+
+    <h2 class="state-title error-title">
+      Unable to Load Project
+    </h2>
+
+    <p class="state-text error-text">
+      {{ error }}
+    </p>
+
+    <button
+      type="button"
+      class="retry-btn"
+      (click)="getProjectById(projectId)"
+    >
+      <mat-icon>refresh</mat-icon>
+      Try Again
     </button>
   </div>
 
-  <!-- Filtered Empty States -->
-  <div *ngIf="!sprintsLoading && sprints.length === 0 && selectedFilter === 'planning'" class="empty-state">
-    <mat-icon class="empty-icon">schedule</mat-icon>
-    <h2>No planning sprints found</h2>
-    <p>All sprints are either active, completed, or archived.</p>
-  </div>
 
-  <div *ngIf="!sprintsLoading && sprints.length === 0 && selectedFilter === 'active'" class="empty-state">
-    <mat-icon class="empty-icon">play_circle_outline</mat-icon>
-    <h2>No active sprints found</h2>
-    <p>Start a sprint to begin tracking progress.</p>
-  </div>
+  <!-- Project Content -->
+  <ng-container *ngIf="!loading && !error">
 
-  <div *ngIf="!sprintsLoading && sprints.length === 0 && selectedFilter === 'completed'" class="empty-state">
-    <mat-icon class="empty-icon">check_circle_outline</mat-icon>
-    <h2>No completed sprints found</h2>
-    <p>Complete active sprints to see them here.</p>
-  </div>
+    <!-- Project Header -->
+    <mat-card class="project-header-card">
 
-  <div *ngIf="!sprintsLoading && sprints.length === 0 && selectedFilter === 'archived'" class="empty-state">
-    <mat-icon class="empty-icon">inventory_2</mat-icon>
-    <h2>No archived sprints found</h2>
-    <p>Archive completed sprints to move them here.</p>
-  </div>
+      <div class="card-header">
 
-  <!-- Loading State -->
-  <div *ngIf="sprintsLoading" class="loading-container">
-    <mat-spinner diameter="45"></mat-spinner>
-    <p>Loading sprints...</p>
-  </div>
+        <mat-icon class="avatar-icon">assignment</mat-icon>
 
-  <!-- Sprints List -->
-  <div *ngIf="!sprintsLoading && sprints.length > 0" class="sprints-table">
-      <!-- Sprint Rows -->
+        <div class="card-header-text">
+          <h3
+            class="card-title"
+            [title]="projectData.name"
+          >
+            {{ projectData.name }}
+          </h3>
+
+          <p
+            class="card-subtitle"
+            [title]="projectData.description || 'No description available'"
+          >
+            {{ projectData.description || 'No description available' }}
+          </p>
+        </div>
+
+
+        <div class="project-status">
+          <mat-chip
+            [style.background-color]="getStatusColor(projectData.status)"
+            class="status-chip"
+          >
+            {{ projectData.status | titlecase }}
+          </mat-chip>
+        </div>
+
+
+        <!-- Header Actions -->
+        <div class="project-header-actions">
+
+          <button
+            mat-icon-button
+            color="primary"
+            (click)="goBackToWorkspace()"
+            matTooltip="Back to workspace"
+          >
+            <mat-icon>arrow_back</mat-icon>
+          </button>
+
+          <button
+            mat-icon-button
+            color="primary"
+            (click)="openProjectInviteDialog()"
+            matTooltip="Invite members to project"
+          >
+            <mat-icon>person_add</mat-icon>
+          </button>
+
+          <button
+            mat-button
+            class="edit-btn"
+            (click)="openEditProjectDialog(projectData)"
+            matTooltip="Edit project"
+          >
+            <mat-icon>edit</mat-icon>
+            Edit
+          </button>
+
+          <button
+            mat-button
+            class="archive-btn"
+            (click)="archiveProject(projectData)"
+            matTooltip="Archive project"
+          >
+            <mat-icon>archive</mat-icon>
+            {{ projectData.isArchived ? 'Unarchive' : 'Archive' }}
+          </button>
+
+          <button
+            mat-button
+            color="warn"
+            (click)="deleteProject(projectData)"
+            matTooltip="Delete project"
+          >
+            <mat-icon>delete</mat-icon>
+            Delete
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <!-- Project Information -->
+      <mat-card-content class="project-info">
+
+        <div
+          class="info-item"
+          *ngIf="projectData.owner"
+        >
+          <div class="info-icon-badge">
+            <mat-icon>person</mat-icon>
+          </div>
+
+          <div class="info-text">
+            <span class="info-label">Owner:</span>
+
+            <span
+              class="info-value"
+              [title]="projectData.owner.email"
+            >
+              {{ projectData.owner.firstName }}
+              {{ projectData.owner.lastName }}
+            </span>
+          </div>
+        </div>
+
+
+        <div class="info-item">
+
+          <div class="info-icon-badge">
+            <mat-icon>group</mat-icon>
+          </div>
+
+          <div class="info-text">
+            <span class="info-label">Total Members:</span>
+
+            <span class="info-value">
+              {{ getMembersCount() }}
+            </span>
+          </div>
+
+        </div>
+
+
+        <div
+          class="info-item"
+          *ngIf="projectData.createdAt"
+        >
+
+          <div class="info-icon-badge">
+            <mat-icon>schedule</mat-icon>
+          </div>
+
+          <div class="info-text">
+            <span class="info-label">Created At:</span>
+
+            <span class="info-value">
+              {{ projectData.createdAt | date: 'medium' }}
+            </span>
+          </div>
+
+        </div>
+
+      </mat-card-content>
+
+    </mat-card>
+
+
+    <!-- Sprints Section -->
+    <div
+      class="sprints-header"
+      *ngIf="sprints.length > 0 || selectedFilter !== 'all'"
+    >
+
+      <div class="sprints-title">
+
+        <mat-icon class="header-icon">
+          view_kanban
+        </mat-icon>
+
+        <h1>Sprints</h1>
+
+        <span class="sprints-count">
+          ({{ sprints.length }})
+        </span>
+
+      </div>
+
+
+      <!-- Sprint Filter -->
+      <mat-button-toggle-group
+        class="filter"
+        [(ngModel)]="selectedFilter"
+        (change)="filterSprints(selectedFilter)"
+      >
+
+        <mat-button-toggle value="all">
+          All
+        </mat-button-toggle>
+
+        <mat-button-toggle value="planning">
+          Planning
+        </mat-button-toggle>
+
+        <mat-button-toggle value="active">
+          Active
+        </mat-button-toggle>
+
+        <mat-button-toggle value="completed">
+          Completed
+        </mat-button-toggle>
+
+        <mat-button-toggle value="archived">
+          Archived
+        </mat-button-toggle>
+
+      </mat-button-toggle-group>
+
+
+      <!-- Sprint Actions -->
+      <div class="actions-group">
+
+        <button
+          mat-raised-button
+          color="primary"
+          class="add-button"
+          (click)="openCreateSprintDialog()"
+        >
+          <mat-icon>add</mat-icon>
+          Create Sprint
+        </button>
+
+        <button
+          mat-icon-button
+          color="primary"
+          class="refresh"
+          (click)="loadSprints()"
+          matTooltip="Refresh sprints"
+        >
+          <mat-icon>refresh</mat-icon>
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <!-- Sprints Loading State -->
+    <div
+      *ngIf="sprintsLoading"
+      class="loading-container"
+    >
+      <span class="spinner"></span>
+      <p class="state-text">Loading sprints...</p>
+    </div>
+
+
+    <!-- No Sprints State -->
+    <div
+      *ngIf="
+        !sprintsLoading &&
+        sprints.length === 0 &&
+        selectedFilter === 'all'
+      "
+      class="empty-state"
+    >
+
+      <mat-icon class="empty-icon">
+        view_kanban
+      </mat-icon>
+
+      <h2>No sprints found</h2>
+
+      <p>
+        Create your first sprint to start organizing your work
+      </p>
+
+      <button
+        mat-raised-button
+        color="primary"
+        class="add-button"
+        (click)="openCreateSprintDialog()"
+      >
+        <mat-icon>add</mat-icon>
+        Create Sprint
+      </button>
+
+    </div>
+
+
+    <!-- Planning Empty State -->
+    <div
+      *ngIf="
+        !sprintsLoading &&
+        sprints.length === 0 &&
+        selectedFilter === 'planning'
+      "
+      class="empty-state"
+    >
+
+      <mat-icon class="empty-icon">
+        schedule
+      </mat-icon>
+
+      <h2>No planning sprints found</h2>
+
+      <p>
+        All sprints are either active, completed, or archived.
+      </p>
+
+    </div>
+
+
+    <!-- Active Empty State -->
+    <div
+      *ngIf="
+        !sprintsLoading &&
+        sprints.length === 0 &&
+        selectedFilter === 'active'
+      "
+      class="empty-state"
+    >
+
+      <mat-icon class="empty-icon">
+        play_circle_outline
+      </mat-icon>
+
+      <h2>No active sprints found</h2>
+
+      <p>
+        Start a sprint to begin tracking progress.
+      </p>
+
+    </div>
+
+
+    <!-- Completed Empty State -->
+    <div
+      *ngIf="
+        !sprintsLoading &&
+        sprints.length === 0 &&
+        selectedFilter === 'completed'
+      "
+      class="empty-state"
+    >
+
+      <mat-icon class="empty-icon">
+        check_circle_outline
+      </mat-icon>
+
+      <h2>No completed sprints found</h2>
+
+      <p>
+        Complete active sprints to see them here.
+      </p>
+
+    </div>
+
+
+    <!-- Archived Empty State -->
+    <div
+      *ngIf="
+        !sprintsLoading &&
+        sprints.length === 0 &&
+        selectedFilter === 'archived'
+      "
+      class="empty-state"
+    >
+
+      <mat-icon class="empty-icon">
+        inventory_2
+      </mat-icon>
+
+      <h2>No archived sprints found</h2>
+
+      <p>
+        Archive completed sprints to move them here.
+      </p>
+
+    </div>
+
+
+    <!-- Sprints List -->
+    <div
+      *ngIf="!sprintsLoading && sprints.length > 0"
+      class="sprints-table"
+    >
+
       <div class="sprints-list">
-        <div *ngFor="let sprint of sprints" 
-             class="sprint-row"
-             [class.overdue]="isSprintOverdue(sprint)"
-             [class.active]="sprint.status === 'active'"
-             [class.completed]="sprint.status === 'completed'">
-          
-          <!-- Main Sprint Info -->
-          <div class="sprint-row-content" (click)="viewSprint(sprint)">
+
+        <div
+          *ngFor="let sprint of sprints"
+          class="sprint-row"
+          [class.overdue]="isSprintOverdue(sprint)"
+          [class.active]="sprint.status === 'active'"
+          [class.completed]="sprint.status === 'completed'"
+        >
+
+          <!-- Sprint Main Content -->
+          <div
+            class="sprint-row-content"
+            (click)="viewSprint(sprint)"
+          >
+
+            <!-- Sprint Primary Information -->
             <div class="sprint-primary-info">
+
               <div class="sprint-icon-wrapper">
-                <mat-icon class="sprint-icon">view_kanban</mat-icon>
+                <mat-icon class="sprint-icon">
+                  view_kanban
+                </mat-icon>
               </div>
+
               <div class="sprint-title-container">
-                <h3>{{ sprint.name }}</h3>
-                <p class="sprint-description-text">{{ sprint.description || 'No description available' }}</p>
+
+                <h3>
+                  {{ sprint.name }}
+                </h3>
+
+                <p class="sprint-description-text">
+                  {{ sprint.description || 'No description available' }}
+                </p>
+
               </div>
+
             </div>
 
+
+            <!-- Sprint Secondary Information -->
             <div class="sprint-secondary-info">
+
               <div class="sprint-info-group">
-                <span class="status-badge" [ngClass]="getSprintStatusBadgeClass(sprint.status)">
+
+                <span
+                  class="status-badge"
+                  [ngClass]="getSprintStatusBadgeClass(sprint.status)"
+                >
                   {{ sprint.status || 'planning' }}
                 </span>
 
-                <div *ngIf="sprint.goal" class="sprint-goal-chip">
+
+                <div
+                  *ngIf="sprint.goal"
+                  class="sprint-goal-chip"
+                >
                   <mat-icon>flag</mat-icon>
                   <span>{{ sprint.goal }}</span>
                 </div>
 
-                <div *ngIf="sprint.startDate && sprint.endDate" class="sprint-dates-inline">
+
+                <div
+                  *ngIf="sprint.startDate && sprint.endDate"
+                  class="sprint-dates-inline"
+                >
                   <mat-icon>event</mat-icon>
-                  <span>{{ sprint.startDate | date: 'MMM d' }}</span>
-                  <mat-icon class="arrow-icon">arrow_forward</mat-icon>
-                  <span>{{ sprint.endDate | date: 'MMM d, yyyy' }}</span>
+
+                  <span>
+                    {{ sprint.startDate | date: 'MMM d' }}
+                  </span>
+
+                  <mat-icon class="arrow-icon">
+                    arrow_forward
+                  </mat-icon>
+
+                  <span>
+                    {{ sprint.endDate | date: 'MMM d, yyyy' }}
+                  </span>
                 </div>
 
-                <span class="duration-chip" *ngIf="sprint.startDate && sprint.endDate">
+
+                <span
+                  class="duration-chip"
+                  *ngIf="sprint.startDate && sprint.endDate"
+                >
                   <mat-icon>schedule</mat-icon>
-                  <span>{{ getSprintDuration(sprint) }}</span>
+
+                  <span>
+                    {{ getSprintDuration(sprint) }}
+                  </span>
                 </span>
+
               </div>
 
-              <div class="progress-bar-container" *ngIf="sprint.startDate && sprint.endDate">
-                <div class="progress-bar" 
-                     [style.width.%]="getSprintProgress(sprint)"
-                     [class.overdue]="isSprintOverdue(sprint)">
-                </div>
+
+              <!-- Sprint Progress -->
+              <div
+                class="progress-bar-container"
+                *ngIf="sprint.startDate && sprint.endDate"
+              >
+                <div
+                  class="progress-bar"
+                  [style.width.%]="getSprintProgress(sprint)"
+                  [class.overdue]="isSprintOverdue(sprint)"
+                ></div>
               </div>
+
             </div>
 
-            <!-- Right Section: Actions -->
-            <div class="sprint-actions" (click)="$event.stopPropagation()">
-              <button 
+
+            <!-- Sprint Actions -->
+            <div
+              class="sprint-actions"
+              (click)="$event.stopPropagation()"
+            >
+
+              <button
                 *ngIf="sprint.status === 'planning'"
-                mat-stroked-button 
+                mat-stroked-button
                 color="primary"
-                (click)="startSprint(sprint, $event)">
+                (click)="startSprint(sprint, $event)"
+              >
                 <mat-icon>play_arrow</mat-icon>
                 Start
               </button>
-              <button 
+
+              <button
                 *ngIf="sprint.status === 'active'"
-                mat-stroked-button 
+                mat-stroked-button
                 color="accent"
-                (click)="completeSprint(sprint, $event)">
+                (click)="completeSprint(sprint, $event)"
+              >
                 <mat-icon>check_circle</mat-icon>
                 Complete
               </button>
-              <button mat-icon-button [matMenuTriggerFor]="menu">
+
+
+              <button
+                mat-icon-button
+                [matMenuTriggerFor]="menu"
+              >
                 <mat-icon>more_vert</mat-icon>
               </button>
+
               <mat-menu #menu="matMenu">
-                <button mat-menu-item (click)="viewSprint(sprint)">
+
+                <button
+                  mat-menu-item
+                  (click)="viewSprint(sprint)"
+                >
                   <mat-icon>visibility</mat-icon>
                   <span>View Board</span>
                 </button>
-                <button mat-menu-item (click)="openEditSprintDialog(sprint)">
+
+                <button
+                  mat-menu-item
+                  (click)="openEditSprintDialog(sprint)"
+                >
                   <mat-icon>edit</mat-icon>
                   <span>Edit</span>
                 </button>
-                <button mat-menu-item class="delete-option" (click)="deleteSprint(sprint, $event)">
+
+                <button
+                  mat-menu-item
+                  class="delete-option"
+                  (click)="deleteSprint(sprint, $event)"
+                >
                   <mat-icon color="warn">delete</mat-icon>
                   <span>Delete</span>
                 </button>
+
               </mat-menu>
+
             </div>
+
           </div>
 
         </div>
+
       </div>
+
     </div>
+
+  </ng-container>
 
 </div>

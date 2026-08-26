@@ -276,6 +276,7 @@
   align-items: center;
   flex: 1;
   min-width: 0;
+  gap: 0.5rem;
 }
 
 .search-actions {
@@ -425,7 +426,7 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  height: 38px;
+  height: 36px;
   font-weight: 500;
 }
 
@@ -593,6 +594,7 @@
   .add-button {
     order: 3;
     flex: 0 0 100%;
+    height: 40px;
   }
 
   .filter {

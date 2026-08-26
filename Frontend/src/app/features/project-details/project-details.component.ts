@@ -17,9 +17,13 @@ import { BoardDialogComponent } from '../board-dialog/board-dialog.component';
 export class ProjectDetailsComponent implements OnInit {
   projectId: string = '';
   projectData: ProjectPopulated = {} as ProjectPopulated;
+
   loading = true;
+  error: string = '';
+
   sprints: Board[] = [];
   sprintsLoading = false;
+  
   selectedFilter: 'all' | 'planning' | 'active' | 'completed' | 'archived' = 'all';
 
   constructor(
@@ -38,17 +42,20 @@ export class ProjectDetailsComponent implements OnInit {
     }
   }
 
-  getProjectById(id: string) {
+  getProjectById(id: string): void {
     this.loading = true;
+    this.error = '';
+
     this.projectService.getProjectById(id).subscribe({
       next: (data) => {
         this.projectData = data;
         this.loading = false;
       },
+
       error: () => {
         this.loading = false;
-        Swal.fire('Error', 'Failed to load project', 'error');
-      },
+        this.error = 'Failed to load project. Please try again.';
+      }
     });
   }
 
