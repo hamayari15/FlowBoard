@@ -313,9 +313,7 @@
   font-size: 20px;
 }
 
-.search-box:has(.search-input:disabled) .search-icon {
-  color: #b3b3b3;
-}
+.search-box:has(.search-input:disabled) .search-icon { color: #b3b3b3; }
 
 .search-input {
   flex: 1;
@@ -512,14 +510,6 @@
   color: #fff !important;
   font-size: 0.85rem;
   font-weight: 500;
-}
-
-@media (max-width: 1400px) {
-  .workspace-details-container { padding: 2rem 2.5rem; }
-}
-
-@media (max-width: 1200px) {
-  .workspace-details-container { padding: 2rem 2.5rem; }
 }
 
 @media (max-width: 1024px) {

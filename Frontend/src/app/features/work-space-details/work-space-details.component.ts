@@ -59,7 +59,7 @@ export class WorkSpaceDetailsComponent implements OnInit, OnDestroy {
         next: data => { this.workSpaceData = data; this.loading = false; },
         error: (err: ApiError) => {
           this.loading = false;
-          this.error = err.message || 'Failed to load workspace';
+          this.error = 'Failed to load workspace. Please try again.';
         }
       });
   }

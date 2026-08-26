@@ -164,7 +164,6 @@ export class ProjectDetailsComponent implements OnInit {
     });
   }
 
-  // === Sprint Management ===
   loadSprints() {
     this.sprintsLoading = true;
     this.boardService.getSprintsByStatus(this.projectId, this.selectedFilter).subscribe({
