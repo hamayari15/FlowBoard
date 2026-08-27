@@ -3,8 +3,93 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  padding: 2rem 2.5rem;  
-  box-sizing: border-box;
+  padding: 2rem 2.5rem;
+}
+
+.state-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 60vh;
+  margin-top: 2rem;
+  text-align: center;
+  gap: 0.6rem;
+}
+
+.spinner {
+  width: 24px;
+  height: 24px;
+  border: 3px solid #dcdcdc;
+  border-top-color: #1976d2;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.state-icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  font-size: 2.5rem;
+  color: #1976d2;
+}
+
+.state-icon.error-icon {
+  width: 2rem;
+  height: 2rem;
+  font-size: 2rem;
+  color: #d32f2f;
+}
+
+.state-title {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.state-title.error-title {
+  color: #d32f2f;
+}
+
+.state-text {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #777;
+}
+
+.state-text.error-text {
+  color: #3a3a3a;
+}
+
+.retry-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 0.5rem;
+  padding: 8px 16px;
+  border: 1px solid #d32f2f;
+  border-radius: 8px;
+  background: #fdf6f6;
+  color: #d32f2f;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.retry-btn:hover {
+  background: #fdecea;
+}
+
+.retry-btn mat-icon {
+  width: 1.1rem;
+  height: 1.1rem;
+  font-size: 1.1rem;
 }
 
 .board-header {
@@ -30,7 +115,7 @@
   gap: 0.5rem;
   font-weight: 600;
   font-size: 1.25rem;
-  color: #1e293b;
+  color: #5a5a5a;
   letter-spacing: 0.8px;
 }
 
@@ -158,8 +243,8 @@
 }
 
 .assignee-avatar {
-  width: 28px;
-  height: 28px;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
   color: #e3f2fd;
   display: flex;
@@ -170,6 +255,14 @@
   overflow: hidden;
   margin-left: -12px;
   border: 2px solid #fff;
+}
+
+.assignee-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  display: block;
 }
 
 .assignee-avatar.assignee-1 { background-color: #1976d2; }
@@ -184,8 +277,8 @@
   align-items: center;
   justify-content: center;
   border: 2px solid #fff;
-  width: 28px;
-  height: 28px;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
   margin-left: -12px;
 }
@@ -205,25 +298,7 @@
 }
 
 .edit {
-  color: #388e3c !important; 
-}
-
-/* *********************************************************************** */
-
-.loading-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 60vh;
-  gap: 1rem;
-}
-
-.loading-container p {
-  color: #666;
-  font-size: 15px;
-  letter-spacing: 0.5px;
-  margin: 0;
+  color: #388e3c !important;
 }
 
 .columns-container {
@@ -317,8 +392,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  min-width: auto; 
-  height: 32px; 
+  min-width: auto;
+  height: 32px;
 }
 
 .task-delete-button mat-icon {
@@ -370,16 +445,24 @@
 }
 
 .assignee-initials {
-  width: 28px;
-  height: 28px;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
   background-color: #e3f2fd;
   color: #1976d2;
   font-weight: 600;
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.task-assignee img {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
 }
 
 .task-assignee.assignee-1 .assignee-initials { background-color: #e3f2fd; color: #1976d2; }
@@ -441,7 +524,6 @@
   }
 }
 
-/* Small screens: mobile */
 @media (max-width: 768px) {
   .board-header {
     flex-direction: column;
@@ -484,7 +566,6 @@
   }
 }
 
-/* Extra small screens: very small mobiles */
 @media (max-width: 480px) {
   .board-view-container {
     padding: 1rem 0.5rem;
@@ -502,7 +583,7 @@
     font-size: 0.7rem;
   }
 
-  .assignee-initials, .task-assignee img {
+  .assignee-initials, .task-assignee img, .assignee-avatar, .assignee-avatar img, .board-assignees .assignee-avatar.extra {
     width: 24px;
     height: 24px;
     font-size: 0.7rem;
@@ -517,4 +598,3 @@
     font-size: 0.65rem;
   }
 }
-

@@ -28,6 +28,7 @@ export class BoardViewComponent implements OnInit, OnDestroy {
   columnsWithTasks: ColumnWithTasks[] = [];
   connectedDropLists: string[] = [];
   loading = true;
+  error: string | null = null;
   private destroy$ = new Subject<void>();
 
   constructor(
@@ -50,6 +51,7 @@ export class BoardViewComponent implements OnInit, OnDestroy {
 
   loadBoardData(): void {
     this.loading = true;
+    this.error = null;
     this.boardService.getBoardById(this.boardId)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
@@ -57,9 +59,9 @@ export class BoardViewComponent implements OnInit, OnDestroy {
           this.board = board;
           this.loadTasks();
         },
-        error: () => {
-          Swal.fire('Error', 'Failed to load board', 'error');
+        error: (err: any) => {
           this.loading = false;
+          this.error = err?.message || 'Failed to load board';
         }
       });
   }
@@ -78,9 +80,9 @@ export class BoardViewComponent implements OnInit, OnDestroy {
           this.organizeTasks(tasks);
           this.loading = false;
         },
-        error: () => {
-          Swal.fire('Error', 'Failed to load tasks', 'error');
+        error: (err: any) => {
           this.loading = false;
+          this.error = err?.message || 'Failed to load tasks';
         }
       });
   }
@@ -200,7 +202,7 @@ export class BoardViewComponent implements OnInit, OnDestroy {
     if (!this.board) return;
     const dialogRef = this.dialog.open(BoardDialogComponent, {
       width: '450px',
-      data: { mode: 'edit', board: this.board, isSprint: true // 🔹 أضف هذا السطر باش يظهرلك goal, dates, status, ...
+      data: { mode: 'edit', board: this.board, isSprint: true
  }
     });
     dialogRef.afterClosed().pipe(takeUntil(this.destroy$)).subscribe(result => {
@@ -283,7 +285,6 @@ export class BoardViewComponent implements OnInit, OnDestroy {
 
   goBack(): void {
     if (this.board?.project) {
-      // Navigate back to project details
       const projectId = typeof this.board.project === 'string' 
         ? this.board.project 
         : (this.board.project as any)._id;
@@ -297,7 +298,6 @@ export class BoardViewComponent implements OnInit, OnDestroy {
     return column.id;
   }
 
-  // Sprint-specific helper methods
   getSprintStatusText(): string {
     if (!this.board?.status) return '';
     return this.board.status.charAt(0).toUpperCase() + this.board.status.slice(1);
@@ -338,7 +338,7 @@ export class BoardViewComponent implements OnInit, OnDestroy {
 
   getAssigneeIndex(user: any): number {
     const allAssignees = this.getAllAssignees();
-    return allAssignees.findIndex(a => a._id === user._id) + 1; // +1 for assignee-1 class
+    return allAssignees.findIndex(a => a._id === user._id) + 1;
   }
 
 }

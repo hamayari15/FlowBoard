@@ -1,179 +1,113 @@
 <div class="board-view-container">
-  <div class="board-header">
-  <button mat-icon-button (click)="goBack()" class="back-button">
-    <mat-icon>arrow_back</mat-icon>
-  </button>
 
-  <div class="board-info">
-      <h1 class="board-title">
-        <mat-icon>view_kanban</mat-icon>
-            {{ truncateBoardName(board?.name, 8) }}
-      </h1>
-
-    <span *ngIf="board?.status" class="sprint-status-badge" [ngClass]="getSprintStatusClass()">
-      {{ getSprintStatusText() }}
-    </span>
-    
-    <div class="sprint-goal-banner" *ngIf="board">
-  <mat-icon [ngClass]="board?.goal ? '' : 'icon-disabled'">flag</mat-icon>
-  <span>{{ board?.goal ? board?.goal : 'No goal set' }}</span>
-</div>
-
-
-      <div class="sprint-dates-info" *ngIf="board">
- <div class="date-badge">
-    <mat-icon [ngClass]="board.startDate ? '' : 'icon-disabled'">event</mat-icon>
-    <span>{{ board.startDate ? (board.startDate | date: 'MMM d, yyyy') : 'No start date set' }}</span>
+  <div *ngIf="loading" class="state-container">
+    <span class="spinner"></span>
+    <p class="state-text">Loading board...</p>
   </div>
 
-<mat-icon>arrow_forward</mat-icon>
-
-<div class="date-badge">
-    <mat-icon [ngClass]="board.endDate ? '' : 'icon-disabled'">event</mat-icon>
-    <span>{{ board.endDate ? (board.endDate | date: 'MMM d, yyyy') : 'No end date set' }}</span>
+  <div *ngIf="error && !loading" class="state-container">
+    <mat-icon class="state-icon error-icon">error_outline</mat-icon>
+    <h2 class="state-title error-title">Unable to Load Board</h2>
+    <p class="state-text error-text">{{ error }}</p>
+    <button type="button" class="retry-btn" (click)="loadBoardData()"><mat-icon>refresh</mat-icon>Try Again</button>
   </div>
 
-       
-        <div
-          class="time-remaining-badge"
-          *ngIf="board?.status === 'active' && board?.endDate"
-          [class.overdue]="isSprintOverdue()"
-        >
-          <mat-icon>{{ isSprintOverdue() ? 'warning' : 'timer' }}</mat-icon>
-          <span>{{ getSprintDaysRemaining() }}</span>
+  <ng-container *ngIf="!loading && !error">
+
+    <div class="board-header">
+      <button mat-icon-button (click)="goBack()" class="back-button"><mat-icon>arrow_back</mat-icon></button>
+
+      <div class="board-info">
+        <h1 class="board-title"><mat-icon>view_kanban</mat-icon>{{ truncateBoardName(board?.name, 8) }}</h1>
+
+        <span *ngIf="board?.status" class="sprint-status-badge" [ngClass]="getSprintStatusClass()">{{ getSprintStatusText() }}</span>
+
+        <div class="sprint-goal-banner" *ngIf="board">
+          <mat-icon [ngClass]="board?.goal ? '' : 'icon-disabled'">flag</mat-icon>
+          <span>{{ board?.goal ? board?.goal : 'No goal set' }}</span>
+        </div>
+
+        <div class="sprint-dates-info" *ngIf="board">
+          <div class="date-badge">
+            <mat-icon [ngClass]="board.startDate ? '' : 'icon-disabled'">event</mat-icon>
+            <span>{{ board.startDate ? (board.startDate | date: 'MMM d, yyyy') : 'No start date set' }}</span>
+          </div>
+
+          <mat-icon>arrow_forward</mat-icon>
+
+          <div class="date-badge">
+            <mat-icon [ngClass]="board.endDate ? '' : 'icon-disabled'">event</mat-icon>
+            <span>{{ board.endDate ? (board.endDate | date: 'MMM d, yyyy') : 'No end date set' }}</span>
+          </div>
+
+          <div class="time-remaining-badge" *ngIf="board?.status === 'active' && board?.endDate" [class.overdue]="isSprintOverdue()">
+            <mat-icon>{{ isSprintOverdue() ? 'warning' : 'timer' }}</mat-icon>
+            <span>{{ getSprintDaysRemaining() }}</span>
+          </div>
+        </div>
+
+        <div class="board-assignees" *ngIf="board && columnsWithTasks?.length">
+          <p *ngIf="getAllAssignees().length > 0">Contributors: </p>
+          <ng-container *ngFor="let assignee of getAllAssignees() | slice:0:3; let i = index">
+            <div class="assignee-avatar" [ngClass]="'assignee-' + (i + 1)" matTooltip="{{ assignee.firstName + ' ' + assignee.lastName }}">
+              <span *ngIf="!assignee.avatar">{{ getInitials(assignee.firstName, assignee.lastName) }}</span>
+              <img *ngIf="assignee.avatar" [src]="assignee.avatar" alt="Avatar">
+            </div>
+          </ng-container>
+          <div *ngIf="getAllAssignees().length > 3" class="assignee-avatar extra">+{{ getAllAssignees().length - 3 }}</div>
         </div>
       </div>
 
-<div class="board-assignees" *ngIf="board && columnsWithTasks?.length">
-  <p *ngIf="getAllAssignees().length > 0">Contributors: </p>
-  <ng-container *ngFor="let assignee of getAllAssignees() | slice:0:3; let i = index">
-    <div 
-      class="assignee-avatar" 
-      [ngClass]="'assignee-' + (i + 1)" 
-      matTooltip="{{ assignee.firstName + ' ' + assignee.lastName }}"
-    >
-      <span *ngIf="!assignee.avatar">
-        {{ getInitials(assignee.firstName, assignee.lastName) }}
-      </span>
-      <img *ngIf="assignee.avatar" [src]="assignee.avatar" alt="Avatar">
-    </div>
-  </ng-container>
-
-  <div *ngIf="getAllAssignees().length > 3" class="assignee-avatar extra">
-    +{{ getAllAssignees().length - 3 }}
-  </div>
-</div>
-
-
-  </div>
-
-  <div class="board-actions">
-    <button mat-stroked-button class="edit" (click)="openBoardEditDialog()">
-      <mat-icon>edit</mat-icon>
-      Edit
-    </button>
-    <button mat-stroked-button class="delete" color="warn" (click)="deleteBoard()">
-      <mat-icon>delete</mat-icon>
-      Delete
-    </button>
-  </div>
-  </div>
-
-    <div *ngIf="loading" class="loading-container">
-      <mat-spinner diameter="45"></mat-spinner>
-      <p>Loading board...</p>
+      <div class="board-actions">
+        <button mat-stroked-button class="edit" (click)="openBoardEditDialog()"><mat-icon>edit</mat-icon>Edit</button>
+        <button mat-stroked-button class="delete" color="warn" (click)="deleteBoard()"><mat-icon>delete</mat-icon>Delete</button>
+      </div>
     </div>
 
-    <div *ngIf="!loading" class="board-content">
+    <div class="board-content">
       <div class="columns-container">
-        <div 
-          *ngFor="let column of columnsWithTasks" 
-          class="column"
-          [attr.data-column-id]="getColumnId(column)"
-        >
+        <div *ngFor="let column of columnsWithTasks" class="column" [attr.data-column-id]="getColumnId(column)">
           <div class="column-header">
             <div class="column-title">
               <h4>{{ column.name }}</h4>
               <span class="task-count">{{ column.tasks.length }}</span>
             </div>
-            <button 
-              mat-icon-button 
-              class="add-task-button"
-              (click)="openCreateTaskDialog(getColumnId(column))"
-              matTooltip="Add task"
-            >
-              <mat-icon>add</mat-icon>
-            </button>
+            <button mat-icon-button class="add-task-button" (click)="openCreateTaskDialog(getColumnId(column))" matTooltip="Add task"><mat-icon>add</mat-icon></button>
           </div>
 
-          <div 
-            class="tasks-container"
-            cdkDropList
-            [id]="getColumnId(column)"
-            [cdkDropListData]="column.tasks"
-            [cdkDropListConnectedTo]="connectedDropLists"
-            (cdkDropListDropped)="onDrop($event, getColumnId(column))"
-          >
-<div *ngFor="let task of column.tasks" class="task-card" cdkDrag (click)="openTaskDetail(task)">
-  <div class="task-header">
-    <div class="task-title">{{ task.title }}</div>
-    <button 
-      mat-icon-button 
-      class="task-delete-button"
-      (click)="deleteTask(task, $event)"
-      matTooltip="Delete task"
-    >
-      <mat-icon>close</mat-icon>
-    </button>
-  </div>
+          <div class="tasks-container" cdkDropList [id]="getColumnId(column)" [cdkDropListData]="column.tasks" [cdkDropListConnectedTo]="connectedDropLists" (cdkDropListDropped)="onDrop($event, getColumnId(column))">
+            <div *ngFor="let task of column.tasks" class="task-card" cdkDrag (click)="openTaskDetail(task)">
+              <div class="task-header">
+                <div class="task-title">{{ task.title }}</div>
+                <button mat-icon-button class="task-delete-button" (click)="deleteTask(task, $event)" matTooltip="Delete task"><mat-icon>close</mat-icon></button>
+              </div>
 
-  <div class="task-meta">
-    <div class="task-due-date" *ngIf="task.dueDate">
-      <mat-icon class="due-date-icon">schedule</mat-icon>
-      <span>{{ task.dueDate | date: 'MMM d' }}</span>
-    </div>
-    <div class="task-priority" *ngIf="task.priority">
-      <mat-icon class="priority-icon">{{ getPriorityIcon(task.priority) }}</mat-icon>
-      <span>{{ task.priority }}</span>
-    </div>
-    <!-- Task Assignee inside task-meta -->
-<div 
-  class="task-assignee" 
-  *ngIf="task.assignee" 
-  matTooltip="{{ getAssigneeTooltip(task.assignee) }}"
-  [ngClass]="'assignee-' + getAssigneeIndex(task.assignee)"
->
-  <span *ngIf="!task.assignee.avatar" class="assignee-initials">
-    {{ getInitials(task.assignee.firstName, task.assignee.lastName) }}
-  </span>
-  <img *ngIf="task.assignee.avatar" [src]="task.assignee.avatar" alt="Avatar">
-</div>
+              <div class="task-meta">
+                <div class="task-due-date" *ngIf="task.dueDate">
+                  <mat-icon class="due-date-icon">schedule</mat-icon>
+                  <span>{{ task.dueDate | date: 'MMM d' }}</span>
+                </div>
+                <div class="task-priority" *ngIf="task.priority">
+                  <mat-icon class="priority-icon">{{ getPriorityIcon(task.priority) }}</mat-icon>
+                  <span>{{ task.priority }}</span>
+                </div>
+                <div class="task-assignee" *ngIf="task.assignee" matTooltip="{{ getAssigneeTooltip(task.assignee) }}" [ngClass]="'assignee-' + getAssigneeIndex(task.assignee)">
+                  <span *ngIf="!task.assignee.avatar" class="assignee-initials">{{ getInitials(task.assignee.firstName, task.assignee.lastName) }}</span>
+                  <img *ngIf="task.assignee.avatar" [src]="task.assignee.avatar" alt="Avatar">
+                </div>
+              </div>
+            </div>
 
-
-
-  </div>
-</div>
-
-
-<div class="empty-column" *ngIf="column.tasks.length === 0">
-  <mat-icon>inbox</mat-icon>
-  <p>No tasks yet</p>
-  <button 
-    mat-stroked-button 
-    color="primary"
-    (click)="openCreateTaskDialog(getColumnId(column))"
-  >
-    Create Task
-  </button>
-</div>
-
+            <div class="empty-column" *ngIf="column.tasks.length === 0">
+              <mat-icon>inbox</mat-icon>
+              <p>No tasks yet</p>
+              <button mat-stroked-button color="primary" (click)="openCreateTaskDialog(getColumnId(column))">Create Task</button>
+            </div>
           </div>
         </div>
       </div>
     </div>
 
+  </ng-container>
 
-
-
-    
-  </div>
+</div>

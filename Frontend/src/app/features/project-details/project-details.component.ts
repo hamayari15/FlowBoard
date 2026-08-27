@@ -172,7 +172,6 @@ export class ProjectDetailsComponent implements OnInit {
         this.sprintsLoading = false;
       },
       error: () => {
-        Swal.fire('Error', 'Failed to load sprints', 'error');
         this.sprintsLoading = false;
       },
     });
