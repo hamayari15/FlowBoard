@@ -101,7 +101,7 @@ export class ProjectInviteDialogComponent implements OnDestroy {
         if (validEmails.length === 1) {
           // Single invite response
           const message = response.userExists 
-            ? `${validEmails[0]} has been added to the project!`
+            ? `${validEmails[0]} has been added to the project`
             : `Invitation sent to ${validEmails[0]}. They'll need to create an account to join.`;
           
           const title = response.userExists ? 'Member Added!' : 'Invitation Sent!';

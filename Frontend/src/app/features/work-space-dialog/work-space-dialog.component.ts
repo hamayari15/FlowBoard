@@ -21,6 +21,7 @@ export class WorkSpaceDialogComponent implements OnInit, OnDestroy {
   loading = false;
   ownerId: string = '';
   private destroy$ = new Subject<void>();
+  private initialFormValue: { name: string; description: string } | null = null; // NEW
 
   constructor(
     private fb: FormBuilder,
@@ -42,6 +43,11 @@ export class WorkSpaceDialogComponent implements OnInit, OnDestroy {
         name: this.data.workspace.name || '',
         description: this.data.workspace.description || '',
       });
+
+       this.initialFormValue = {
+        name: (this.data.workspace.name || '').trim(),
+        description: (this.data.workspace.description || '').trim(),
+      };
     }
   }
 
@@ -89,9 +95,9 @@ export class WorkSpaceDialogComponent implements OnInit, OnDestroy {
         this.data.workspace = workspace;
         Swal.fire({
           icon: 'success',
-          title: 'Workspace Created !',
+          title: 'Workspace Created!',
           text: 'Your workspace has been created successfully. You can now invite members using the invite button.',
-          showConfirmButton: true
+          showConfirmButton: true,
         });
         this.dialogRef.close(workspace);
       },
@@ -113,8 +119,8 @@ export class WorkSpaceDialogComponent implements OnInit, OnDestroy {
         this.loading = false;
           Swal.fire({
             icon: 'success',
-            title: 'Updated !',
-            text: 'Workspace updated successfully.',
+            title: 'Workspace Updated!',
+            text: 'Workspace updated successfully',
             timer: 2000,
             showConfirmButton: false
           });        
@@ -152,8 +158,20 @@ export class WorkSpaceDialogComponent implements OnInit, OnDestroy {
     return fieldNames[fieldName] || fieldName;
   }
 
+  get hasChanges(): boolean {
+    if (this.data.mode !== 'edit' || !this.initialFormValue) return true;
+    const current = {
+      name: (this.workspaceForm.get('name')?.value || '').trim(),
+      description: (this.workspaceForm.get('description')?.value || '').trim(),
+    };
+    return (
+      current.name !== this.initialFormValue.name ||
+      current.description !== this.initialFormValue.description
+    );
+  }
+
   get isFormValid(): boolean {
-    return this.workspaceForm.valid && !this.loading;
+    return this.workspaceForm.valid && !this.loading && this.hasChanges;
   }
 
   get dialogTitle(): string {

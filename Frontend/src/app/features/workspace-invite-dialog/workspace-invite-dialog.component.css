@@ -8,6 +8,7 @@
 .dialog-title {
   display: flex;
   align-items: center;
+  background-color: #e8f0fe;
   gap: 10px;
   padding: 18px 20px 14px;
   margin: 0;
@@ -15,7 +16,6 @@
   font-weight: 600;
   color: #333;
   border-bottom: 1px solid #e0e0e0;
-  background: linear-gradient(135deg, #f8f9ff 0%, #e6f2ff 100%);
 }
 
 .dialog-title mat-icon {
@@ -136,7 +136,7 @@
 
 .dialog-actions button {
   min-width: 100px;
-  height: 32px;
+  height: 36px;
 }
 
 .invite-button {

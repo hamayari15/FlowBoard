@@ -35,8 +35,8 @@ export class EditCommentDialogComponent implements OnInit {
       next: (res) => {
       Swal.fire({
           icon: 'success',
-          title: 'Updated !',
-          text: 'Comment updated successfully.',
+          title: 'Comment Updated!',
+          text: 'Comment updated successfully',
           showConfirmButton: false,
           timer: 2000
         }); 

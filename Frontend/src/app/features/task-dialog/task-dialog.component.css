@@ -3,10 +3,10 @@
   margin: 0;
 }
 
-/* Title */
 .dialog-title {
   display: flex;
   align-items: center;
+  background-color: #e8f0fe;
   gap: 10px;
   padding: 18px 20px 14px;
   margin: 0;
@@ -107,7 +107,7 @@
 
 .dialog-actions button {
   min-width: 100px;
-  height: 32px;
+  height: 36px;
 }
 
 .dialog-actions .mat-mdc-raised-button {

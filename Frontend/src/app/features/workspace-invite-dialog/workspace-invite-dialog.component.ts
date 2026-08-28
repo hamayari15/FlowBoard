@@ -98,7 +98,7 @@ export class WorkspaceInviteDialogComponent implements OnDestroy {
         
         if (validEmails.length === 1) {
           const message = response.userExists 
-            ? `${validEmails[0]} has been added to the workspace!`
+            ? `${validEmails[0]} has been added to the workspace`
             : `Invitation sent to ${validEmails[0]}. They'll need to create an account to join.`;
           
           const title = response.userExists ? 'Member Added!' : 'Invitation Sent!';

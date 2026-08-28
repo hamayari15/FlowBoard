@@ -49,11 +49,11 @@ export class TaskDetailDialogComponent implements OnInit {
         this.newComment = '';
         Swal.fire({
           icon: 'success',
-          title: 'Created !',
-          text: 'Comment has been added to task successfully.',
-          showConfirmButton: false,
-          timer: 2000
-        });        },
+          title: 'Comment Added!',
+          text: 'Comment has been added to task successfully',
+          showConfirmButton: true
+        });        
+      },
       error: () => Swal.fire('Error', 'Failed to add comment', 'error')
     });
   }
@@ -71,7 +71,7 @@ export class TaskDetailDialogComponent implements OnInit {
   
   editComment(comment: any): void {
     const dialogRef = this.dialog.open(EditCommentDialogComponent, {
-      width: '400px',
+      width: '450px',
       data: { comment }
     });
     dialogRef.afterClosed().subscribe(result => {
@@ -99,8 +99,8 @@ export class TaskDetailDialogComponent implements OnInit {
             this.comments = this.comments.filter(c => c._id !== comment._id);
             Swal.fire({
           icon: 'success',
-          title: 'Deleted !',
-          text: 'Comment deleted successfully.',
+          title: 'Comment Deleted!',
+          text: 'Comment deleted successfully',
           showConfirmButton: false,
           timer: 2000
         });           },
@@ -112,7 +112,7 @@ export class TaskDetailDialogComponent implements OnInit {
 
   openEditTaskDialog(): void {
     const dialogRef = this.dialog.open(TaskDialogComponent, {
-      width: '450px',
+      width: '500px',
       data: {
         mode: 'edit',
         task: this.task,
@@ -144,8 +144,8 @@ export class TaskDetailDialogComponent implements OnInit {
           next: () => {
             Swal.fire({
                       icon: 'success',
-                      title: 'Deleted !',
-                      text: 'Task deleted successfully.',
+                      title: 'Task Deleted!',
+                      text: 'Task deleted successfully',
                       timer: 2000,
                       showConfirmButton: false
                     }); 

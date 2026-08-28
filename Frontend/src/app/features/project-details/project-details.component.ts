@@ -184,7 +184,7 @@ export class ProjectDetailsComponent implements OnInit {
 
   openCreateSprintDialog() {
     const dialogRef = this.dialog.open(BoardDialogComponent, {
-      width: '450px',
+      width: '500px',
       data: {
         mode: 'add',
         projectId: this.projectId,
@@ -198,7 +198,7 @@ export class ProjectDetailsComponent implements OnInit {
 
   openEditSprintDialog(sprint: Board) {
     const dialogRef = this.dialog.open(BoardDialogComponent, {
-      width: '450px',
+      width: '500px',
       data: {
         mode: 'edit',
         board: sprint,

@@ -138,7 +138,7 @@ export class BoardViewComponent implements OnInit, OnDestroy {
 
   openCreateTaskDialog(columnId: string): void {
     const dialogRef = this.dialog.open(TaskDialogComponent, {
-      width: '450px',
+      width: '500px',
       data: {
         mode: 'create',
         boardId: this.boardId,
@@ -201,7 +201,7 @@ export class BoardViewComponent implements OnInit, OnDestroy {
    openBoardEditDialog(): void {
     if (!this.board) return;
     const dialogRef = this.dialog.open(BoardDialogComponent, {
-      width: '450px',
+      width: '500px',
       data: { mode: 'edit', board: this.board, isSprint: true
  }
     });

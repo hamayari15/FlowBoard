@@ -6,6 +6,7 @@
 .dialog-title {
   display: flex;
   align-items: center;
+  background-color: #e8f0fe;
   gap: 10px;
   padding: 18px 20px 14px;
   margin: 0;
@@ -35,19 +36,15 @@
   gap: 16px;
 }
 
-.full-width {
-  width: 100%;
-}
+.full-width { width: 100%; }
 
-.project-form .mat-mdc-form-field {
-  margin-bottom: 0;
-}
+.project-form .mat-mdc-form-field { margin-bottom: 0; }
 
 .status-option-content {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 6px 0;
+  padding: 0;
 }
 
 .status-option-content mat-icon {
@@ -71,17 +68,9 @@
   width: 18px;
 }
 
-.member-info {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-}
+.member-info { display: flex; flex-direction: column; flex: 1; }
 
-.member-name {
-  font-weight: 500;
-  color: #333;
-  font-size: 13px;
-}
+.member-name { font-weight: 500; color: #333; font-size: 13px; }
 
 .member-email {
   font-size: 11px;
@@ -96,10 +85,7 @@
   gap: 10px;
 }
 
-.dialog-actions button {
-  min-width: 90px;
-  height: 32px;
-}
+.dialog-actions button { min-width: 90px; height: 36px; }
 
 .dialog-actions .mat-mdc-raised-button {
   display: flex;
@@ -107,31 +93,18 @@
   gap: 8px;
 }
 
-.dialog-actions .mat-mdc-raised-button mat-spinner {
-  margin-right: 8px;
-}
+.dialog-actions .mat-mdc-raised-button mat-spinner { margin-right: 8px; }
 
-.mat-mdc-form-field-outline {
-  border-radius: 8px;
-}
+.mat-mdc-form-field-outline { border-radius: 8px; }
 
-.mat-mdc-form-field-focus-overlay {
-  border-radius: 8px;
-}
+.mat-mdc-form-field-focus-overlay { border-radius: 8px; }
 
-.project-form .mat-mdc-form-field-subscript-wrapper {
-  margin-top: 8px;
-}
+.project-form .mat-mdc-form-field-subscript-wrapper { margin-top: 8px; }
 
 .project-form .mat-mdc-form-field-hint-wrapper,
-.project-form .mat-mdc-form-field-error-wrapper {
-  padding: 0 16px;
-}
+.project-form .mat-mdc-form-field-error-wrapper { padding: 0 16px; }
 
-.project-form textarea {
-  resize: vertical;
-  min-height: 80px;
-}
+.project-form textarea { resize: vertical; min-height: 80px; }
 
 @media (max-width: 600px) {
   .dialog-title {
@@ -139,9 +112,7 @@
     padding: 20px 20px 12px;
   }
 
-  .dialog-content {
-    padding: 20px;
-  }
+  .dialog-content { padding: 20px; }
 
   .dialog-actions {
     padding: 12px 20px 20px;
@@ -154,9 +125,7 @@
   }
 }
 
-.mat-mdc-raised-button[disabled] {
-  opacity: 0.7;
-}
+.mat-mdc-raised-button[disabled] { opacity: 0.7; }
 
 .mat-mdc-form-field.mat-form-field-invalid .mat-mdc-text-field-wrapper {
   box-shadow: 0 0 0 2px rgba(244, 67, 54, 0.2);
@@ -166,89 +135,10 @@
   box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.2);
 }
 
-.mat-mdc-select-panel {
-  border-radius: 8px;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-}
+.mat-mdc-select-panel { border-radius: 8px; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15); }
 
 .mat-mdc-form-field-hint,
-.mat-mdc-form-field-error {
-  font-size: 12px;
-  line-height: 1.4;
-}
+.mat-mdc-form-field-error { font-size: 12px; line-height: 1.4; }
 
-.mat-mdc-form-field-error {
-  color: #f44336;
-}
-
-.mat-mdc-form-field-hint {
-  color: #666;
-}
-
-/* Invitation Section Styles */
-.invite-section {
-  margin-top: 24px;
-  padding-top: 20px;
-  border-top: 1px solid #e0e0e0;
-}
-
-.invite-section h3 {
-  color: #333;
-  font-size: 16px;
-  font-weight: 600;
-  margin-bottom: 16px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.invite-section h3::before {
-  content: '📧';
-  font-size: 18px;
-}
-
-.invite-form {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-
-.invite-form .mat-mdc-form-field {
-  flex: 1;
-  min-width: 250px;
-}
-
-.invite-button {
-  background: linear-gradient(135deg, #46A049 0%, #52B788 100%) !important;
-  color: white !important;
-  margin-top: 8px;
-  min-width: 140px;
-  height: 40px;
-  border-radius: 6px !important;
-}
-
-.invite-button:hover {
-  background: linear-gradient(135deg, #4CAF50 0%, #66BB8B 100%) !important;
-  box-shadow: 0 2px 8px rgba(70, 160, 73, 0.3);
-}
-
-.invite-button[disabled] {
-  background: #ccc !important;
-  color: #999 !important;
-}
-
-@media (max-width: 600px) {
-  .invite-form {
-    flex-direction: column;
-    align-items: stretch;
-  }
-  
-  .invite-form .mat-mdc-form-field {
-    min-width: unset;
-  }
-  
-  .invite-button {
-    margin-top: 8px;
-  }
-}
+.mat-mdc-form-field-error { color: #f44336; }
+.mat-mdc-form-field-hint { color: #666; }

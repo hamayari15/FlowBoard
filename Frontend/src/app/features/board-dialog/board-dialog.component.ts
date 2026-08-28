@@ -16,6 +16,14 @@ export class BoardDialogComponent implements OnInit {
   mode: 'add' | 'edit' = 'add';
   isSprint = false;
   minStartDate = new Date();
+  private initialFormValue: { name: string; description: string; goal: string; startDate: string; endDate: string; status: string } | null = null;
+
+  statusOptions = [
+    { value: 'planning', label: 'Planning', icon: 'event_note', color: '#9c27b0' },
+    { value: 'active', label: 'Active', icon: 'play_circle', color: '#4caf50' },
+    { value: 'completed', label: 'Completed', icon: 'check_circle', color: '#2196f3' },
+    { value: 'archived', label: 'Archived', icon: 'archive', color: '#757575' }
+  ];
 
   constructor(
     private fb: FormBuilder,
@@ -25,7 +33,7 @@ export class BoardDialogComponent implements OnInit {
   ) {
     this.mode = data.mode || 'add';
     this.isSprint = data.isSprint || false;
-    
+
     this.boardForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(100), this.noWhitespaceValidator]],
       description: ['', [Validators.maxLength(500)]],
@@ -46,7 +54,53 @@ export class BoardDialogComponent implements OnInit {
         endDate: this.data.board.endDate || '',
         status: this.data.board.status || 'planning'
       });
+
+      this.initialFormValue = {
+        name: (this.data.board.name || '').trim(),
+        description: (this.data.board.description || '').trim(),
+        goal: (this.data.board.goal || '').trim(),
+        startDate: this.normalizeDate(this.data.board.startDate),
+        endDate: this.normalizeDate(this.data.board.endDate),
+        status: this.data.board.status || 'planning'
+      };
     }
+  }
+
+  private normalizeDate(value: any): string {
+    if (!value) return '';
+    const d = new Date(value);
+    return isNaN(d.getTime()) ? '' : d.toDateString();
+  }
+
+  get hasChanges(): boolean {
+    if (this.mode !== 'edit' || !this.initialFormValue) return true;
+
+    const formValue = this.boardForm.value;
+    const current = {
+      name: (formValue.name || '').trim(),
+      description: (formValue.description || '').trim(),
+      goal: (formValue.goal || '').trim(),
+      startDate: this.normalizeDate(formValue.startDate),
+      endDate: this.normalizeDate(formValue.endDate),
+      status: formValue.status || 'planning'
+    };
+
+    if (current.name !== this.initialFormValue.name || current.description !== this.initialFormValue.description) {
+      return true;
+    }
+
+    if (!this.isSprint) return false;
+
+    return (
+      current.goal !== this.initialFormValue.goal ||
+      current.startDate !== this.initialFormValue.startDate ||
+      current.endDate !== this.initialFormValue.endDate ||
+      current.status !== this.initialFormValue.status
+    );
+  }
+
+  get isFormValid(): boolean {
+    return this.boardForm.valid && !this.loading && this.hasChanges;
   }
 
   private noWhitespaceValidator(control: AbstractControl): { [key: string]: any } | null {
@@ -85,7 +139,6 @@ export class BoardDialogComponent implements OnInit {
       ]
     };
 
-    // Add sprint-specific fields if in sprint mode
     if (this.isSprint) {
       boardData.goal = formValue.goal?.trim() || undefined;
       boardData.startDate = formValue.startDate || undefined;
@@ -93,23 +146,21 @@ export class BoardDialogComponent implements OnInit {
       boardData.status = formValue.status || 'planning';
     }
 
-    console.log('Creating board/sprint with data:', boardData);
     this.boardService.createBoard(boardData).subscribe({
       next: (board: Board) => {
         this.loading = false;
         this.data.board = board;
         Swal.fire({
           icon: 'success',
-          title: 'Sprint Created !',
-          text: 'New sprint has been created successfully.',
-          showConfirmButton: false,
-          timer: 2000
+          title: 'Sprint Created!',
+          text: 'New sprint has been created successfully',
+          showConfirmButton: true
         });
         this.dialogRef.close(board);
       },
       error: (error: ApiError) => {
         this.loading = false;
-        this.showErrorAlert('Creation Failed', error.message || 'Failed to create sprint');
+        this.showErrorAlert('Creation Failed', error.message || 'Failed to create ' + (this.isSprint ? 'sprint' : 'board'));
       }
     });
   }
@@ -122,7 +173,6 @@ export class BoardDialogComponent implements OnInit {
       description: formValue.description?.trim() || undefined
     };
 
-    // Add sprint-specific fields if in sprint mode
     if (this.isSprint) {
       boardData.goal = formValue.goal?.trim() || undefined;
       boardData.startDate = formValue.startDate || undefined;
@@ -135,8 +185,8 @@ export class BoardDialogComponent implements OnInit {
         this.loading = false;
         Swal.fire({
           icon: 'success',
-          title: 'Updated !',
-          text: 'Sprint updated successfully.',
+          title: 'Sprint Updated!',
+          text: 'Sprint updated successfully',
           timer: 2000,
           showConfirmButton: false
         });
@@ -147,6 +197,10 @@ export class BoardDialogComponent implements OnInit {
         this.showErrorAlert('Update Failed', error.message || 'Failed to update ' + (this.isSprint ? 'sprint' : 'board'));
       }
     });
+  }
+
+  get selectedStatus() {
+    return this.statusOptions.find(s => s.value === this.boardForm.get('status')?.value);
   }
 
   private showErrorAlert(title: string, message: string): void {

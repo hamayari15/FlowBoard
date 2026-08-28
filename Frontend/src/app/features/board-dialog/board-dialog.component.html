@@ -83,12 +83,19 @@
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Status</mat-label>
           <mat-select formControlName="status">
-            <mat-option value="planning">Planning</mat-option>
-            <mat-option value="active">Active</mat-option>
-            <mat-option value="completed">Completed</mat-option>
-            <mat-option value="archived">Archived</mat-option>
+            <mat-select-trigger>
+              <div class="status-trigger-content" *ngIf="selectedStatus">
+                <mat-icon [style.color]="selectedStatus.color">{{ selectedStatus.icon }}</mat-icon>
+                <span>{{ selectedStatus.label }}</span>
+              </div>
+            </mat-select-trigger>
+            <mat-option *ngFor="let status of statusOptions" [value]="status.value">
+              <div class="status-option-content">
+                <mat-icon [style.color]="status.color">{{ status.icon }}</mat-icon>
+                <span>{{ status.label }}</span>
+              </div>
+            </mat-option>
           </mat-select>
-          <mat-icon matPrefix>info</mat-icon>
         </mat-form-field>
       </div>
 
@@ -101,9 +108,9 @@
 
   <mat-dialog-actions align="end" class="dialog-actions">
     <button mat-button (click)="onCancel()" [disabled]="loading">Cancel</button>
-    <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="!boardForm.valid || loading">
+    <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="!isFormValid || loading">
       <mat-spinner *ngIf="loading" diameter="16"></mat-spinner>
-      <mat-icon *ngIf="!loading">{{ mode === 'add' ? 'add' : 'save' }}</mat-icon>
+      <mat-icon *ngIf="!loading">{{ mode === 'add' ? 'add_circle' : 'edit' }}</mat-icon>
       <span>{{ mode === 'add' ? (isSprint ? 'Create Sprint' : 'Create Board') : (isSprint ? 'Update Sprint' : 'Update Board') }}</span>
     </button>
   </mat-dialog-actions>

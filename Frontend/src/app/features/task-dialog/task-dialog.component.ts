@@ -104,10 +104,9 @@ export class TaskDialogComponent implements OnInit {
         next: (response) => {
         Swal.fire({
           icon: 'success',
-          title: 'Task Created !',
-          text: 'New task has been created successfully.',
-          showConfirmButton: false,
-          timer: 2000
+          title: 'Task Created!',
+          text: 'New task has been created successfully',
+          showConfirmButton: true
         });          
           this.dialogRef.close(response);
         },
@@ -129,8 +128,8 @@ export class TaskDialogComponent implements OnInit {
         next: (response) => {
         Swal.fire({
           icon: 'success',
-          title: 'Updated !',
-          text: 'Task updated successfully.',
+          title: 'Task Updated!',
+          text: 'Task updated successfully',
           showConfirmButton: false,
           timer: 2000
         });          

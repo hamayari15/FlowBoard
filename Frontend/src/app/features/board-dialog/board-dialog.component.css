@@ -6,6 +6,7 @@
 .dialog-title {
   display: flex;
   align-items: center;
+  background-color: #e8f0fe;
   gap: 10px;
   padding: 18px 20px 14px;
   margin: 0;
@@ -69,8 +70,8 @@
 }
 
 .dialog-actions button {
-  min-width: 90px;
-  height: 32px;
+  min-width: 100px;
+  height: 36px;
 }
 
 .dialog-actions .mat-mdc-raised-button {
@@ -113,6 +114,27 @@
 
 .date-fields .mat-mdc-form-field {
   margin-bottom: 0;
+}
+
+.status-option-content {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 2px 0;
+}
+
+.status-trigger-content {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0;
+}
+
+.status-option-content mat-icon,
+.status-trigger-content mat-icon {
+  font-size: 18px;
+  height: 18px;
+  width: 18px;
 }
 
 .board-form .mat-mdc-form-field-hint-wrapper,

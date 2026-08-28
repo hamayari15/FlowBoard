@@ -28,7 +28,7 @@
     <button mat-button (click)="onCancel()" [disabled]="loading">Cancel</button>
     <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="!isFormValid || loading">
       <mat-spinner diameter="16" *ngIf="loading"></mat-spinner>
-      <mat-icon *ngIf="!loading">{{ data.mode === "add" ? "add" : "save" }}</mat-icon>
+      <mat-icon *ngIf="!loading">{{ data.mode === "add" ? "add_circle" : "edit" }}</mat-icon>
       {{ submitButtonText }}
     </button>
   </mat-dialog-actions>

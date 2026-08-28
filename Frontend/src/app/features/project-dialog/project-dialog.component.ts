@@ -25,6 +25,7 @@ export class ProjectDialogComponent implements OnInit, OnDestroy {
   availableMembers: any[] = [];
   selectedMembers: string[] = [];
   private destroy$ = new Subject<void>();
+  private initialFormValue: { name: string; description: string; status: string; members: string[] } | null = null;
 
   statusOptions = [
     { value: 'active', label: 'Active', icon: 'play_circle', color: '#4caf50' },
@@ -101,6 +102,40 @@ export class ProjectDialogComponent implements OnInit, OnDestroy {
       description: project.description || '',
       status: project.status
     });
+
+    const existingMembers = ((project as any).members || [])
+      .map((m: any) => (typeof m === 'string' ? m : m._id))
+      .sort();
+    this.selectedMembers = existingMembers;
+
+    this.initialFormValue = {
+      name: (project.name || '').trim(),
+      description: (project.description || '').trim(),
+      status: project.status || 'active',
+      members: existingMembers,
+    };
+  }
+
+  get hasChanges(): boolean {
+    if (this.data.mode !== 'edit' || !this.initialFormValue) return true;
+
+    const current = {
+      name: (this.projectForm.get('name')?.value || '').trim(),
+      description: (this.projectForm.get('description')?.value || '').trim(),
+      status: this.projectForm.get('status')?.value || 'active',
+      members: [...this.selectedMembers].sort(),
+    };
+
+    const membersChanged =
+      current.members.length !== this.initialFormValue.members.length ||
+      current.members.some((id, i) => id !== this.initialFormValue!.members[i]);
+
+    return (
+      current.name !== this.initialFormValue.name ||
+      current.description !== this.initialFormValue.description ||
+      current.status !== this.initialFormValue.status ||
+      membersChanged
+    );
   }
 
   onSubmit() {
@@ -127,11 +162,12 @@ export class ProjectDialogComponent implements OnInit, OnDestroy {
           next: (project: Project) => {
             this.loading = false;
             Swal.fire({
-          icon: 'success',
-          title: 'Project Created !',
-          text: 'Your project has been created successfully. You can now invite members using the invite button.',
-          showConfirmButton: true
-        });            this.dialogRef.close(project);
+              icon: 'success',
+              title: 'Project Created!',
+              text: 'Your project has been created successfully. You can now invite members using the invite button.',
+              showConfirmButton: true
+            });
+            this.dialogRef.close(project);
           },
           error: (error) => {
             this.loading = false;
@@ -140,34 +176,33 @@ export class ProjectDialogComponent implements OnInit, OnDestroy {
           },
         });
       } else if (this.data.mode === 'edit' && this.data.project?._id) {
-        // For update, only send the fields that can be updated
         const updateData = {
           name: formData.name,
           description: formData.description,
           status: formData.status,
           members: this.selectedMembers,
         };
-        
+
         this.projectService
           .updateProject(this.data.project._id, updateData)
           .subscribe({
             next: (project: Project) => {
               this.loading = false;
               Swal.fire({
-          icon: 'success',
-          title: 'Updated !',
-          text: 'Project updated successfully.',
-          timer: 2000,
-          showConfirmButton: false
-        });
-        this.dialogRef.close(project);  
-          },
-          error: (error) => {
-            this.loading = false;
-            console.error('Error updating project:', error);
-            Swal.fire('Error', 'Failed to update project', 'error');
-          },
-        });
+                icon: 'success',
+                title: 'Project Updated!',
+                text: 'Project updated successfully',
+                timer: 2000,
+                showConfirmButton: false
+              });
+              this.dialogRef.close(project);
+            },
+            error: (error) => {
+              this.loading = false;
+              console.error('Error updating project:', error);
+              Swal.fire('Error', 'Failed to update project', 'error');
+            },
+          });
       }
     } else {
       this.markFormGroupTouched();
@@ -198,11 +233,15 @@ export class ProjectDialogComponent implements OnInit, OnDestroy {
   }
 
   get isFormValid(): boolean {
-    return this.projectForm.valid;
+    return this.projectForm.valid && !this.loading && this.hasChanges;
   }
 
   get dialogTitle(): string {
     return this.data.mode === 'add' ? 'Create New Project' : 'Edit Project';
+  }
+
+  get selectedStatus() {
+    return this.statusOptions.find(s => s.value === this.projectForm.get('status')?.value);
   }
 
   get submitButtonText(): string {
