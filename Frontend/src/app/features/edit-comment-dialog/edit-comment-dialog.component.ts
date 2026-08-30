@@ -14,6 +14,7 @@ import { ApiError } from 'src/app/core/models';
 export class EditCommentDialogComponent implements OnInit {
   commentForm: FormGroup;
   loading = false;
+  private initialContent: string;
 
   constructor(
     private fb: FormBuilder,
@@ -21,12 +22,21 @@ export class EditCommentDialogComponent implements OnInit {
     public dialogRef: MatDialogRef<EditCommentDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
+    this.initialContent = (data.comment.content || '').trim();
     this.commentForm = this.fb.group({
       content: [data.comment.content, [Validators.required, Validators.minLength(3)]]
     });
   }
 
   ngOnInit(): void {}
+
+  get hasChanges(): boolean {
+    return (this.commentForm.get('content')?.value || '').trim() !== this.initialContent;
+  }
+
+  get isFormValid(): boolean {
+    return this.commentForm.valid && !this.loading && this.hasChanges;
+  }
 
   saveComment(): void {
     if (this.commentForm.invalid) return;

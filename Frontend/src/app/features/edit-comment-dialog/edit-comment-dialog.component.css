@@ -5,22 +5,25 @@
 .comment-edit-form {
   display: flex;
   flex-direction: column;
+  padding-top: 24px;
   gap: 12px;
 }
 
 mat-dialog-content {
-  padding: 16px 0;
+  padding: 20px 0 0;
 }
 
 .dialog-title {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 18px 18px 14px;
+  padding: 18px 20px 14px;
   margin: 0;
-  font-size: 18px;
+  font-size: 20px;
   font-weight: 600;
   color: #333;
+  border-bottom: 1px solid #e0e0e0;
+  background-color: #e8f0fe;
 }
 
 .dialog-title mat-icon {
