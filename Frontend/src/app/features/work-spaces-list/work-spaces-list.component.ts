@@ -119,25 +119,23 @@ export class WorkspaceListComponent implements OnInit, OnDestroy {
       confirmButtonColor: '#d33',
       cancelButtonColor: '#3085d6',
       reverseButtons: true,
-      showLoaderOnConfirm: true,
-      preConfirm: () =>
-        this.wsService.deleteWorkSpace(id)
-          .pipe(takeUntil(this.destroy$))
-          .toPromise()
-          .catch((error: ApiError) => {
-            Swal.showValidationMessage(`Request failed: ${error.message}`);
-            throw error;
-          }),
     }).then(result => {
       if (result.isConfirmed) {
-        Swal.fire({
-          icon: 'success',
-          title: 'Workspace Deleted!',
-          text: 'Workspace deleted successfully',
-          timer: 2000,
-          showConfirmButton: false,
+        this.wsService.deleteWorkSpace(id)
+          .pipe(takeUntil(this.destroy$))
+          .subscribe({
+            next: () => {
+              Swal.fire({
+                icon: 'success',
+                title: 'Workspace Deleted!',
+                text: 'Workspace deleted successfully',
+                timer: 2000,
+                showConfirmButton: false,
+              });
+              this.getAllWorkSpaces();
+            },
+          error: (error: ApiError) => Swal.fire({ icon: 'error', title: 'Delete Failed', text: error.message || 'Failed to delete workspace', confirmButtonColor: '#3085d6' })
         });
-        this.getAllWorkSpaces();
       }
     });
   }

@@ -8,7 +8,7 @@ import { takeUntil } from 'rxjs/operators';
 import { BoardService } from 'src/app/core/services/board.service';
 import { TaskService } from 'src/app/core/services/task.service';
 import { BoardDialogComponent } from '../board-dialog/board-dialog.component';
-import { Board, BoardColumn, TaskPopulated, getColumnId } from 'src/app/core/models';
+import { Board, BoardColumn, TaskPopulated, getColumnId, ApiError } from 'src/app/core/models';
 import { TaskDialogComponent } from '../task-dialog/task-dialog.component';
 import { TaskDetailDialogComponent } from '../task-detail-dialog/task-detail-dialog.component';
 
@@ -192,8 +192,8 @@ export class BoardViewComponent implements OnInit, OnDestroy {
             });                
             this.loadTasks();
             },
-            error: () => Swal.fire('Error', 'Failed to delete task', 'error')
-          });
+          error: (error: ApiError) => Swal.fire({ icon: 'error', title: 'Delete Failed', text: error.message || 'Failed to delete task', confirmButtonColor: '#3085d6' })
+        });
       }
     });
   }
@@ -235,7 +235,7 @@ export class BoardViewComponent implements OnInit, OnDestroy {
             });              
             this.router.navigate(['/project-details']);
             },
-            error: () => Swal.fire('Error', 'Failed to delete board', 'error')
+          error: (error: ApiError) => Swal.fire({ icon: 'error', title: 'Delete Failed', text: error.message || 'Failed to delete sprint', confirmButtonColor: '#3085d6' })
           });
       }
     });

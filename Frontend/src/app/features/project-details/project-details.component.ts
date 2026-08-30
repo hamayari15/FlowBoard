@@ -4,7 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import Swal from 'sweetalert2';
 import { ProjectService } from 'src/app/core/services/project.service';
 import { BoardService } from 'src/app/core/services/board.service';
-import { ProjectPopulated, Board } from 'src/app/core/models';
+import { ProjectPopulated, Board, ApiError } from 'src/app/core/models';
 import { ProjectDialogComponent } from '../project-dialog/project-dialog.component';
 import { ProjectInviteDialogComponent } from '../project-invite-dialog/project-invite-dialog.component';
 import { BoardDialogComponent } from '../board-dialog/board-dialog.component';
@@ -158,7 +158,7 @@ export class ProjectDetailsComponent implements OnInit {
             });
             this.goBackToWorkspace();
           },
-          error: () => Swal.fire('Error', 'Failed to delete project', 'error'),
+          error: (error: ApiError) => Swal.fire({ icon: 'error', title: 'Delete Failed', text: error.message || 'Failed to delete project', confirmButtonColor: '#3085d6' })
         });
       }
     });
@@ -304,7 +304,7 @@ export class ProjectDetailsComponent implements OnInit {
             });
             this.loadSprints();
           },
-          error: () => Swal.fire('Error', 'Failed to delete sprint', 'error'),
+          error: (error: ApiError) => Swal.fire({ icon: 'error', title: 'Delete Failed', text: error.message || 'Failed to delete sprint', confirmButtonColor: '#3085d6' })
         });
       }
     });

@@ -115,15 +115,29 @@ export class WorkSpaceDetailsComponent implements OnInit, OnDestroy {
   deleteWorkspace(): void {
     if (!this.workSpaceId) return;
     Swal.fire({
-      icon: 'warning', title: 'Are you sure?', text: "You won't be able to revert this action!",
-      confirmButtonText: 'Yes, delete it!', showCancelButton: true, confirmButtonColor: '#d33', cancelButtonColor: '#3085d6', reverseButtons: true,
-      showLoaderOnConfirm: true,
-      preConfirm: () => this.wsService.deleteWorkSpace(this.workSpaceId).pipe(takeUntil(this.destroy$)).toPromise()
-        .catch((error: ApiError) => { Swal.showValidationMessage(`Request failed: ${error.message}`); throw error; }),
+      icon: 'warning', 
+      title: 'Are you sure?', 
+      text: "You won't be able to revert this action!",
+      confirmButtonText: 'Yes, delete it!', 
+      showCancelButton: true, 
+      confirmButtonColor: '#d33', 
+      cancelButtonColor: '#3085d6', 
+      reverseButtons: true,
     }).then(result => {
       if (result.isConfirmed) {
-        Swal.fire({ icon: 'success', title: 'Deleted !', text: 'Workspace deleted successfully.', timer: 2000, showConfirmButton: false });
-        this.goBackToWorkspaces();
+        this.wsService.deleteWorkSpace(this.workSpaceId)
+          .pipe(takeUntil(this.destroy$))
+          .subscribe({
+            next: () => {
+              Swal.fire({ icon: 'success', 
+                title: 'Workspace Deleted!', 
+                text: 'Workspace deleted successfully.', 
+                timer: 2000, showConfirmButton: false 
+              });
+              this.goBackToWorkspaces();
+            },
+            error: (error: ApiError) => Swal.fire({ icon: 'error', title: 'Delete Failed', text: error.message || 'Failed to delete workspace', confirmButtonColor: '#3085d6' })
+          });
       }
     });
   }
@@ -153,14 +167,26 @@ export class WorkSpaceDetailsComponent implements OnInit, OnDestroy {
       title: `${action} Project`,
       text: `Are you sure you want to ${action.toLowerCase()} "${project.name}"?`,
       confirmButtonText: `Yes, ${action.toLowerCase()} it!`,
-      showCancelButton: true, confirmButtonColor: '#ff9800', cancelButtonColor: '#3085d6', reverseButtons: true,
-      showLoaderOnConfirm: true,
-      preConfirm: () => this.projectService.toggleArchiveProject(project._id!).pipe(takeUntil(this.destroy$)).toPromise()
-        .catch(error => { Swal.showValidationMessage(`Request failed: ${error.message}`); throw error; }),
+      showCancelButton: true, 
+      confirmButtonColor: '#ff9800', 
+      cancelButtonColor: '#3085d6', 
+      reverseButtons: true,
     }).then(result => {
       if (result.isConfirmed) {
-        Swal.fire({ icon: 'success', title: `${action}d !`, text: `Project ${action.toLowerCase()}d successfully.`, timer: 2000, showConfirmButton: false });
-        this.refreshProjects();
+        this.projectService.toggleArchiveProject(project._id!)
+          .pipe(takeUntil(this.destroy$))
+          .subscribe({
+            next: () => {
+              Swal.fire({ icon: 'success', 
+                title: `Project ${action}d!`, 
+                text: `Project ${action.toLowerCase()}d successfully`, 
+                timer: 2000, 
+                showConfirmButton: false 
+              });
+              this.refreshProjects();
+            },
+          error: (error: ApiError) => Swal.fire({ icon: 'error', title: `${action} Failed`, text: error.message || `Failed to ${action.toLowerCase()} project`, confirmButtonColor: '#3085d6' })
+        });
       }
     });
   }
@@ -168,15 +194,31 @@ export class WorkSpaceDetailsComponent implements OnInit, OnDestroy {
   deleteProject(project: ProjectPopulated): void {
     if (!project._id) return;
     Swal.fire({
-      icon: 'warning', title: 'Are you sure?', text: "You won't be able to revert this action!",
-      confirmButtonText: 'Yes, delete it!', showCancelButton: true, confirmButtonColor: '#d33', cancelButtonColor: '#3085d6', reverseButtons: true,
-      showLoaderOnConfirm: true,
-      preConfirm: () => this.projectService.deleteProject(project._id!).pipe(takeUntil(this.destroy$)).toPromise()
-        .catch(error => { Swal.showValidationMessage(`Request failed: ${error.message}`); throw error; }),
+      icon: 'warning', 
+      title: 'Are you sure?', 
+      text: "You won't be able to revert this action!",
+      confirmButtonText: 'Yes, delete it!', 
+      showCancelButton: true, 
+      confirmButtonColor: '#d33', 
+      cancelButtonColor: '#3085d6', 
+      reverseButtons: true,
     }).then(result => {
       if (result.isConfirmed) {
-        Swal.fire({ icon: 'success', title: 'Deleted !', text: 'Project deleted successfully.', timer: 2000, showConfirmButton: false });
-        this.refreshProjects();
+        this.projectService.deleteProject(project._id!)
+          .pipe(takeUntil(this.destroy$))
+          .subscribe({
+            next: () => {
+              Swal.fire({ 
+                icon: 'success', 
+                title: 'Project Deleted!', 
+                text: 'Project deleted successfully.', 
+                timer: 2000, 
+                showConfirmButton: false 
+              });
+              this.refreshProjects();
+            },
+            error: (error: ApiError) => Swal.fire({ icon: 'error', title: 'Delete Failed', text: error.message || 'Failed to delete project', confirmButtonColor: '#3085d6' })
+          });
       }
     });
   }
