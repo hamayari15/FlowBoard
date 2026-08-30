@@ -185,8 +185,8 @@ export class BoardViewComponent implements OnInit, OnDestroy {
             next: () => {
             Swal.fire({
               icon: 'success',
-              title: 'Deleted !',
-              text: 'Task deleted successfully.',
+              title: 'Task Deleted!',
+              text: 'Task deleted successfully',
               timer: 2000,
               showConfirmButton: false,
             });                
@@ -228,8 +228,8 @@ export class BoardViewComponent implements OnInit, OnDestroy {
             next: () => {
             Swal.fire({
               icon: 'success',
-              title: 'Deleted !',
-              text: 'Sprint deleted successfully.',
+              title: 'Sprint Deleted!',
+              text: 'Sprint deleted successfully',
               timer: 2000,
               showConfirmButton: false,
             });              

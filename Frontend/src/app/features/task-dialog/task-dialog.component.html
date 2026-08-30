@@ -25,12 +25,16 @@
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Priority</mat-label>
         <mat-select formControlName="priority">
-          <mat-option *ngFor="let priority of priorities" [value]="priority">
+          <mat-select-trigger>
+            <div class="priority-option" *ngIf="selectedPriority">
+              <mat-icon [style.color]="selectedPriority.color">{{ selectedPriority.icon }}</mat-icon>
+              <span>{{ selectedPriority.label }}</span>
+            </div>
+          </mat-select-trigger>
+          <mat-option *ngFor="let priority of priorityOptions" [value]="priority.value">
             <div class="priority-option">
-              <mat-icon class="priority-icon-{{ priority }}">
-                {{ priority === 'high' ? 'arrow_upward' : priority === 'low' ? 'arrow_downward' : 'remove' }}
-              </mat-icon>
-              <span>{{ priority | titlecase }}</span>
+              <mat-icon [style.color]="priority.color">{{ priority.icon }}</mat-icon>
+              <span>{{ priority.label }}</span>
             </div>
           </mat-option>
         </mat-select>
@@ -72,8 +76,7 @@
 
   <mat-dialog-actions align="end" class="dialog-actions">
     <button mat-button (click)="onCancel()" [disabled]="loading">Cancel</button>
-    <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="!taskForm.valid || loading">
-      <mat-spinner *ngIf="loading" diameter="16"></mat-spinner>
+    <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="!isFormValid || loading">      <mat-spinner *ngIf="loading" diameter="16"></mat-spinner>
       <mat-icon *ngIf="!loading">{{ mode === 'create' ? 'add' : 'save' }}</mat-icon>
       {{ mode === 'create' ? 'Create Task' : 'Update Task' }}
     </button>

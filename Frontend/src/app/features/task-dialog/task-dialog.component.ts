@@ -4,7 +4,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import Swal from 'sweetalert2';
 import { TaskService } from 'src/app/core/services/task.service';
 import { AuthService } from 'src/app/core/services/auth.service';
-import { User, TaskCreateRequest, TaskUpdateRequest, Task } from 'src/app/core/models';
+import { User, TaskCreateRequest, TaskUpdateRequest, Task, ApiError } from 'src/app/core/models';
 import { BoardService } from 'src/app/core/services';
 
 @Component({
@@ -17,8 +17,13 @@ export class TaskDialogComponent implements OnInit {
   loading = false;
   loadingMembers = false;
   mode: 'create' | 'edit' = 'create';
-  priorities = ['low', 'medium', 'high'];
+  priorityOptions = [
+    { value: 'low', label: 'Low', icon: 'arrow_downward', color: '#4caf50' },
+    { value: 'medium', label: 'Medium', icon: 'drag_handle', color: '#ff9800' },
+    { value: 'high', label: 'High', icon: 'arrow_upward', color: '#f44336' }
+  ];
   projectMembers: User[] = [];
+  private initialFormValue: { title: string; description: string; priority: string; labels: string[]; assignee: string | null; dueDate: string } | null = null;
 
   constructor(
     private fb: FormBuilder,
@@ -51,26 +56,67 @@ export class TaskDialogComponent implements OnInit {
         assignee: task.assignee?._id || task.assignee || null,
         dueDate: task.dueDate || null
       });
+
+      this.initialFormValue = {
+        title: (task.title || '').trim(),
+        description: (task.description || '').trim(),
+        priority: task.priority || 'medium',
+        labels: this.parseLabels(task.labels?.join(', ') || ''),
+        assignee: task.assignee?._id || task.assignee || null,
+        dueDate: this.normalizeDate(task.dueDate)
+      };
     }
   }
 
-  loadProjectMembers(): void {
-  if (!this.data.projectId) return;
-  console.log("hama", this.data); 
-
-  this.boardService.getMembersByBoardId(this.data.boardId).subscribe({
-  next: (members: User[]) => {
-    this.projectMembers = members;
-    this.loadingMembers = false;
-  },
-  error: (err) => {
-    console.log(err);
-    this.loadingMembers = false;
-    Swal.fire('Error', 'Failed to load project members', 'error');
+  private parseLabels(raw: string): string[] {
+    return raw
+      ? raw.split(',').map((l: string) => l.trim()).filter((l: string) => l).sort()
+      : [];
   }
-});
-  };
 
+  private normalizeDate(value: any): string {
+    if (!value) return '';
+    const d = new Date(value);
+    return isNaN(d.getTime()) ? '' : d.toDateString();
+  }
+
+  get hasChanges(): boolean {
+    if (this.mode !== 'edit' || !this.initialFormValue) return true;
+
+    const formValue = this.taskForm.value;
+    const currentLabels = this.parseLabels(formValue.labels || '');
+    const labelsChanged =
+      currentLabels.length !== this.initialFormValue.labels.length ||
+      currentLabels.some((l, i) => l !== this.initialFormValue!.labels[i]);
+
+    return (
+      (formValue.title || '').trim() !== this.initialFormValue.title ||
+      (formValue.description || '').trim() !== this.initialFormValue.description ||
+      formValue.priority !== this.initialFormValue.priority ||
+      (formValue.assignee || null) !== this.initialFormValue.assignee ||
+      this.normalizeDate(formValue.dueDate) !== this.initialFormValue.dueDate ||
+      labelsChanged
+    );
+  }
+
+  get isFormValid(): boolean {
+    return this.taskForm.valid && !this.loading && this.hasChanges;
+  }
+
+  loadProjectMembers(): void {
+    if (!this.data.projectId) return;
+
+    this.boardService.getMembersByBoardId(this.data.boardId).subscribe({
+      next: (members: User[]) => {
+        this.projectMembers = members;
+        this.loadingMembers = false;
+      },
+      error: (error: ApiError) => {
+        this.loadingMembers = false;
+        Swal.fire({ icon: 'error', title: 'Load Failed', text: 'Unable to load assignees for this project. You can still create the task and assign it later.', confirmButtonColor: '#3085d6' });
+      }
+    });
+  }
 
   onSubmit(): void {
     if (this.taskForm.invalid) {
@@ -82,9 +128,7 @@ export class TaskDialogComponent implements OnInit {
 
     this.loading = true;
     const formValue = this.taskForm.value;
-    const labels = formValue.labels 
-      ? formValue.labels.split(',').map((l: string) => l.trim()).filter((l: string) => l)
-      : [];
+    const labels = this.parseLabels(formValue.labels);
 
     const currentUser = this.authService.getCurrentUser();
 
@@ -102,17 +146,17 @@ export class TaskDialogComponent implements OnInit {
       };
       this.taskService.createTask(taskData).subscribe({
         next: (response) => {
-        Swal.fire({
-          icon: 'success',
-          title: 'Task Created!',
-          text: 'New task has been created successfully',
-          showConfirmButton: true
-        });          
+          Swal.fire({
+            icon: 'success',
+            title: 'Task Created!',
+            text: 'New task has been created successfully',
+            showConfirmButton: true
+          });
           this.dialogRef.close(response);
         },
-        error: (error) => {
-          Swal.fire('Error', error.message || 'Failed to create task', 'error');
+        error: (error: ApiError) => {
           this.loading = false;
+          Swal.fire({ icon: 'error', title: 'Creation Failed', text: error.message || 'Failed to create task', confirmButtonColor: '#3085d6' });
         }
       });
     } else if (this.mode === 'edit') {
@@ -126,18 +170,18 @@ export class TaskDialogComponent implements OnInit {
       };
       this.taskService.updateTask(this.data.task._id, updateData).subscribe({
         next: (response) => {
-        Swal.fire({
-          icon: 'success',
-          title: 'Task Updated!',
-          text: 'Task updated successfully',
-          showConfirmButton: false,
-          timer: 2000
-        });          
+          Swal.fire({
+            icon: 'success',
+            title: 'Task Updated!',
+            text: 'Task updated successfully',
+            showConfirmButton: false,
+            timer: 2000
+          });
           this.dialogRef.close({ updated: true });
         },
-        error: (error) => {
-          Swal.fire('Error', error.message || 'Failed to update task', 'error');
+        error: (error: ApiError) => {
           this.loading = false;
+          Swal.fire({ icon: 'error', title: 'Update Failed', text: error.message || 'Failed to update task', confirmButtonColor: '#3085d6' });
         }
       });
     }
@@ -145,6 +189,10 @@ export class TaskDialogComponent implements OnInit {
 
   onCancel(): void {
     this.dialogRef.close();
+  }
+
+  get selectedPriority() {
+    return this.priorityOptions.find(p => p.value === this.taskForm.get('priority')?.value);
   }
 
   getErrorMessage(fieldName: string): string {

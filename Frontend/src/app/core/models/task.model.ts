@@ -1,3 +1,5 @@
+import { ApiResponse, ApiError } from './api-response.model';
+
 export interface Task {
   _id?: string;
   title: string;
@@ -85,3 +87,5 @@ export interface TaskUpdateRequest {
   dueDate?: Date;
   attachments?: TaskAttachment[];
 }
+
+export { ApiResponse, ApiError };

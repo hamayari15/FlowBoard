@@ -19,7 +19,7 @@ export class BoardDialogComponent implements OnInit {
   private initialFormValue: { name: string; description: string; goal: string; startDate: string; endDate: string; status: string } | null = null;
 
   statusOptions = [
-    { value: 'planning', label: 'Planning', icon: 'event_note', color: '#9c27b0' },
+    { value: 'planning', label: 'Planning', icon: 'event_note', color: '#ff9800' },
     { value: 'active', label: 'Active', icon: 'play_circle', color: '#4caf50' },
     { value: 'completed', label: 'Completed', icon: 'check_circle', color: '#2196f3' },
     { value: 'archived', label: 'Archived', icon: 'archive', color: '#757575' }

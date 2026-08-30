@@ -172,7 +172,7 @@ export class ProjectDialogComponent implements OnInit, OnDestroy {
           error: (error) => {
             this.loading = false;
             console.error('Error creating project:', error);
-            Swal.fire('Error', 'Failed to create project', 'error');
+            this.showErrorAlert('Creation Failed', error.message || 'Failed to create project');
           },
         });
       } else if (this.data.mode === 'edit' && this.data.project?._id) {
@@ -200,7 +200,7 @@ export class ProjectDialogComponent implements OnInit, OnDestroy {
             error: (error) => {
               this.loading = false;
               console.error('Error updating project:', error);
-              Swal.fire('Error', 'Failed to update project', 'error');
+              this.showErrorAlert('Update Failed', error.message || 'Failed to update project');
             },
           });
       }
@@ -246,5 +246,9 @@ export class ProjectDialogComponent implements OnInit, OnDestroy {
 
   get submitButtonText(): string {
     return this.data.mode === 'add' ? 'Create Project' : 'Update Project';
+  }
+
+  private showErrorAlert(title: string, message: string): void {
+    Swal.fire({ icon: 'error', title, text: message, confirmButtonColor: '#3085d6' });
   }
 }

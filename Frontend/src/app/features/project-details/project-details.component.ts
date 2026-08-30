@@ -67,7 +67,7 @@ export class ProjectDetailsComponent implements OnInit {
 
   openProjectInviteDialog() {
     const dialogRef = this.dialog.open(ProjectInviteDialogComponent, {
-      width: '450px',
+      width: '500px',
       data: {
         projectId: this.projectId,
         projectName: this.projectData.name,
@@ -151,8 +151,8 @@ export class ProjectDetailsComponent implements OnInit {
           next: () => {
             Swal.fire({
               icon: 'success',
-              title: 'Deleted !',
-              text: 'Project deleted successfully.',
+              title: 'Project Deleted!',
+              text: 'Project deleted successfully',
               timer: 2000,
               showConfirmButton: false,
             });
@@ -297,8 +297,8 @@ export class ProjectDetailsComponent implements OnInit {
           next: () => {
             Swal.fire({
               icon: 'success',
-              title: 'Deleted !',
-              text: 'Sprint deleted successfully.',
+              title: 'Sprint Deleted!',
+              text: 'Sprint deleted successfully',
               timer: 2000,
               showConfirmButton: false,
             });

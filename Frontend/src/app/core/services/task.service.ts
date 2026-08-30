@@ -96,6 +96,9 @@ export class TaskService {
         errorMessage = error.error.message;
       } else {
         switch (error.status) {
+          case 0:
+            errorMessage = 'Unable to reach the server. Please check your connection or try again later.';
+            break;
           case 400:
             errorMessage = 'Bad request. Please check your input.';
             break;

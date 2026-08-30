@@ -16,8 +16,9 @@
 
 <mat-dialog-actions align="end">
   <button mat-button (click)="close()" [disabled]="loading">Cancel</button>
-  <button mat-raised-button color="primary" (click)="saveComment()" [disabled]="loading || commentForm.invalid">
+    <button mat-raised-button color="primary" (click)="saveComment()" [disabled]="!isFormValid || loading">
     <mat-spinner *ngIf="loading" diameter="20"></mat-spinner>
+    <mat-icon *ngIf="!loading">edit</mat-icon>
     <span *ngIf="!loading">Save</span>
   </button>
 </mat-dialog-actions>

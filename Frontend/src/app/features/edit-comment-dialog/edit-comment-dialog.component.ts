@@ -3,12 +3,14 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import Swal from 'sweetalert2';
 import { CommentService } from 'src/app/core/services/comment.service';
+import { ApiError } from 'src/app/core/models';
 
 @Component({
   selector: 'app-edit-comment-dialog',
   templateUrl: './edit-comment-dialog.component.html',
   styleUrls: ['./edit-comment-dialog.component.css']
 })
+
 export class EditCommentDialogComponent implements OnInit {
   commentForm: FormGroup;
   loading = false;
@@ -43,10 +45,7 @@ export class EditCommentDialogComponent implements OnInit {
         this.dialogRef.close({ updated: true, comment: res });
         this.loading = false;
       },
-      error: () => {
-        Swal.fire('Error', 'Failed to update comment', 'error');
-        this.loading = false;
-      }
+      error: (error: ApiError) => Swal.fire({ icon: 'error', title: 'Update Failed', text: error.message || 'Failed to update comment', confirmButtonColor: '#3085d6' })    
     });
   }
 

@@ -4,7 +4,7 @@ import Swal from 'sweetalert2';
 import { TaskService } from 'src/app/core/services/task.service';
 import { CommentService } from 'src/app/core/services/comment.service';
 import { AuthService } from 'src/app/core/services';
-import { TaskPopulated } from 'src/app/core/models';
+import { TaskPopulated, ApiError } from 'src/app/core/models';
 import { EditCommentDialogComponent } from '../edit-comment-dialog/edit-comment-dialog.component';
 import { TaskDialogComponent } from '../task-dialog/task-dialog.component';
 
@@ -54,8 +54,8 @@ export class TaskDetailDialogComponent implements OnInit {
           showConfirmButton: true
         });        
       },
-      error: () => Swal.fire('Error', 'Failed to add comment', 'error')
-    });
+    error: (error: ApiError) => Swal.fire({ icon: 'error', title: 'Cration Failed', text: error.message || 'Failed to add comment', confirmButtonColor: '#3085d6' })    
+  });
   }
   
   loadComments(): void {
@@ -65,8 +65,7 @@ export class TaskDetailDialogComponent implements OnInit {
         console.log(res)
         this.comments = res;
       },
-      error: () => Swal.fire('Error', 'Failed to load comments', 'error')
-    });
+    error: () => Swal.fire({ icon: 'error', title: 'Load Failed', text: 'Unable to load comments for this task. Try closing and reopening the task.', confirmButtonColor: '#3085d6' })    });
   }
   
   editComment(comment: any): void {
@@ -100,11 +99,12 @@ export class TaskDetailDialogComponent implements OnInit {
             Swal.fire({
           icon: 'success',
           title: 'Comment Deleted!',
-          text: 'Comment deleted successfully',
+          text: 'The comment has been removed',
           showConfirmButton: false,
           timer: 2000
-        });           },
-          error: () => Swal.fire('Error', 'Failed to delete comment', 'error')
+        });           
+      },
+          error: (error: ApiError) => Swal.fire({ icon: 'error', title: 'Delete Failed', text: error.message || 'Failed to delete comment', confirmButtonColor: '#3085d6' })
         });
       }
     });
@@ -151,8 +151,8 @@ export class TaskDetailDialogComponent implements OnInit {
                     }); 
             this.dialogRef.close({ deleted: true });
           },
-          error: () => Swal.fire('Error', 'Failed to delete task', 'error')
-        });
+        error: (error: ApiError) => Swal.fire({ icon: 'error', title: 'Delete Failed', text: error.message || 'Failed to delete task', confirmButtonColor: '#3085d6' })        
+      });
       }
     });
   }

@@ -132,8 +132,8 @@ export class WorkspaceListComponent implements OnInit, OnDestroy {
       if (result.isConfirmed) {
         Swal.fire({
           icon: 'success',
-          title: 'Deleted !',
-          text: 'Workspace deleted successfully.',
+          title: 'Workspace Deleted!',
+          text: 'Workspace deleted successfully',
           timer: 2000,
           showConfirmButton: false,
         });
