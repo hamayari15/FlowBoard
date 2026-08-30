@@ -2,7 +2,7 @@
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  padding: 2rem 2.5rem;
+  padding: 2rem 3.5rem;
   min-height: 100vh;
   color: #333;
 }
@@ -388,11 +388,6 @@
   box-shadow: 0 2px 4px rgba(25, 118, 210, 0.2);
 }
 
-::ng-deep .mat-button-toggle-disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
 .reload-btn {
   display: flex;
   align-items: center;
@@ -412,7 +407,6 @@
 
 .reload-btn:disabled {
   cursor: not-allowed;
-  opacity: 0.7;
 }
 
 .reload-btn.spinning mat-icon {

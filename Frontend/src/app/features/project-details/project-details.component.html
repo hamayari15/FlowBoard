@@ -63,7 +63,7 @@
       </mat-card-content>
     </mat-card>
 
-    <div class="sprints-header" *ngIf="sprints.length > 0 || selectedFilter !== 'all'">
+    <div class="sprints-header" *ngIf="!loading && !error">
       <div class="sprints-title">
         <mat-icon class="header-icon">view_kanban</mat-icon>
         <h1>Sprints</h1>
@@ -71,7 +71,7 @@
       </div>
 
       <div class="sprints-actions">
-        <mat-button-toggle-group class="filter" [(ngModel)]="selectedFilter" (change)="filterSprints(selectedFilter)">
+        <mat-button-toggle-group class="filter" [(ngModel)]="selectedFilter" (change)="filterSprints(selectedFilter)" [disabled]="sprintsLoading || sprints.length === 0">
           <mat-button-toggle value="all">All</mat-button-toggle>
           <mat-button-toggle value="planning">Planning</mat-button-toggle>
           <mat-button-toggle value="active">Active</mat-button-toggle>
@@ -79,7 +79,7 @@
           <mat-button-toggle value="archived">Archived</mat-button-toggle>
         </mat-button-toggle-group>
 
-        <button type="button" class="reload-btn" (click)="loadSprints()" matTooltip="Refresh sprints"><mat-icon>refresh</mat-icon></button>
+        <button type="button" class="reload-btn" (click)="loadSprints()" [disabled]="sprintsLoading" [class.spinning]="sprintsLoading" matTooltip="Refresh sprints"><mat-icon>refresh</mat-icon></button>
         <button mat-raised-button color="primary" class="add-button" (click)="openCreateSprintDialog()"><mat-icon>add</mat-icon>Create Sprint</button>
       </div>
     </div>
