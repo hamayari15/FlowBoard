@@ -38,9 +38,13 @@
 
 .priority-option,
 .assignee-option {
-  display: flex;
   align-items: center;
-  gap: 10px;
+  display: flex;
+  gap: 12px;
+}
+
+.assignee-option {
+  padding: 6px 0;
 }
 
 .priority-option { padding: 0; }
@@ -54,31 +58,30 @@
 }
 
 .assignee-avatar {
-  width: 32px;
-  height: 32px;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
-  background: #1976d2;
-  color: white;
+  background: #e3f2fd;
+  color: #1976d2;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 600;
-  font-size: 14px;
+  font-size: 12px;
   flex-shrink: 0;
 }
 
-.assignee-info { display: flex; flex-direction: column; }
+.assignee-info { display: flex; flex-direction: column; gap: 2px; line-height: 1.2;}
 
 .assignee-name {
   font-weight: 600;
   color: #333;
-  font-size: 14px;
-  margin-bottom: -2px;
+  font-size: 13px;
 }
 
-.assignee-email { font-size: 12px; color: #666; margin-top: -2px; }
+.assignee-email { font-size: 11px; color: #888; }
 
-.unassigned-option { color: #999; }
+.unassigned-option { color: #999; font-size: 13px; }
 
 .dialog-actions {
   padding: 16px 24px 24px;
