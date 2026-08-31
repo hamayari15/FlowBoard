@@ -197,13 +197,12 @@ export class BoardViewComponent implements OnInit, OnDestroy {
       }
     });
   }
-
-   openBoardEditDialog(): void {
+  
+  openBoardEditDialog(): void {
     if (!this.board) return;
     const dialogRef = this.dialog.open(BoardDialogComponent, {
       width: '500px',
-      data: { mode: 'edit', board: this.board, isSprint: true
- }
+      data: { mode: 'edit', board: this.board, isSprint: true }
     });
     dialogRef.afterClosed().pipe(takeUntil(this.destroy$)).subscribe(result => {
       if (result) this.loadBoardData();
@@ -211,6 +210,10 @@ export class BoardViewComponent implements OnInit, OnDestroy {
   }
 
   deleteBoard(): void {
+      const projectId = this.board?.project
+      ? (typeof this.board.project === 'string' ? this.board.project : (this.board.project as any)._id)
+      : null;
+
     Swal.fire({
       title: 'Are you sure?',
       text: `You won't be able to revert this action!`,
@@ -233,7 +236,11 @@ export class BoardViewComponent implements OnInit, OnDestroy {
               timer: 2000,
               showConfirmButton: false,
             });              
-            this.router.navigate(['/project-details']);
+              if (projectId) {
+                this.router.navigate([`/project-details/${projectId}`]);
+              } else {
+                this.router.navigate(['/workSpaces-list']);
+              }
             },
           error: (error: ApiError) => Swal.fire({ icon: 'error', title: 'Delete Failed', text: error.message || 'Failed to delete sprint', confirmButtonColor: '#3085d6' })
           });
@@ -266,22 +273,20 @@ export class BoardViewComponent implements OnInit, OnDestroy {
   }
 
   getAllAssignees() {
-  const assigneesMap = new Map<string, any>();
+    const assigneesMap = new Map<string, any>();
 
-  this.columnsWithTasks?.forEach(column => {
-    column.tasks?.forEach(task => {
-      if (task.assignee) {
-        const key = task.assignee.email || task.assignee._id || task.assignee.firstName + task.assignee.lastName;
-        if (!assigneesMap.has(key)) {
-          assigneesMap.set(key, task.assignee);
+    this.columnsWithTasks?.forEach(column => {
+      column.tasks?.forEach(task => {
+        if (task.assignee) {
+          const key = task.assignee.email || task.assignee._id || task.assignee.firstName + task.assignee.lastName;
+          if (!assigneesMap.has(key)) {
+            assigneesMap.set(key, task.assignee);
+          }
         }
-      }
+      });
     });
-  });
-
-  return Array.from(assigneesMap.values());
-}
-
+    return Array.from(assigneesMap.values());
+  }
 
   goBack(): void {
     if (this.board?.project) {
