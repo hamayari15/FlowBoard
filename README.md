@@ -1,3 +1,2 @@
-[-] ws && pr invitations via email
-[-] sprints rows design
-[-] update navbar && fix home page (hero section)
+- [ ] ws && pr invitations via email
+- [ ] update navbar && fix home page (hero section)

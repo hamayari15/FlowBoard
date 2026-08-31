@@ -121,32 +121,30 @@
 
     <div *ngIf="!sprintsLoading && sprints.length > 0" class="sprints-table">
       <div class="sprints-list">
-        <div *ngFor="let sprint of sprints" class="sprint-row" [class.overdue]="isSprintOverdue(sprint)" [class.active]="sprint.status === 'active'" [class.completed]="sprint.status === 'completed'">
+        <div *ngFor="let sprint of sprints" class="sprint-row" [ngClass]="getSprintStatusBadgeClass(sprint.status)">
           <div class="sprint-row-content" (click)="viewSprint(sprint)">
-            <div class="sprint-primary-info">
-              <div class="sprint-icon-wrapper"><mat-icon class="sprint-icon">view_kanban</mat-icon></div>
-              <div class="sprint-title-container">
-                <h3>{{ sprint.name }}</h3>
-                <p class="sprint-description-text">{{ sprint.description || 'No description available' }}</p>
-              </div>
+            <div class="sprint-icon-wrapper"><mat-icon class="sprint-icon">view_kanban</mat-icon></div>
+
+            <div class="sprint-title-container" [matTooltip]="sprint.description || 'No description available'" matTooltipPosition="above">
+              <h3>{{ sprint.name }}</h3>
+              <span class="sprint-description-text">{{ sprint.description || 'No description available' }}</span>
             </div>
 
-            <div class="sprint-secondary-info">
-              <div class="sprint-info-group">
-                <span class="status-badge" [ngClass]="getSprintStatusBadgeClass(sprint.status)">{{ sprint.status || 'planning' }}</span>
-                <div *ngIf="sprint.goal" class="sprint-goal-chip"><mat-icon>flag</mat-icon><span>{{ sprint.goal }}</span></div>
-                <div *ngIf="sprint.startDate && sprint.endDate" class="sprint-dates-inline">
-                  <mat-icon>event</mat-icon>
-                  <span>{{ sprint.startDate | date: 'MMM d' }}</span>
-                  <mat-icon class="arrow-icon">arrow_forward</mat-icon>
-                  <span>{{ sprint.endDate | date: 'MMM d, yyyy' }}</span>
-                </div>
-                <span class="duration-chip" *ngIf="sprint.startDate && sprint.endDate"><mat-icon>schedule</mat-icon><span>{{ getSprintDuration(sprint) }}</span></span>
-              </div>
+            <span class="status-badge" [ngClass]="getSprintStatusBadgeClass(sprint.status)">{{ sprint.status || 'planning' }}</span>
 
-              <div class="progress-bar-container" *ngIf="sprint.startDate && sprint.endDate">
-                <div class="progress-bar" [style.width.%]="getSprintProgress(sprint)" [class.overdue]="isSprintOverdue(sprint)"></div>
-              </div>
+            <div *ngIf="sprint.goal" class="sprint-goal-chip" [matTooltip]="sprint.goal"><mat-icon>flag</mat-icon><span>{{ sprint.goal }}</span></div>
+
+            <div class="sprint-dates-inline" *ngIf="sprint.startDate && sprint.endDate">
+              <mat-icon>event</mat-icon>
+              <span>{{ sprint.startDate | date: 'MMM d' }}</span>
+              <mat-icon class="arrow-icon">arrow_forward</mat-icon>
+              <span>{{ sprint.endDate | date: 'MMM d, yyyy' }}</span>
+            </div>
+
+            <span class="duration-chip" *ngIf="sprint.startDate && sprint.endDate"><mat-icon>schedule</mat-icon><span>{{ getSprintDuration(sprint) }}</span></span>
+
+            <div class="progress-bar-container" *ngIf="sprint.startDate && sprint.endDate">
+              <div class="progress-bar" [style.width.%]="getSprintProgress(sprint)" [class.overdue]="isSprintOverdue(sprint)"></div>
             </div>
 
             <div class="sprint-actions" (click)="$event.stopPropagation()">
