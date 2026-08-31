@@ -23,6 +23,7 @@ export class ProjectDetailsComponent implements OnInit {
 
   sprints: Board[] = [];
   sprintsLoading = false;
+  hasAnySprints = true;
   
   selectedFilter: 'all' | 'planning' | 'active' | 'completed' | 'archived' = 'all';
 
@@ -170,6 +171,9 @@ export class ProjectDetailsComponent implements OnInit {
       next: (sprints) => {
         this.sprints = sprints;
         this.sprintsLoading = false;
+        if (this.selectedFilter === 'all') {
+          this.hasAnySprints = sprints.length > 0;
+        }
       },
       error: () => {
         this.sprintsLoading = false;

@@ -71,7 +71,7 @@
       </div>
 
       <div class="sprints-actions">
-        <mat-button-toggle-group class="filter" [(ngModel)]="selectedFilter" (change)="filterSprints(selectedFilter)" [disabled]="sprintsLoading || sprints.length === 0">
+        <mat-button-toggle-group class="filter" [(ngModel)]="selectedFilter" (change)="filterSprints(selectedFilter)" [disabled]="sprintsLoading || !hasAnySprints">
           <mat-button-toggle value="all">All</mat-button-toggle>
           <mat-button-toggle value="planning">Planning</mat-button-toggle>
           <mat-button-toggle value="active">Active</mat-button-toggle>
