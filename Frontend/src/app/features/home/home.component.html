@@ -40,9 +40,51 @@
       <div class="hero-visual">
        <div class="hero-image-placeholder">
   <div class="hero-board-mock">
-    <span class="hero-board-col"></span>
-    <span class="hero-board-col"></span>
-    <span class="hero-board-col"></span>
+    <div class="hero-board-col hero-board-col--todo">
+      <div class="hero-col-head">
+        <span class="hero-col-dot"></span>
+        <span class="hero-col-title">To Do</span>
+        <span class="hero-col-count">3</span>
+      </div>
+      <div class="hero-task-card" style="--d: .05s">
+        <span class="hero-task-line hero-task-line--long"></span>
+        <span class="hero-task-line hero-task-line--short"></span>
+      </div>
+      <div class="hero-task-card" style="--d: .15s">
+        <span class="hero-task-line hero-task-line--medium"></span>
+      </div>
+    </div>
+    <div class="hero-board-col hero-board-col--progress">
+      <div class="hero-col-head">
+        <span class="hero-col-dot"></span>
+        <span class="hero-col-title">Doing</span>
+        <span class="hero-col-count">2</span>
+      </div>
+      <div class="hero-task-card" style="--d: .25s">
+        <span class="hero-task-line hero-task-line--long"></span>
+        <div class="hero-task-progress"><span></span></div>
+      </div>
+      <div class="hero-task-card" style="--d: .35s">
+        <span class="hero-task-line hero-task-line--medium"></span>
+        <div class="hero-task-progress"><span></span></div>
+      </div>
+    </div>
+    <div class="hero-board-col hero-board-col--done">
+      <div class="hero-col-head">
+        <span class="hero-col-dot"></span>
+        <span class="hero-col-title">Done</span>
+        <span class="hero-col-count">4</span>
+      </div>
+      <div class="hero-task-card hero-task-card--done" style="--d: .45s">
+        <i class="fas fa-check"></i>
+        <span class="hero-task-line hero-task-line--medium"></span>
+      </div>
+      <div class="hero-task-card hero-task-card--done" style="--d: .55s">
+        <i class="fas fa-check"></i>
+        <span class="hero-task-line hero-task-line--short"></span>
+      </div>
+    </div>
+    <span class="hero-board-shimmer"></span>
   </div>
   <div class="floating-card card-1">
     <i class="fas fa-tasks"></i>
