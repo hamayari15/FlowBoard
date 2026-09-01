@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 
-// mongoose.connect(process.env.MONGODB_URI)
-mongoose.connect('mongodb://127.0.0.1:27017/flowBoard')
+mongoose.connect(process.env.MONGODB_URI)
+// mongoose.connect('')
     .then(
         () => {
             console.log("Connected to DB");

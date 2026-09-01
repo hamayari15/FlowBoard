@@ -401,26 +401,22 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.sprint-row.active { background: #e8f5e9; }
+.sprint-row.status-planning { background: #fdfbf6; }
 
-.sprint-row.completed { background: #f5f5f5; }
+.sprint-row.status-active { background: #f3faf4; }
 
-.sprint-row.overdue { border-left: 4px solid #dc3545; }
+.sprint-row.status-completed { background: #f2f8fd; }
+
+.sprint-row.status-archived { background: #f6f6f6; }
 
 .sprint-row-content {
   display: flex;
-  align-items: flex-start;
-  gap: 1.2rem;
-  padding: 0.8rem;
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: 0.6rem;
+  padding: 0.7rem 1rem;
+  overflow-x: auto;
   cursor: pointer;
-}
-
-.sprint-primary-info {
-  display: flex;
-  flex: 2;
-  align-items: flex-start;
-  gap: 1rem;
-  min-width: 200px;
 }
 
 .sprint-icon-wrapper {
@@ -428,161 +424,195 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  width: 36px;
-  height: 36px;
-  background: #e3f2fd;
-  border-radius: 6px;
+  width: 34px;
+  height: 34px;
+  background: #e7f3fb;
+  border-radius: 50%;
 }
 
-.sprint-icon { color: #1976d2; font-size: 20px; }
+.sprint-icon { color: #1976d2; width: 1rem; height: 1rem; font-size: 1rem; }
 
 .sprint-title-container {
   display: flex;
-  flex: 1;
-  flex-direction: column;
-  gap: 4px;
-  min-width: 0;
+  flex: 1 1 130px;
+  align-items: baseline;
+  gap: 0.5rem;
+  min-width: 70px;
   overflow: hidden;
 }
 
 .sprint-title-container h3 {
   margin: 0;
+  flex-shrink: 0;
+  max-width: 140px;
+  overflow: hidden;
   color: #212529;
-  font-size: 0.95rem;
-  font-weight: 500;
-  word-break: break-word;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .sprint-description-text {
-  margin: 0;
-  color: #666;
-  font-size: 0.875rem;
-  line-height: 1.4;
+  overflow: hidden;
+  min-width: 0;
+  color: #868e96;
+  font-size: 0.8rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.sprint-secondary-info {
-  display: flex;
-  flex: 3;
-  flex-direction: column;
-  gap: 1rem;
-  min-width: 300px;
-}
-
-.sprint-info-group {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 1rem;
+.sprint-description-text::before {
+  content: '—';
+  margin-right: 0.5rem;
+  color: #ced4da;
 }
 
 .status-badge {
   display: inline-flex;
+  flex-shrink: 0;
   align-items: center;
-  padding: 6px 12px;
-  border-radius: 16px;
-  font-size: 0.75rem;
-  font-weight: 500;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.7rem;
+  font-weight: 600;
   text-transform: capitalize;
-  letter-spacing: 0.3px;
+  letter-spacing: 0.2px;
+  white-space: nowrap;
 }
 
-.status-planning {
-  background-color: #fff8e1;
+.status-badge.status-planning {
+  background-color: #fff3e0;
   color: #f57c00;
   border: 1px solid rgba(245, 124, 0, 0.2);
 }
 
-.status-active {
+.status-badge.status-active {
   background-color: #e8f5e9;
   color: #2e7d32;
   border: 1px solid rgba(46, 125, 50, 0.2);
 }
 
-.status-completed {
+.status-badge.status-completed {
   background-color: #e3f2fd;
   color: #1976d2;
   border: 1px solid rgba(25, 118, 210, 0.2);
 }
 
-.status-archived {
-  background-color: #f5f5f5;
+.status-badge.status-archived {
+  background-color: #f0f0f0;
   color: #757575;
   border: 1px solid rgba(117, 117, 117, 0.2);
 }
 
 .sprint-goal-chip {
   display: flex;
+  flex-shrink: 0;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.4rem 0.8rem;
-  background: #e3f2fd;
-  border-radius: 4px;
+  gap: 0.35rem;
+  max-width: 160px;
+  padding: 4px 10px;
+  overflow: hidden;
+  background: #e7f3fb;
+  border-radius: 20px;
   color: #1976d2;
-  font-size: 0.875rem;
+  font-size: 0.75rem;
+  white-space: nowrap;
 }
 
-.sprint-goal-chip mat-icon { width: 16px; height: 16px; color: #1976d2; font-size: 16px; }
+.sprint-goal-chip span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sprint-goal-chip mat-icon {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+  color: #1976d2;
+  font-size: 14px;
+}
 
 .sprint-dates-inline {
   display: flex;
+  flex-shrink: 0;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.4rem 0.8rem;
+  gap: 0.4rem;
+  padding: 0.35rem 0.75rem;
   background: #f8f9fa;
-  border-radius: 4px;
+  border-radius: 20px;
   color: #495057;
-  font-size: 0.875rem;
+  font-size: 0.8rem;
+  white-space: nowrap;
 }
 
 .sprint-dates-inline mat-icon {
   width: 16px;
   height: 16px;
-  color: #adb5bd;
+  color: #1976d2;
   font-size: 16px;
 }
 
-.arrow-icon { margin: 0 2px; }
-
 .duration-chip {
   display: flex;
+  flex-shrink: 0;
   align-items: center;
   gap: 4px;
-  padding: 4px 8px;
-  background: #e9ecef;
-  border-radius: 12px;
+  padding: 4px 10px;
+  background: #f1f3f5;
+  border-radius: 20px;
   color: #495057;
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   white-space: nowrap;
 }
 
-.duration-chip mat-icon { width: 14px; height: 14px; font-size: 14px; }
+.duration-chip mat-icon {
+  width: 14px;
+  height: 14px;
+  color: #868e96;
+  font-size: 14px;
+}
+
+.arrow-icon {
+  width: 14px !important;
+  height: 14px !important;
+  margin: 0 2px;
+  color: #adb5bd;
+  font-size: 14px !important;
+}
 
 .progress-bar-container {
-  width: 100%;
+  flex-shrink: 0;
+  width: 140px;
   height: 6px;
-  margin-top: 0.5rem;
   overflow: hidden;
-  background: #e9ecef;
+  background: #edf1f4;
   border-radius: 3px;
 }
 
 .progress-bar {
   height: 100%;
-  background: linear-gradient(90deg, #2196f3, #1976d2);
+  background: linear-gradient(90deg, #64b5f6, #1976d2);
   border-radius: 3px;
   transition: width 0.3s ease;
 }
 
-.progress-bar.overdue { background: linear-gradient(90deg, #f44336, #d32f2f); }
+.sprint-row.status-planning .progress-bar { background: linear-gradient(90deg, #ffcc80, #f57c00); }
+
+.sprint-row.status-active .progress-bar { background: linear-gradient(90deg, #81c784, #2e7d32); }
+
+.sprint-row.status-completed .progress-bar { background: linear-gradient(90deg, #64b5f6, #1976d2); }
+
+.sprint-row.status-archived .progress-bar { background: linear-gradient(90deg, #bdbdbd, #757575); }
+
+.progress-bar.overdue { background: linear-gradient(90deg, #ef5350, #d32f2f) !important; }
 
 .sprint-actions {
   display: flex;
   align-items: center;
   flex-shrink: 0;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: 0.5rem;
-  margin-top: 4px;
-  margin-left: auto;
 }
 
 .sprint-actions button {
@@ -597,6 +627,7 @@
   background-color: #e8f5e9;
   color: #2e7d32;
 }
+
 
 .delete-option { color: #dc3545; }
 
@@ -697,14 +728,9 @@
   }
 
   .sprint-row-content {
-    flex-direction: column;
-    gap: 0.8rem;
+    flex-wrap: wrap;
+    gap: 0.6rem;
     padding: 0.6rem;
-  }
-
-  .sprint-primary-info {
-    flex: 1;
-    min-width: 100%;
   }
 
   .sprint-icon-wrapper {
@@ -716,24 +742,32 @@
     font-size: 18px;
   }
 
+  .sprint-title-container {
+    flex: 1 1 100%;
+    order: 1;
+    max-width: none;
+  }
+
   .sprint-title-container h3 {
+    max-width: none;
     font-size: 0.85rem;
   }
 
   .sprint-description-text {
-    font-size: 0.8rem;
-  }
-
-  .sprint-secondary-info {
-    min-width: 100%;
-  }
-
-  .sprint-goal-chip {
-    padding: 0.3rem 0.6rem;
     font-size: 0.75rem;
   }
 
+  .status-badge {
+    order: 2;
+  }
+
+  .sprint-goal-chip {
+    order: 3;
+    max-width: 140px;
+  }
+
   .sprint-dates-inline {
+    order: 4;
     padding: 0.3rem 0.6rem;
     font-size: 0.75rem;
   }
@@ -745,29 +779,23 @@
   }
 
   .duration-chip {
-    padding: 3px 6px;
-    font-size: 0.7rem;
+    order: 5;
   }
 
-  .duration-chip mat-icon {
-    width: 12px;
-    height: 12px;
-    font-size: 12px;
+  .progress-bar-container {
+    order: 6;
+    flex: 1 1 auto;
+    width: auto;
+    min-width: 80px;
   }
 
   .sprint-actions {
+    order: 7;
     width: 100%;
     justify-content: flex-end;
     flex-wrap: nowrap;
     gap: 0.5rem;
-    margin-top: 0.5rem;
-    margin-left: 0;
-  }
-
-  .sprint-actions button {
-    padding: 4px 8px;
-    font-size: 0.75rem;
-    white-space: nowrap;
+    margin-top: 0.25rem;
   }
 
   .status-chip {
