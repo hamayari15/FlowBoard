@@ -1,2 +1,4 @@
 - [ ] ws && pr invitations via email
 - [ ] update navbar && fix home page (hero section)
+- [ ] workspace charts page UI
+- [ ] board-view responsive design
