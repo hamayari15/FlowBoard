@@ -88,9 +88,11 @@ export class WorkspaceInviteDialogComponent implements OnDestroy {
 
     this.loading = true;
 
+    const message = (this.inviteForm.get('message')?.value || '').trim() || undefined;
+
     const inviteObservable = validEmails.length === 1 
-      ? this.wsService.inviteMember(this.data.workspaceId, validEmails[0])
-      : this.wsService.bulkInviteMembers(this.data.workspaceId, validEmails);
+      ? this.wsService.inviteMember(this.data.workspaceId, validEmails[0], message)
+      : this.wsService.bulkInviteMembers(this.data.workspaceId, validEmails, message);
 
     inviteObservable.pipe(takeUntil(this.destroy$)).subscribe({
       next: (response: any) => {
@@ -135,7 +137,7 @@ export class WorkspaceInviteDialogComponent implements OnDestroy {
         Swal.fire({
           icon: 'error',
           title: 'Invitation Failed',
-          text: error.message || 'Failed to send invitations. Please try again.',
+          text: error?.message || error?.error?.message || 'Failed to send invitations. Please try again.',
           confirmButtonColor: '#667eea'
         });
       }

@@ -231,6 +231,22 @@ const getEmailTemplate = (type, data) => {
     </style>
   `;
 
+  const escapeHtml = (str) => String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+
+  const personalMessageBlock = data.personalMessage
+    ? `
+            <div class="note" style="border-left-color:#667eea; background:#eef1ff;">
+              <strong>💬 A personal note from ${escapeHtml(data.inviterName || 'the inviter')}:</strong>
+              <p style="margin:10px 0 0; color:#333; white-space:pre-line;">${escapeHtml(data.personalMessage)}</p>
+            </div>
+          `
+    : '';
+
   const templates = {
     // Workspace - User already exists
     WORKSPACE_ADD_EXISTING: `
@@ -248,7 +264,7 @@ const getEmailTemplate = (type, data) => {
             <div class="highlight">
               <strong>✅ You're all set!</strong> Since you already have an account with FlowBoard, you can jump right into your new workspace and start contributing to amazing projects.
             </div>
-
+            ${personalMessageBlock}
             <div class="feature-list">
               <h4>🎯 What you can do in FlowBoard:</h4>
               <ul>
@@ -320,7 +336,7 @@ const getEmailTemplate = (type, data) => {
             <div class="highlight">
               <strong>🚀 What is FlowBoard?</strong> FlowBoard is where productivity meets collaboration. It's a modern workspace designed to help teams organize projects, track progress, and achieve goals together - all in one beautiful, intuitive platform.
             </div>
-
+            ${personalMessageBlock}
             <div class="feature-list">
               <h4>✨ Amazing features waiting for you:</h4>
               <ul>
@@ -398,7 +414,7 @@ const getEmailTemplate = (type, data) => {
             <div class="highlight">
               <strong>🎉 You're ready to contribute!</strong> Your account has been automatically added to both the project and workspace. Time to roll up your sleeves and create something amazing with your team!
             </div>
-
+            ${personalMessageBlock}
             <div class="info-grid">
               <div class="info-item">
                 <strong>🎯 Project</strong>
@@ -482,7 +498,7 @@ const getEmailTemplate = (type, data) => {
             <div class="highlight">
               <strong>🎊 Join the team!</strong> You're being invited to work on an exciting project with a dedicated, talented team. This is your chance to make a real impact while using the best project management tools available.
             </div>
-
+            ${personalMessageBlock}
             <div class="info-grid">
               <div class="info-item">
                 <strong>🎯 Project</strong>

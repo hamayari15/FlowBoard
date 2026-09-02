@@ -44,7 +44,7 @@ exports.createWorkSpace = async (req, res) => {
 exports.inviteMember = async (req, res) => {
   try {
     const workspaceId = req.params.id;
-    const { email } = req.body;
+    const { email, message } = req.body;
 
     if (!email || !email.trim()) {
       return res.status(400).json({ message: "Email is required" });
@@ -88,7 +88,8 @@ exports.inviteMember = async (req, res) => {
       email: normalizedEmail,
       workspaceName: wSpace.name,
       workspaceId: wSpace._id,
-      inviterName: `${wSpace.owner.firstName} ${wSpace.owner.lastName}`
+      inviterName: `${wSpace.owner.firstName} ${wSpace.owner.lastName}`,
+      personalMessage: typeof message === 'string' ? message.trim() || undefined : undefined
     };
 
     if (user) {
@@ -139,7 +140,7 @@ exports.inviteMember = async (req, res) => {
 exports.bulkInviteMembers = async (req, res) => {
   try {
     const workspaceId = req.params.id;
-    const { emails } = req.body;
+    const { emails, message } = req.body;
 
     if (!emails || !Array.isArray(emails) || emails.length === 0) {
       return res.status(400).json({ message: "Emails array is required and must not be empty" });
@@ -202,7 +203,8 @@ exports.bulkInviteMembers = async (req, res) => {
           email: normalizedEmail,
           workspaceName: wSpace.name,
           workspaceId: wSpace._id,
-          inviterName: `${wSpace.owner.firstName} ${wSpace.owner.lastName}`
+          inviterName: `${wSpace.owner.firstName} ${wSpace.owner.lastName}`,
+          personalMessage: typeof message === 'string' ? message.trim() || undefined : undefined
         };
 
         if (user) {

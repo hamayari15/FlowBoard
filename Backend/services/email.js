@@ -13,15 +13,26 @@ const transporter = nodemailer.createTransport({
 
 async function sendEmail(to, subject, html) {
   try {
-    await transporter.sendMail({
+    const info = await transporter.sendMail({
       from: `"FlowBoard Team" <${process.env.SMTP_USER}>`,
       to,
       subject,
       html,
     });
     console.log(`✅ Email sent to ${to}`);
+
+    // When SMTP is a test/catch-all account (e.g. Ethereal), the email never
+    // reaches a real inbox. nodemailer gives us a preview URL in that case so
+    // we can actually see what was sent, instead of it disappearing silently.
+    const previewUrl = nodemailer.getTestMessageUrl(info);
+    if (previewUrl) {
+      console.log(`📬 Preview this email (test SMTP, not a real inbox): ${previewUrl}`);
+    }
+
+    return { success: true, previewUrl: previewUrl || null };
   } catch (err) {
     console.error("❌ Error sending email:", err);
+    return { success: false, error: err.message };
   }
 }
 
@@ -38,7 +49,7 @@ async function sendInvitationEmail(type, emailData) {
 
   const subject = subjects[type] || `Invitation from FlowBoard`;
   
-  await sendEmail(emailData.email, subject, emailTemplate);
+  return sendEmail(emailData.email, subject, emailTemplate);
 }
 
 module.exports = { sendEmail, sendInvitationEmail };

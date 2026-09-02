@@ -89,10 +89,12 @@ export class ProjectInviteDialogComponent implements OnDestroy {
 
     this.loading = true;
 
+    const message = (this.inviteForm.get('message')?.value || '').trim() || undefined;
+
     // Use bulk invite if multiple emails, single invite if one email
     const inviteObservable = validEmails.length === 1 
-      ? this.projectService.inviteMember(this.data.projectId, validEmails[0])
-      : this.projectService.bulkInviteMembers(this.data.projectId, validEmails);
+      ? this.projectService.inviteMember(this.data.projectId, validEmails[0], message)
+      : this.projectService.bulkInviteMembers(this.data.projectId, validEmails, message);
 
     inviteObservable.pipe(takeUntil(this.destroy$)).subscribe({
       next: (response: any) => {
@@ -139,7 +141,7 @@ export class ProjectInviteDialogComponent implements OnDestroy {
         Swal.fire({
           icon: 'error',
           title: 'Invitation Failed',
-          text: error.message || 'Failed to send invitations. Please try again.',
+          text: error?.message || error?.error?.message || 'Failed to send invitations. Please try again.',
           confirmButtonColor: '#667eea'
         });
       }
