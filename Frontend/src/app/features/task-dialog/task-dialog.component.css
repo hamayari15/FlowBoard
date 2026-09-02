@@ -140,6 +140,11 @@
 .mat-mdc-form-field-hint { color: #666; }
 
 @media (max-width: 600px) {
+  .task-dialog-container {
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+
   .dialog-title {
     font-size: 20px;
     padding: 20px 20px 12px;

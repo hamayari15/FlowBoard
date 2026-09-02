@@ -113,6 +113,7 @@ export class TaskDetailDialogComponent implements OnInit {
   openEditTaskDialog(): void {
     const dialogRef = this.dialog.open(TaskDialogComponent, {
       width: '500px',
+      maxWidth: '90vw',
       data: {
         mode: 'edit',
         task: this.task,

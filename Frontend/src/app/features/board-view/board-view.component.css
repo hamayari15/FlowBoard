@@ -512,6 +512,15 @@
     padding: 1.5rem 1rem;
   }
 
+  .board-header {
+    flex-wrap: wrap;
+  }
+
+  .board-info {
+    flex-wrap: wrap;
+    row-gap: 0.6rem;
+  }
+
   .columns-container {
     gap: 1rem;
     flex-wrap: wrap;
@@ -528,12 +537,41 @@
   .board-header {
     flex-direction: column;
     align-items: flex-start;
-    gap: 0.5rem;
+    gap: 0.75rem;
+  }
+
+  .board-info {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.6rem;
+    width: 100%;
+  }
+
+  .board-title {
+    font-size: 1.1rem;
+  }
+
+  .sprint-dates-info {
+    row-gap: 0.4rem;
+  }
+
+  .time-remaining-badge {
+    margin-left: 0;
+  }
+
+  .board-assignees {
+    flex-wrap: wrap;
   }
 
   .board-actions {
+    width: 100%;
     flex-wrap: wrap;
     gap: 0.3rem;
+  }
+
+  .board-actions button {
+    flex: 1 1 auto;
+    justify-content: center;
   }
 
   .columns-container {
@@ -571,6 +609,34 @@
     padding: 1rem 0.5rem;
   }
 
+  .board-title {
+    font-size: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .sprint-status-badge {
+    font-size: 0.65rem;
+    padding: 0.3rem 0.5rem;
+  }
+
+  .sprint-goal-banner {
+    font-size: 0.75rem;
+  }
+
+  .sprint-dates-info {
+    flex-wrap: wrap;
+  }
+
+  .date-badge {
+    font-size: 0.7rem;
+    padding: 0.25rem 0.5rem;
+  }
+
+  .board-actions button {
+    font-size: 0.7rem;
+    padding: 0.4rem 0.6rem;
+  }
+
   .task-card {
     padding: 0.5rem;
   }
@@ -587,10 +653,6 @@
     width: 24px;
     height: 24px;
     font-size: 0.7rem;
-  }
-
-  .board-title {
-    font-size: 1.1rem;
   }
 
   .task-count {

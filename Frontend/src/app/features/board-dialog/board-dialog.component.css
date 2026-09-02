@@ -148,13 +148,15 @@
 }
 
 @media (max-width: 600px) {
-  .dialog-title {
-    font-size: 20px;
-    padding: 20px 20px 12px;
+
+  .board-dialog-container {
+    max-height: 90vh;
+    overflow-y: auto;
   }
 
-  .dialog-content {
-    padding: 20px;
+  .dialog-title {
+    font-size: 20px;
+    padding: 16px 20px 12px;
   }
 
   .dialog-actions {
@@ -166,6 +168,7 @@
     width: 100%;
     margin: 4px 0;
   }
+
 }
 
 .mat-mdc-raised-button[disabled] {

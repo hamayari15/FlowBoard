@@ -139,6 +139,7 @@ export class BoardViewComponent implements OnInit, OnDestroy {
   openCreateTaskDialog(columnId: string): void {
     const dialogRef = this.dialog.open(TaskDialogComponent, {
       width: '500px',
+      maxWidth: '90vw',
       data: {
         mode: 'create',
         boardId: this.boardId,
@@ -157,6 +158,7 @@ export class BoardViewComponent implements OnInit, OnDestroy {
   openTaskDetail(task: TaskPopulated): void {
     const dialogRef = this.dialog.open(TaskDetailDialogComponent, {
       width: '550px',
+      maxWidth: '90vw',
       data: { task, board: this.board }
     });
     dialogRef.afterClosed()
@@ -202,6 +204,7 @@ export class BoardViewComponent implements OnInit, OnDestroy {
     if (!this.board) return;
     const dialogRef = this.dialog.open(BoardDialogComponent, {
       width: '500px',
+      maxWidth: '90vw',
       data: { mode: 'edit', board: this.board, isSprint: true }
     });
     dialogRef.afterClosed().pipe(takeUntil(this.destroy$)).subscribe(result => {
