@@ -24,12 +24,16 @@ export class WorkspaceService {
     );
   }
 
-  inviteMember(workspaceId: string, email: string) {
-    return this.http.post(`${this.apiUrl}/${workspaceId}/addMember`, { email });
+  inviteMember(workspaceId: string, email: string, message?: string) {
+    return this.http.post(`${this.apiUrl}/${workspaceId}/addMember`, { email, message }).pipe(
+      catchError(this.handleError)
+    );
   }
 
-  bulkInviteMembers(workspaceId: string, emails: string[]) {
-    return this.http.post(`${this.apiUrl}/${workspaceId}/bulkInvite`, { emails });
+  bulkInviteMembers(workspaceId: string, emails: string[], message?: string) {
+    return this.http.post(`${this.apiUrl}/${workspaceId}/bulkInvite`, { emails, message }).pipe(
+      catchError(this.handleError)
+    );
   }
 
   getWorkSpaces(): Observable<WorkspacePopulated[]> {

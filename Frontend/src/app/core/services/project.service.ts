@@ -42,22 +42,22 @@ export class ProjectService {
     );
   }
 
-  inviteMember(projectId: string, email: string): Observable<any> {
+  inviteMember(projectId: string, email: string, message?: string): Observable<any> {
     if (!projectId || !email) {
       return throwError(() => new Error('Project ID and email are required'));
     }
 
-    return this.http.post(`${this.apiUrl}/${projectId}/addMember`, { email }).pipe(
+    return this.http.post(`${this.apiUrl}/${projectId}/addMember`, { email, message }).pipe(
       catchError(this.handleError)
     );
   }
 
-  bulkInviteMembers(projectId: string, emails: string[]): Observable<any> {
+  bulkInviteMembers(projectId: string, emails: string[], message?: string): Observable<any> {
     if (!projectId || !emails || emails.length === 0) {
       return throwError(() => new Error('Project ID and emails are required'));
     }
 
-    return this.http.post(`${this.apiUrl}/${projectId}/bulkInvite`, { emails }).pipe(
+    return this.http.post(`${this.apiUrl}/${projectId}/bulkInvite`, { emails, message }).pipe(
       catchError(this.handleError)
     );
   }

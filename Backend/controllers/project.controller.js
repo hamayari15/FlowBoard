@@ -34,7 +34,7 @@ exports.createProject = async (req, res) => {
 exports.inviteMember = async (req, res) => {
   try {
     const projectId = req.params.id;
-    const { email } = req.body;
+    const { email, message } = req.body;
 
     if (!email || !email.trim()) {
       return res.status(400).json({ message: "Email is required" });
@@ -81,7 +81,8 @@ exports.inviteMember = async (req, res) => {
       projectId: project._id,
       workspaceName: project.workspace.name,
       projectStatus: project.status,
-      inviterName: `${project.owner.firstName} ${project.owner.lastName}`
+      inviterName: `${project.owner.firstName} ${project.owner.lastName}`,
+      personalMessage: typeof message === 'string' ? message.trim() || undefined : undefined
     };
 
     if (user) {
@@ -142,7 +143,7 @@ exports.inviteMember = async (req, res) => {
 exports.bulkInviteMembers = async (req, res) => {
   try {
     const projectId = req.params.id;
-    const { emails } = req.body;
+    const { emails, message } = req.body;
 
     if (!emails || !Array.isArray(emails) || emails.length === 0) {
       return res.status(400).json({ message: "Emails array is required and must not be empty" });
@@ -208,7 +209,8 @@ exports.bulkInviteMembers = async (req, res) => {
           projectId: project._id,
           workspaceName: project.workspace.name,
           projectStatus: project.status,
-          inviterName: `${project.owner.firstName} ${project.owner.lastName}`
+          inviterName: `${project.owner.firstName} ${project.owner.lastName}`,
+          personalMessage: typeof message === 'string' ? message.trim() || undefined : undefined
         };
 
         if (user) {
