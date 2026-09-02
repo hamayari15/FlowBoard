@@ -69,6 +69,7 @@ export class ProjectDetailsComponent implements OnInit {
   openProjectInviteDialog() {
     const dialogRef = this.dialog.open(ProjectInviteDialogComponent, {
       width: '500px',
+      maxWidth: '90vw',
       data: {
         projectId: this.projectId,
         projectName: this.projectData.name,
@@ -83,6 +84,7 @@ export class ProjectDetailsComponent implements OnInit {
   openEditProjectDialog(project: ProjectPopulated) {
     const dialogRef = this.dialog.open(ProjectDialogComponent, {
       width: '450px',
+      maxWidth: '90vw',
       data: { mode: 'edit', project },
     });
     dialogRef.afterClosed().subscribe((result) => {
@@ -189,6 +191,7 @@ export class ProjectDetailsComponent implements OnInit {
   openCreateSprintDialog() {
     const dialogRef = this.dialog.open(BoardDialogComponent, {
       width: '500px',
+      maxWidth: '90vw',
       data: {
         mode: 'add',
         projectId: this.projectId,
@@ -203,6 +206,7 @@ export class ProjectDetailsComponent implements OnInit {
   openEditSprintDialog(sprint: Board) {
     const dialogRef = this.dialog.open(BoardDialogComponent, {
       width: '500px',
+      maxWidth: '90vw',
       data: {
         mode: 'edit',
         board: sprint,
