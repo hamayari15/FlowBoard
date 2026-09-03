@@ -18,7 +18,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   
   private authSubscription: Subscription = new Subscription();
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(public authService: AuthService, private router: Router) {}
 
   ngOnInit(): void {
     this.authSubscription = this.authService.isLoggedIn$.subscribe(
@@ -41,6 +41,11 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   toggleMobileMenu() {
     this.isMenuOpen = !this.isMenuOpen;
+  }
+
+  createNewAccount(): void {
+    this.authService.logout();
+    this.router.navigate(['/register']);
   }
 
   logout() {

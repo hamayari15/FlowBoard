@@ -1,7 +1,7 @@
 <nav class="navbar">
   <div class="navbar-container">
     <div class="navbar-brand">
-        <div class="logo-placeholder"><img src="assets/logo.png" alt=""> </div> 
+        <div class="logo-placeholder"><img src="assets/board.png" alt=""> </div> 
       <span class="brand-text" routerLink="/">flowBoard</span>  
     </div>
 
@@ -21,7 +21,10 @@
       <div class="user-info" *ngIf="currentUser">
         <span class="welcome-text">Welcome, {{ currentUser.userName }} !</span>
       </div>
-      <button class="btn-secondary" (click)="logout()">
+      <button class="btn-secondary" routerLink="/register" (click)="createNewAccount()">
+        <i class="fas fa-user-plus"></i> Create New Account
+      </button>
+      <button class="btn-logout" (click)="logout()">
         <i class="fas fa-sign-out-alt"></i> Logout
       </button>
     </div>
@@ -49,6 +52,9 @@
       <div class="mobile-user-info" *ngIf="currentUser">
         <span>Welcome, {{ currentUser.userName }}</span>
       </div>
+       <a routerLink="/register" class="mobile-nav-item" (click)="toggleMobileMenu(); createNewAccount()">
+         <i class="fas fa-user-plus"></i> Create New Account
+       </a>
       <button class="mobile-nav-item logout-btn" (click)="logout(); toggleMobileMenu()">
         <i class="fas fa-sign-out-alt"></i> Logout
       </button>

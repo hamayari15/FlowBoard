@@ -24,10 +24,7 @@
   cursor: pointer;
 }
 
-.logo-placeholder img {
-  width: 40px;
-  height: 40px;
-}
+.logo-placeholder img { width: 24px; height: 24px; }
 
 .brand-text {
   font-size: 20px;
@@ -67,7 +64,7 @@
   letter-spacing: 0.2px;
 }
 
-.btn-primary, .btn-secondary {
+.btn-primary, .btn-secondary, .btn-logout {
   display: flex;
   align-items: center;
   gap: 6px;
@@ -102,6 +99,17 @@
   background: rgba(102, 126, 234, 0.08);
   border-color: #667eea;
   color: #5a67d8;
+}
+
+.btn-logout {
+  background: transparent;
+  color: #e53e3e;
+  border-color: rgba(229, 62, 62, 0.4);
+}
+
+.btn-logout:hover {
+  background: rgba(229, 62, 62, 0.08);
+  border-color: #e53e3e;
 }
 
 .mobile-menu-toggle {
@@ -182,13 +190,9 @@
   border-bottom: 1px solid rgba(102, 126, 234, 0.15);
 }
 
-.logout-btn {
-  color: #e53e3e !important;
-}
+.logout-btn { color: #e53e3e !important; }
 
-.logout-btn:hover {
-  background: rgba(229, 62, 62, 0.08) !important;
-}
+.logout-btn:hover { background: rgba(229, 62, 62, 0.08) !important; }
 
 @media (max-width: 768px) {
   .navbar-actions {

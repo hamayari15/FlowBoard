@@ -307,9 +307,7 @@
   font-size: 0.75rem;
 }
 
-.edit {
-  color: #388e3c !important;
-}
+.edit { color: #388e3c !important; }
 
 .columns-container {
   display: flex;
@@ -321,9 +319,7 @@
   padding: 0 1rem;
 }
 
-.columns-container::-webkit-scrollbar {
-  height: 6px;
-}
+.columns-container::-webkit-scrollbar { height: 6px; }
 
 .columns-container::-webkit-scrollbar-thumb {
   background: rgba(0, 0, 0, 0.15);
@@ -345,8 +341,6 @@
   height: 100%;
 }
 
-/* Status accent colors: recognized statuses get a semantic color, custom
-   column names cycle through the fallback palette (see getColumnAccentClass). */
 .column.col-accent-todo { --accent: #64748b; }
 .column.col-accent-progress { --accent: #f59e0b; }
 .column.col-accent-review { --accent: #8b5cf6; }
@@ -400,9 +394,7 @@
   transition: box-shadow 0.2s ease;
 }
 
-.task-card:hover {
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
-}
+.task-card:hover { box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15); }
 
 .task-header {
   display: flex;
@@ -475,10 +467,7 @@
 .task-priority.priority-medium { color: #fb8c00; }
 .task-priority.priority-low { color: #43a047; }
 
-.task-assignee {
-  display: flex;
-  align-items: center;
-}
+.task-assignee { display: flex; align-items: center; }
 
 .assignee-initials {
   width: 30px;
@@ -539,9 +528,7 @@
   padding: 0.2rem 0.6rem;
 }
 
-.cdk-drop-list-dragging .column {
-  min-height: 100%;
-}
+.cdk-drop-list-dragging .column { min-height: 100%; }
 
 @media (max-width: 1024px) {
   .board-view-container {
@@ -561,10 +548,6 @@
 }
 
 @media (max-width: 768px) {
-  /* App-bar layout: back arrow and the edit/delete icon buttons share the
-     top row (like a normal mobile toolbar), the sprint info block flows
-     full-width underneath. Replaces the old full-width action buttons that
-     sat awkwardly above the back arrow. */
   .board-header {
     display: grid;
     grid-template-columns: auto 1fr auto;
@@ -584,10 +567,24 @@
 
   .board-info {
     grid-area: info;
-    flex-direction: column;
-    align-items: flex-start;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
     gap: 0.6rem;
     width: 100%;
+  }
+
+   .sprint-goal-banner {
+    flex: 1 1 auto;
+    min-width: 0;
+    max-width: 100%;
+    overflow: hidden;
+  }
+
+  .sprint-goal-banner span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   .sprint-dates-info,
@@ -601,8 +598,6 @@
     gap: 0.4rem;
   }
 
-  /* Icon-only, same footprint as the back button, instead of stretched
-     full-width pills. */
   .btn-label {
     display: none;
   }
@@ -617,9 +612,6 @@
     justify-content: center;
   }
 
-  /* With the label hidden, Material's own icon-to-label spacing (a
-     trailing margin meant to leave room before the button text) pushes the
-     icon off-center to the left. Zero it so the icon centers in the circle. */
   .board-actions button mat-icon {
     margin: 0 !important;
   }
@@ -632,10 +624,6 @@
     height: 100%;
   }
 
-  /* Swipeable status columns: each column snaps into view and scrolls its
-     own task list, so the page itself doesn't turn into one long list.
-     justify-content must stay flex-start here — "center" on a scrollable
-     flex container makes the start of the content unreachable by scrolling. */
   .columns-container {
     flex-direction: row;
     flex-wrap: nowrap;
@@ -728,9 +716,7 @@
     font-size: 0.7rem;
   }
 
-  .board-title {
-    font-size: 1.1rem;
-  }
+  .board-title { font-size: 1.1rem; }
 
   .task-count {
     padding: 2px 6px;
