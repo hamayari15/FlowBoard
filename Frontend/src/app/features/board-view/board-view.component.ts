@@ -30,6 +30,7 @@ export class BoardViewComponent implements OnInit, OnDestroy {
   loading = true;
   error: string | null = null;
   private destroy$ = new Subject<void>();
+  private readonly columnAccentPalette = ['col-accent-1', 'col-accent-2', 'col-accent-3', 'col-accent-4', 'col-accent-5'];
 
   constructor(
     private route: ActivatedRoute,
@@ -65,12 +66,6 @@ export class BoardViewComponent implements OnInit, OnDestroy {
         }
       });
   }
-
-  truncateBoardName(name: string | undefined, maxLength: number): string {
-    if (!name) return 'Loading...';
-    return name.length > maxLength ? name.slice(0, maxLength) + '...' : name;
-  }
-
 
   loadTasks(): void {
     this.taskService.getTasksByBoard(this.boardId)
@@ -301,6 +296,18 @@ export class BoardViewComponent implements OnInit, OnDestroy {
 
   getColumnId(column: ColumnWithTasks): string {
     return column.id;
+  }
+
+  /** Picks a visual accent for a status column: recognized status names get a
+   * semantic color (todo/progress/review/done), anything custom falls back to
+   * a rotating palette based on the column's order. */
+  getColumnAccentClass(column: ColumnWithTasks): string {
+    const name = (column.name || '').toLowerCase();
+    if (/(done|complete|closed)/.test(name)) return 'col-accent-done';
+    if (/(progress|doing|active)/.test(name)) return 'col-accent-progress';
+    if (/(review|qa|test)/.test(name)) return 'col-accent-review';
+    if (/(to ?do|backlog|open|new)/.test(name)) return 'col-accent-todo';
+    return this.columnAccentPalette[(column.order ?? 0) % this.columnAccentPalette.length];
   }
 
   getSprintStatusText(): string {
