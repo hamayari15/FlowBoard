@@ -71,6 +71,7 @@ export class TaskDetailDialogComponent implements OnInit {
   editComment(comment: any): void {
     const dialogRef = this.dialog.open(EditCommentDialogComponent, {
       width: '450px',
+      maxWidth: '90vw',
       data: { comment }
     });
     dialogRef.afterClosed().subscribe(result => {

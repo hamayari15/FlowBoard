@@ -28,6 +28,8 @@
   min-height: 350px;
   max-height: 70vh;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
 }
 
 .task-form { display: flex; flex-direction: column; gap: 16px; }
@@ -140,21 +142,33 @@
 .mat-mdc-form-field-hint { color: #666; }
 
 @media (max-width: 600px) {
+  /* Was two nested scroll regions: this container scrolled itself
+     (overflow-y: auto) while .dialog-content also scrolled internally
+     (max-height: 70vh) - that's what made mobile scroll feel stuck/janky
+     and could leave the action buttons unreachable. A single flex column
+     with only .dialog-content scrolling fixes it: title and actions stay
+     pinned, and there's exactly one smooth scroll area between them. */
   .task-dialog-container {
+    display: flex;
+    flex-direction: column;
     max-height: 90vh;
-    overflow-y: auto;
   }
 
   .dialog-title {
+    flex: 0 0 auto;
     font-size: 20px;
     padding: 20px 20px 12px;
   }
 
   .dialog-content {
+    flex: 1 1 auto;
+    min-height: 120px;
+    max-height: none;
     padding: 20px;
   }
 
   .dialog-actions {
+    flex: 0 0 auto;
     padding: 12px 20px 20px;
     flex-direction: column-reverse;
   }

@@ -22,6 +22,13 @@ exports.register = async (req, res) => {
       return res.status(400).json({ message: "Please enter a valid email address" });
     }
 
+    // Mirrors register.component.ts: Validators.minLength(12) on the email field.
+    // Not enforced in the User schema itself - that would also apply to login's
+    // user.save() and could lock out existing accounts with shorter emails.
+    if (email.trim().length < 12) {
+      return res.status(400).json({ message: "Email must be at least 12 characters long" });
+    }
+
      if (firstName.trim().length < 2 || firstName.trim().length > 30) {
       return res.status(400).json({ message: "First name must be between 2 and 30 characters" });
     }
@@ -70,7 +77,9 @@ exports.register = async (req, res) => {
       
       if (!workspace.members.includes(registredUser._id)) {
         workspace.members.push(registredUser._id);
-        await workspace.save();
+        // Only the members array changed - don't let unrelated legacy data
+        // on this workspace block adding the new member.
+        await workspace.save({ validateModifiedOnly: true });
       }
     }
 
@@ -82,14 +91,14 @@ exports.register = async (req, res) => {
 
       if (!project.members.includes(registredUser._id)) {
         project.members.push(registredUser._id);
-        await project.save();
+        await project.save({ validateModifiedOnly: true });
       }
-      
+
       if (project.workspace) {
         const workspace = await workSpace.findById(project.workspace._id);
         if (workspace && !workspace.members.includes(registredUser._id)) {
           workspace.members.push(registredUser._id);
-          await workspace.save();
+          await workspace.save({ validateModifiedOnly: true });
         }
       }
     }
@@ -171,7 +180,9 @@ exports.login = async (req, res) => {
     }
 
     user.lastLogin = new Date();
-    await user.save();
+    // Only lastLogin changed - don't let unrelated legacy data on this
+    // account block logging in.
+    await user.save({ validateModifiedOnly: true });
 
     const payload = { 
       _id: user._id,

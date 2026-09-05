@@ -28,6 +28,8 @@
   min-height: 350px;
   max-height: 70vh;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
 }
 
 .project-form {
@@ -107,14 +109,30 @@
 .project-form textarea { resize: vertical; min-height: 80px; }
 
 @media (max-width: 600px) {
+  /* Pin the title and actions in place and let .dialog-content be the only
+     scrolling region, sized to fill whatever space is left between them -
+     same fix applied to board-dialog/task-dialog, kept consistent here. */
+  .project-dialog-container {
+    display: flex;
+    flex-direction: column;
+    max-height: 90vh;
+  }
+
   .dialog-title {
+    flex: 0 0 auto;
     font-size: 20px;
     padding: 20px 20px 12px;
   }
 
-  .dialog-content { padding: 20px; }
+  .dialog-content {
+    flex: 1 1 auto;
+    min-height: 120px;
+    max-height: none;
+    padding: 20px;
+  }
 
   .dialog-actions {
+    flex: 0 0 auto;
     padding: 12px 20px 20px;
     flex-direction: column-reverse;
   }
@@ -141,4 +159,4 @@
 .mat-mdc-form-field-error { font-size: 12px; line-height: 1.4; }
 
 .mat-mdc-form-field-error { color: #f44336; }
-.mat-mdc-form-field-hint { color: #666; }
+.mat-mdc-form-field-hint { color: #666; }

@@ -27,6 +27,10 @@ exports.createComment = async (req, res) => {
     res.status(201).json(savedComment);
   } catch (error) {
     console.error('Error creating comment:', error);
+    if (error.name === 'ValidationError') {
+      const messages = Object.values(error.errors).map(e => e.message);
+      return res.status(400).json({ message: messages.join('. ') });
+    }
     res.status(500).json({ message: 'Failed to create comment', error: error.message });
   }
 };
@@ -77,7 +81,7 @@ exports.updateComment = async (req, res) => {
     const updatedComment = await Comment.findByIdAndUpdate(
       id,
       { content, isEdited: true },
-      { new: true }
+      { new: true, runValidators: true }
     );
 
     if (!updatedComment) {
@@ -87,6 +91,10 @@ exports.updateComment = async (req, res) => {
     res.status(200).json(updatedComment);
   } catch (error) {
     console.error('Error updating comment:', error);
+    if (error.name === 'ValidationError') {
+      const messages = Object.values(error.errors).map(e => e.message);
+      return res.status(400).json({ message: messages.join('. ') });
+    }
     res.status(500).json({ message: 'Failed to update comment', error: error.message });
   }
 };

@@ -36,6 +36,10 @@ exports.createTask = async (req, res) => {
 
     res.status(201).json(populatedTask);
   } catch (err) {
+    if (err.name === 'ValidationError') {
+      const messages = Object.values(err.errors).map(e => e.message);
+      return res.status(400).json({ message: messages.join('. ') });
+    }
     res.status(500).json({ message: "Failed to create task", error: err.message });
   }
 };
@@ -81,7 +85,7 @@ exports.Update = async (req, res) => {
     delete updateData.createdAt;
     delete updateData.updatedAt;
 
-    const updatedTask = await Task.findByIdAndUpdate(id, updateData, { new: true })
+    const updatedTask = await Task.findByIdAndUpdate(id, updateData, { new: true, runValidators: true })
       .populate('board', 'name description')
       .populate('assignee', 'firstName lastName email avatar')
       .populate('createdBy', 'firstName lastName email avatar')
@@ -92,6 +96,10 @@ exports.Update = async (req, res) => {
     }
     res.status(200).json(updatedTask);
   } catch (err) {
+    if (err.name === 'ValidationError') {
+      const messages = Object.values(err.errors).map(e => e.message);
+      return res.status(400).json({ message: messages.join('. ') });
+    }
     res.status(500).json({ message: "Error updating task", error: err.message });
   }
 };
@@ -121,7 +129,7 @@ exports.updatePosition = async (req, res) => {
     const updatedTask = await Task.findByIdAndUpdate(
       id,
       { position },
-      { new: true }
+      { new: true, runValidators: true }
     )
     .populate('assignee', 'firstName lastName email avatar')
     .populate('createdBy', 'firstName lastName email avatar')
@@ -158,4 +166,4 @@ exports.bulkUpdatePositions = async (req, res) => {
   } catch (err) {
     res.status(500).json({ message: "Error updating task positions", error: err.message });
   }
-};
+};

@@ -50,10 +50,9 @@
         <mat-icon class="title-icon">assessment</mat-icon>
         Workspace Overview
       </h2>
-      
-      <!-- Combined Grid: Overview Cards + Chart (2 rows x 3 columns) -->
-      <div class="overview-grid">
-        <!-- Row 1, Column 1 -->
+
+      <!-- Compact KPI strip: the key numbers, visible at a glance -->
+      <div class="stats-strip">
         <div class="stat-card card-primary">
           <div class="card-icon-wrapper">
             <mat-icon class="card-mat-icon">folder</mat-icon>
@@ -64,7 +63,6 @@
           </div>
         </div>
 
-        <!-- Row 1, Column 2 -->
         <div class="stat-card card-success">
           <div class="card-icon-wrapper">
             <mat-icon class="card-mat-icon">check_circle</mat-icon>
@@ -76,8 +74,35 @@
           </div>
         </div>
 
-        <!-- Row 1, Column 3 - Chart (spans 2 rows) -->
-        <div class="chart-card chart-tall" *ngIf="projectStatusData.labels && projectStatusData.labels.length > 0">
+        <div class="stat-card card-info">
+          <div class="card-icon-wrapper">
+            <mat-icon class="card-mat-icon">task</mat-icon>
+          </div>
+          <div class="card-content">
+            <h3>{{ stats.overview.totalTasks }}</h3>
+            <p>Total Tasks</p>
+            <span class="card-detail">Across {{ stats.overview.totalBoards }} boards</span>
+          </div>
+        </div>
+
+        <div class="stat-card" [class.card-warning]="stats.overview.overdueTasks > 0" [class.card-neutral]="stats.overview.overdueTasks === 0">
+          <div class="card-icon-wrapper">
+            <mat-icon class="card-mat-icon" [style.color]="stats.overview.overdueTasks > 0 ? '#f59e0b' : '#10b981'">
+              {{ stats.overview.overdueTasks > 0 ? 'warning' : 'stars' }}
+            </mat-icon>
+          </div>
+          <div class="card-content">
+            <h3>{{ stats.overview.overdueTasks }}</h3>
+            <p>Overdue Tasks</p>
+            <span class="card-detail" *ngIf="stats.overview.overdueTasks > 0">Needs attention</span>
+            <span class="card-detail" *ngIf="stats.overview.overdueTasks === 0">All on track!</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Charts side by side: status split + member performance -->
+      <div class="overview-charts">
+        <div class="chart-card" *ngIf="projectStatusData.labels && projectStatusData.labels.length > 0">
           <div class="chart-header">
             <mat-icon class="chart-icon">pie_chart</mat-icon>
             <div class="chart-title-group">
@@ -94,49 +119,21 @@
           </div>
         </div>
 
-        <!-- Row 2, Column 1 -->
-        <div class="stat-card card-info">
-          <div class="card-icon-wrapper">
-            <mat-icon class="card-mat-icon">task</mat-icon>
+        <div class="chart-card" *ngIf="memberPerformanceData.labels && memberPerformanceData.labels.length > 0">
+          <div class="chart-header">
+            <mat-icon class="chart-icon">bar_chart</mat-icon>
+            <div class="chart-title-group">
+              <h3>Team Member Performance</h3>
+              <p class="chart-description">Overall task completion by team members across all projects</p>
+            </div>
           </div>
-          <div class="card-content">
-            <h3>{{ stats.overview.totalTasks }}</h3>
-            <p>Total Tasks</p>
-            <span class="card-detail">Across {{ stats.overview.totalBoards }} boards</span>
+          <div class="chart-body">
+            <canvas baseChart
+                    [data]="memberPerformanceData"
+                    [options]="barOptions"
+                    [type]="'bar'">
+            </canvas>
           </div>
-        </div>
-
-        <!-- Row 2, Column 2 -->
-        <div class="stat-card" [class.card-warning]="stats.overview.overdueTasks > 0" [class.card-neutral]="stats.overview.overdueTasks === 0">
-          <div class="card-icon-wrapper">
-            <mat-icon class="card-mat-icon" [style.color]="stats.overview.overdueTasks > 0 ? '#f59e0b' : '#10b981'">
-              {{ stats.overview.overdueTasks > 0 ? 'warning' : 'stars' }}
-            </mat-icon>
-          </div>
-          <div class="card-content">
-            <h3>{{ stats.overview.overdueTasks }}</h3>
-            <p>Overdue Tasks</p>
-            <span class="card-detail" *ngIf="stats.overview.overdueTasks > 0">Needs attention</span>
-            <span class="card-detail" *ngIf="stats.overview.overdueTasks === 0">All on track!</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Member Performance Chart (Full Width Below) -->
-      <div class="chart-card chart-full-width" *ngIf="memberPerformanceData.labels && memberPerformanceData.labels.length > 0">
-        <div class="chart-header">
-          <mat-icon class="chart-icon">bar_chart</mat-icon>
-          <div class="chart-title-group">
-            <h3>Team Member Performance</h3>
-            <p class="chart-description">Overall task completion by team members across all projects</p>
-          </div>
-        </div>
-        <div class="chart-body chart-body-wide">
-          <canvas baseChart
-                  [data]="memberPerformanceData"
-                  [options]="barOptions"
-                  [type]="'bar'">
-          </canvas>
         </div>
       </div>
     </div>

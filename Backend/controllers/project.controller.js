@@ -26,6 +26,10 @@ exports.createProject = async (req, res) => {
     res.status(201).json(savedProject);
 
   } catch (err) {
+    if (err.name === 'ValidationError') {
+      const messages = Object.values(err.errors).map(e => e.message);
+      return res.status(400).json({ message: messages.join('. ') });
+    }
     res.status(500).json({ message: "Error creating project", error: err.message });
   }
 };
@@ -45,11 +49,16 @@ exports.inviteMember = async (req, res) => {
       return res.status(400).json({ message: "Please provide a valid email address" });
     }
 
+    // Mirrors project-invite-dialog.component.ts: Validators.maxLength(500) on the message field
+    if (typeof message === 'string' && message.length > 500) {
+      return res.status(400).json({ message: "Message must not exceed 500 characters" });
+    }
+
     const project = await Project.findById(projectId)
       .populate("members", "_id email firstName lastName")
       .populate("workspace", "_id name members")
       .populate("owner", "_id email firstName lastName");
-      
+
     if (!project) {
       return res.status(404).json({ message: "Project not found" });
     }
@@ -89,13 +98,16 @@ exports.inviteMember = async (req, res) => {
 
       if (!project.members.some(m => m._id.equals(user._id))) {
         project.members.push(user._id);
-        await project.save();
+        // Only the members array changed - don't let unrelated legacy data
+        // on this project (e.g. a name/description predating these length
+        // limits) block adding a member.
+        await project.save({ validateModifiedOnly: true });
       }
 
       const workspace = await Workspace.findById(project.workspace._id);
       if (!workspace.members.some(m => m.equals(user._id))) {
         workspace.members.push(user._id);
-        await workspace.save();
+        await workspace.save({ validateModifiedOnly: true });
       }
 
       await sendInvitationEmail('PROJECT_ADD_EXISTING', emailData);
@@ -153,11 +165,16 @@ exports.bulkInviteMembers = async (req, res) => {
       return res.status(400).json({ message: "Maximum 50 emails allowed per bulk invitation" });
     }
 
+    // Mirrors project-invite-dialog.component.ts: Validators.maxLength(500) on the message field
+    if (typeof message === 'string' && message.length > 500) {
+      return res.status(400).json({ message: "Message must not exceed 500 characters" });
+    }
+
     const project = await Project.findById(projectId)
       .populate("members", "_id email firstName lastName")
       .populate("workspace", "_id name members")
       .populate("owner", "_id email firstName lastName");
-      
+
     if (!project) {
       return res.status(404).json({ message: "Project not found" });
     }
@@ -221,7 +238,7 @@ exports.bulkInviteMembers = async (req, res) => {
           const workspace = await Workspace.findById(project.workspace._id);
           if (!workspace.members.some(m => m.equals(user._id))) {
             workspace.members.push(user._id);
-            await workspace.save();
+            await workspace.save({ validateModifiedOnly: true });
           }
 
           await sendInvitationEmail('PROJECT_ADD_EXISTING', emailData);
@@ -251,7 +268,7 @@ exports.bulkInviteMembers = async (req, res) => {
     }
 
     if (results.successful.some(r => r.userExists)) {
-      await project.save();
+      await project.save({ validateModifiedOnly: true });
     }
 
     const summary = {
@@ -319,7 +336,7 @@ exports.Update = async (req, res) => {
     const id = req.params.id;
     const newData = req.body;
 
-    const updatedProject = await Project.findByIdAndUpdate(id, newData, {new: true});
+    const updatedProject = await Project.findByIdAndUpdate(id, newData, { new: true, runValidators: true });
 
     if (!updatedProject) {
       return res.status(404).json({ message: "Project not found" });
@@ -327,6 +344,10 @@ exports.Update = async (req, res) => {
     res.status(200).json(updatedProject);
 
   } catch (err) {
+    if (err.name === 'ValidationError') {
+      const messages = Object.values(err.errors).map(e => e.message);
+      return res.status(400).json({ message: messages.join('. ') });
+    }
     res.status(500).json({ message: "Error updating project", error: err.message });
   }
 };
@@ -342,7 +363,10 @@ exports.ToggleArchive = async (req, res) => {
     }
 
     project.isArchived = !project.isArchived;
-    await project.save();
+    // Only the isArchived flag changed - don't let unrelated legacy data
+    // on this project (e.g. a name/description predating these length
+    // limits) block archiving/unarchiving.
+    await project.save({ validateModifiedOnly: true });
 
     res.status(200).json({
       message: project.isArchived ? "Project archived successfully" : "Project unarchived successfully",
@@ -350,6 +374,10 @@ exports.ToggleArchive = async (req, res) => {
     });
 
   } catch (err) {
+    if (err.name === 'ValidationError') {
+      const messages = Object.values(err.errors).map(e => e.message);
+      return res.status(400).json({ message: messages.join('. ') });
+    }
     res.status(500).json({ message: "Error updating project archive status", error: err.message });
   }
 };
@@ -368,4 +396,4 @@ exports.Delete = async (req, res) => {
   } catch (err) {
     res.status(500).json({ message: "Error deleting project", error: err.message });
   }
-};
+};

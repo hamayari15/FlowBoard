@@ -36,6 +36,10 @@ exports.createWorkSpace = async (req, res) => {
     res.status(201).json(savedWorkSpace);
 
   } catch (err) {
+    if (err.name === 'ValidationError') {
+      const messages = Object.values(err.errors).map(e => e.message);
+      return res.status(400).json({ message: messages.join('. ') });
+    }
     res.status(500).json({ message: "Error creating workspace", error: err.message });
   }
 };
@@ -53,6 +57,11 @@ exports.inviteMember = async (req, res) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email.trim())) {
       return res.status(400).json({ message: "Please provide a valid email address" });
+    }
+
+    // Mirrors workspace-invite-dialog.component.ts: Validators.maxLength(500) on the message field
+    if (typeof message === 'string' && message.length > 500) {
+      return res.status(400).json({ message: "Message must not exceed 500 characters" });
     }
 
     const wSpace = await workSpace.findById(workspaceId)
@@ -94,7 +103,10 @@ exports.inviteMember = async (req, res) => {
 
     if (user) {
       wSpace.members.push(user._id);
-      await wSpace.save();
+      // Only the members array changed - don't let unrelated legacy data
+      // on this workspace (e.g. a name/description predating these length
+      // limits) block adding a member.
+      await wSpace.save({ validateModifiedOnly: true });
 
       await sendInvitationEmail('WORKSPACE_ADD_EXISTING', emailData);
 
@@ -148,6 +160,11 @@ exports.bulkInviteMembers = async (req, res) => {
 
     if (emails.length > 50) {
       return res.status(400).json({ message: "Maximum 50 emails allowed per bulk invitation" });
+    }
+
+    // Mirrors workspace-invite-dialog.component.ts: Validators.maxLength(500) on the message field
+    if (typeof message === 'string' && message.length > 500) {
+      return res.status(400).json({ message: "Message must not exceed 500 characters" });
     }
 
     const wSpace = await workSpace.findById(workspaceId)
@@ -236,7 +253,7 @@ exports.bulkInviteMembers = async (req, res) => {
     }
 
     if (results.successful.some(r => r.userExists)) {
-      await wSpace.save();
+      await wSpace.save({ validateModifiedOnly: true });
     }
 
     const summary = {
@@ -536,14 +553,18 @@ exports.Update = async (req, res) => {
     const id = req.params.id;
     const newData = req.body;
 
-    const updatedWorkSpace = await workSpace.findByIdAndUpdate(id, newData, { new: true }).populate("owner").populate("members");
+    const updatedWorkSpace = await workSpace.findByIdAndUpdate(id, newData, { new: true, runValidators: true }).populate("owner").populate("members");
     if (!updatedWorkSpace) {
       return res.status(404).json({ message: "Workspace not found" });
     }
-    
+
     res.status(200).json(updatedWorkSpace);
 
   } catch (err) {
+    if (err.name === 'ValidationError') {
+      const messages = Object.values(err.errors).map(e => e.message);
+      return res.status(400).json({ message: messages.join('. ') });
+    }
     res.status(500).json({ message: "Error updating workSpace", error: err.message });
   }
 };
@@ -562,4 +583,4 @@ exports.Delete = async (req, res) => {
   } catch (err) {
     res.status(500).json({ message: "Error Deleting Workspace", error: err.message });
   }
-};
+};

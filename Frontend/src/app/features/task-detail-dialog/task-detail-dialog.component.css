@@ -1,5 +1,7 @@
 .task-detail-dialog {
   min-width: 550px;
+  display: flex;
+  flex-direction: column;
 }
 
 .dialog-header {
@@ -8,6 +10,7 @@
   justify-content: space-between;
   padding: 16px 20px;
   border-bottom: 1px solid #e0e0e0;
+  flex: 0 0 auto;
 }
 
 .dialog-header h2 {
@@ -28,6 +31,10 @@ mat-dialog-content {
   padding: 20px;
   max-height: 70vh;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  flex: 1 1 auto;
+  min-height: 0;
 }
 
 .task-content {
@@ -356,4 +363,35 @@ mat-spinner {
 .comment-date {
   font-size: 12px;
   color: #999;
+}
+
+@media (max-width: 600px) {
+  /* This dialog had no mobile styling at all: the fixed min-width: 550px
+     above forced it wider than a phone screen (the dialog.open() call caps
+     the panel at maxWidth: 90vw, so the two fought each other and forced
+     horizontal overflow/clipping). Dropping the min-width, capping overall
+     height, and keeping mat-dialog-content as the single flexed scroll
+     region brings this in line with the other dialogs' mobile behavior. */
+  .task-detail-dialog {
+    min-width: unset;
+    width: 100%;
+    max-height: 92vh;
+  }
+
+  .dialog-header {
+    padding: 14px 16px;
+  }
+
+  .dialog-header h2 {
+    font-size: 16px;
+  }
+
+  mat-dialog-content {
+    padding: 16px;
+    max-height: none;
+  }
+
+  .task-metadata-grid {
+    grid-template-columns: 1fr;
+  }
 }

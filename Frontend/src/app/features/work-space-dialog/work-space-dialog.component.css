@@ -29,6 +29,8 @@
   min-height: 280px;
   max-height: 70vh;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
 }
 
 .workspace-form { display: flex; flex-direction: column; gap: 16px; }
@@ -71,14 +73,30 @@
 }
 
 @media (max-width: 600px) {
+  /* Pin the title and actions in place and let .dialog-content be the only
+     scrolling region, sized to fill whatever space is left between them -
+     same fix applied to board-dialog/task-dialog, kept consistent here. */
+  .workspace-dialog-container {
+    display: flex;
+    flex-direction: column;
+    max-height: 90vh;
+  }
+
   .dialog-title {
+    flex: 0 0 auto;
     font-size: 20px;
     padding: 20px 20px 12px;
   }
 
-  .dialog-content { padding: 20px; }
+  .dialog-content {
+    flex: 1 1 auto;
+    min-height: 120px;
+    max-height: none;
+    padding: 20px;
+  }
 
   .dialog-actions {
+    flex: 0 0 auto;
     padding: 12px 20px 20px;
     flex-direction: column-reverse;
   }

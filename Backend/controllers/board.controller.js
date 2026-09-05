@@ -12,6 +12,12 @@ exports.createBoard = async (req, res) => {
       return res.status(400).json({ message: "Board name and project are required" });
     }
 
+    // Mirrors board-dialog.component.ts: the end-date picker's [min] is
+    // clamped to the chosen start date, so end can never precede start.
+    if (startDate && endDate && new Date(endDate) < new Date(startDate)) {
+      return res.status(400).json({ message: "End date must be on or after the start date" });
+    }
+
     const projectDoc = await Project.findById(actualProjectId);
     if (!projectDoc) {
       return res.status(404).json({ message: "Project not found" });
@@ -52,6 +58,10 @@ exports.createBoard = async (req, res) => {
 
   } catch (err) {
     console.error('Error creating board:', err);
+    if (err.name === 'ValidationError') {
+      const messages = Object.values(err.errors).map(e => e.message);
+      return res.status(400).json({ message: messages.join('. ') });
+    }
     res.status(500).json({ message: "Failed to create board", error: err.message });
   }
 };
@@ -96,7 +106,23 @@ exports.Update = async (req, res) => {
     const id = req.params.id;
     const newData = req.body;
 
-    const updatedBoard = await Board.findByIdAndUpdate(id, newData, { new: true });
+    // Only re-check the date range when a date field is actually being
+    // touched - merge against the stored value for whichever side is absent
+    // from this request, same "end can't precede start" rule as create.
+    if (newData.startDate !== undefined || newData.endDate !== undefined) {
+      const existingBoard = await Board.findById(id);
+      if (!existingBoard) {
+        return res.status(404).json({ message: "Board not found" });
+      }
+
+      const effectiveStart = newData.startDate !== undefined ? newData.startDate : existingBoard.startDate;
+      const effectiveEnd = newData.endDate !== undefined ? newData.endDate : existingBoard.endDate;
+      if (effectiveStart && effectiveEnd && new Date(effectiveEnd) < new Date(effectiveStart)) {
+        return res.status(400).json({ message: "End date must be on or after the start date" });
+      }
+    }
+
+    const updatedBoard = await Board.findByIdAndUpdate(id, newData, { new: true, runValidators: true });
     if (!updatedBoard) {
       return res.status(404).json({ message: "Board not found" });
     }
@@ -104,6 +130,10 @@ exports.Update = async (req, res) => {
     res.status(200).json(updatedBoard);
 
   } catch (err) {
+    if (err.name === 'ValidationError') {
+      const messages = Object.values(err.errors).map(e => e.message);
+      return res.status(400).json({ message: messages.join('. ') });
+    }
     res.status(500).json({ message: "Error updating board", error: err.message });
   }
 };
@@ -164,9 +194,9 @@ exports.completeSprint = async (req, res) => {
   try {
     const sprintId = req.params.id;
     const updatedSprint = await Board.findByIdAndUpdate(
-      sprintId, 
-      { status: 'completed' }, 
-      { new: true }
+      sprintId,
+      { status: 'completed' },
+      { new: true, runValidators: true }
     );
     
     if (!updatedSprint) {
@@ -185,9 +215,9 @@ exports.startSprint = async (req, res) => {
   try {
     const sprintId = req.params.id;
     const updatedSprint = await Board.findByIdAndUpdate(
-      sprintId, 
-      { status: 'active', startDate: new Date() }, 
-      { new: true }
+      sprintId,
+      { status: 'active', startDate: new Date() },
+      { new: true, runValidators: true }
     );
     
     if (!updatedSprint) {
@@ -229,4 +259,4 @@ exports.getSprintStats = async (req, res) => {
     console.error('Error fetching sprint stats:', err);
     res.status(500).json({ message: "Error fetching sprint statistics", error: err.message });
   }
-};
+};
