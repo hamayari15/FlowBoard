@@ -163,10 +163,6 @@
 }
 
 @media (max-width: 600px) {
-  /* Pin the title and actions in place and let .dialog-content be the only
-     scrolling region, sized to fill whatever space is left between them -
-     otherwise the form could grow past the 90vh cap with nowhere for the
-     overflow to go, pushing "Send Invitation" out of reach. */
   .invite-dialog-container {
     display: flex;
     flex-direction: column;
@@ -201,4 +197,4 @@
     align-self: flex-end;
     margin-top: 4px;
   }
-}
+}

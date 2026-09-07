@@ -109,9 +109,6 @@
 .project-form textarea { resize: vertical; min-height: 80px; }
 
 @media (max-width: 600px) {
-  /* Pin the title and actions in place and let .dialog-content be the only
-     scrolling region, sized to fill whatever space is left between them -
-     same fix applied to board-dialog/task-dialog, kept consistent here. */
   .project-dialog-container {
     display: flex;
     flex-direction: column;
@@ -159,4 +156,4 @@
 .mat-mdc-form-field-error { font-size: 12px; line-height: 1.4; }
 
 .mat-mdc-form-field-error { color: #f44336; }
-.mat-mdc-form-field-hint { color: #666; }
+.mat-mdc-form-field-hint { color: #666; }

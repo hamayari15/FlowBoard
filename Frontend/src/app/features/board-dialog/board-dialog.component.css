@@ -150,15 +150,6 @@
 }
 
 @media (max-width: 600px) {
-
-  /* The title and actions used to sit in normal document flow while this
-     container also scrolled itself (overflow-y: auto) *and* .dialog-content
-     scrolled internally (max-height: 70vh) - two nested scroll regions
-     fighting for the same touch gesture, which is what made mobile scroll
-     feel stuck/janky and could leave the action buttons unreachable.
-     Making this a single flex column with only .dialog-content scrolling
-     fixes that: the title and actions stay pinned, and there's exactly one
-     smooth scroll area sized to whatever space is left between them. */
   .board-dialog-container {
     display: flex;
     flex-direction: column;

@@ -366,12 +366,6 @@ mat-spinner {
 }
 
 @media (max-width: 600px) {
-  /* This dialog had no mobile styling at all: the fixed min-width: 550px
-     above forced it wider than a phone screen (the dialog.open() call caps
-     the panel at maxWidth: 90vw, so the two fought each other and forced
-     horizontal overflow/clipping). Dropping the min-width, capping overall
-     height, and keeping mat-dialog-content as the single flexed scroll
-     region brings this in line with the other dialogs' mobile behavior. */
   .task-detail-dialog {
     min-width: unset;
     width: 100%;

@@ -2,7 +2,7 @@
 """
 seed_db.py
 Populates the flowBoard MongoDB with sample data for a given user
-(default: amine123@gmail.com): workspaces, projects, boards, tasks,
+(default: hama123@gmail.com): workspaces, projects, boards, tasks,
 comments, and a pool of fake collaborator accounts.
 
 Defaults to local Mongo (mongodb://127.0.0.1:27017/flowBoard), matching
@@ -17,7 +17,7 @@ five times in a row unless you want 5x the data).
 Usage:
     pip install pymongo bcrypt
     python seed_db.py
-    python seed_db.py --email amine123@gmail.com --scale medium
+    python seed_db.py --email hama123@gmail.com --scale medium
     python seed_db.py --uri "mongodb+srv://...." --db flowBoard --scale large
 
 Password for every created account (main user + collaborators) is:
@@ -77,9 +77,7 @@ TASK_TITLES = [
 ]
 
 COLUMN_SETS = [
-    ["Backlog", "To Do", "In Progress", "In Review", "Done"],
-    ["To Do", "In Progress", "Done"],
-    ["Backlog", "Sprint", "In Progress", "Blocked", "Done"],
+    ["To Do", "In Progress", "In Review", "Done"],
 ]
 
 COMMENT_SNIPPETS = [
@@ -134,7 +132,7 @@ def main():
     parser = argparse.ArgumentParser(description="Seed the flowBoard MongoDB with sample data")
     parser.add_argument("--uri", default=os.environ.get("MONGODB_URI", DEFAULT_URI))
     parser.add_argument("--db", default=os.environ.get("MONGODB_DB", "flowBoard"))
-    parser.add_argument("--email", default="amine123@gmail.com",
+    parser.add_argument("--email", default="hama123@gmail.com",
                          help="Main user to populate data for")
     parser.add_argument("--scale", choices=["small", "medium", "large"], default="medium")
     parser.add_argument("--seed", type=int, default=None, help="Random seed for reproducibility")
@@ -161,7 +159,7 @@ def main():
 
     # 1. Main user
     main_id, created = get_or_create_user(
-        db, args.email, "Amine", "Hajji", "amine123", pw_hash
+        db, args.email, "hama", "Ayari", "hama123", pw_hash
     )
     print(f"Main user {args.email}: {'created' if created else 'already existed'} ({main_id})")
 

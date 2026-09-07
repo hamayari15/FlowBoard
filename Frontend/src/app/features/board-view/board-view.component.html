@@ -24,7 +24,7 @@
 
         <div class="sprint-goal-banner" *ngIf="board">
           <mat-icon [ngClass]="board?.goal ? '' : 'icon-disabled'">flag</mat-icon>
-          <span>{{ board?.goal ? board?.goal : 'No goal set' }}</span>
+          <span class="truncate" [title]="board?.goal">{{ board?.goal ? board?.goal : 'No goal set' }}</span>
         </div>
 
         <div class="sprint-dates-info" *ngIf="board">
@@ -110,4 +110,4 @@
 
   </ng-container>
 
-</div>
+</div>

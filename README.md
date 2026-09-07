@@ -10,16 +10,12 @@ A quick overview of Flowboard's core features, from authentication to managing t
 
 Here's what Flowboard looks like in action, from workspace overview to board management.
 
-![Home Page](docs/images/homePage.png)
-![Workspaces List](docs/images/workspacesList.png)
-![Workspace Details](docs/images/workspaceDetails.png)
-![Board View](docs/images/boardView.png)
+![Home Page](docs/images/Home.png)
+![About Page](docs/images/About.png)
 
 <table>
   <tr>
-    <td><img src="docs/images/login.png" width="220"></td>
-    <td><img src="docs/images/projectDetails.png" width="220"></td>
-    <td><img src="docs/images/workspaceStats.png" width="220"></td>
+    <td><img src="docs/images/HomeMobile.png" width="220"></td>
   </tr>
 </table>
 

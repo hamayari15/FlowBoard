@@ -73,9 +73,6 @@
 }
 
 @media (max-width: 600px) {
-  /* Pin the title and actions in place and let .dialog-content be the only
-     scrolling region, sized to fill whatever space is left between them -
-     same fix applied to board-dialog/task-dialog, kept consistent here. */
   .workspace-dialog-container {
     display: flex;
     flex-direction: column;

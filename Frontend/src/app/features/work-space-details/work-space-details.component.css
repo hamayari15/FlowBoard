@@ -21,11 +21,7 @@
   color: #5a5a5a;
 }
 
-.page-subtitle {
-  margin: 0;
-  font-size: 0.9rem;
-  color: #777;
-}
+.page-subtitle { margin: 0; font-size: 0.9rem; color: #777; }
 
 .page-subtitle::before {
   content: '•';
@@ -53,9 +49,7 @@
   animation: spin 0.8s linear infinite;
 }
 
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
+@keyframes spin { to { transform: rotate(360deg); } }
 
 .state-icon {
   width: 2.5rem;
@@ -80,11 +74,7 @@
 
 .state-title.error-title { color: #d32f2f; }
 
-.state-text {
-  margin: 0;
-  font-size: 0.9rem;
-  color: #777;
-}
+.state-text { margin: 0; font-size: 0.9rem; color: #777; }
 
 .state-text.error-text { color: #3a3a3a; }
 
@@ -170,10 +160,7 @@
   flex-wrap: wrap;
 }
 
-.workspace-header-actions button {
-  font-size: 0.8rem;
-  font-weight: 500;
-}
+.workspace-header-actions button { font-size: 0.8rem; font-weight: 500; }
 
 .workspace-header-actions .edit-btn { color: green; }
 .workspace-header-actions .insight-btn { color: orange; }
@@ -187,11 +174,7 @@
   background: #f9fafb;
 }
 
-.workspace-info .info-item {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-}
+.workspace-info .info-item { display: flex; align-items: center; gap: 0.6rem; }
 
 .info-icon-badge {
   display: flex;
@@ -251,11 +234,7 @@
   width: 100%;
 }
 
-.projects-title {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
+.projects-title { display: flex; align-items: center; gap: 0.5rem; }
 
 .projects-title .header-icon { color: #1976d2; }
 
@@ -618,10 +597,15 @@
 
   .project-card .project-info { gap: 0.6rem }
 
-  .card-actions { flex-direction: column; }
+  .card-actions {
+    flex-wrap: nowrap;
+    gap: 0.4rem;
+  }
 
   .card-actions button {
-    width: 100%;
+    flex: 1;
+    width: auto;
+    padding: 0 6px;
     justify-content: center;
   }
 
