@@ -11,16 +11,42 @@ A quick overview of Flowboard's core features, from authentication to managing t
 Here's what Flowboard looks like in action, from workspace overview to board management.
 
 ![Home Page](docs/screenshots/Home.png)
+
 ![About Page](docs/screenshots/About.png)
+
 ![Privacy Page](docs/screenshots/Privacy.png)
+
 ![Workspaces Page](docs/screenshots/Workspaces.png)
+
+![AddWorkspace Dialog](docs/screenshots/AddWorkspaceDialog.png)
+
+![Workspaces Page](docs/screenshots/WorkspaceStats1.png)
+
+![Workspaces Page](docs/screenshots/WorkspaceStats2.png)
+
+<td><img src="docs/screenshots/InviteViaEmailDialog.png" width="750"></td>
+
+![WorkspaceDetails Page](docs/screenshots/WorkspaceDetails.png)
+
+![EditProject Dialog](docs/screenshots/EditProjectDialog.png)
 
 <table>
   <tr>
-    <td><img src="docs/screenshots/HomeMobile.png" width="220"></td>
-    <td><img src="docs/screenshots/AboutMobile.png" width="220"></td>
-    <td><img src="docs/screenshots/WorskspacesMobile.png" width="220"></td>
-    <td><img src="docs/screenshots/WorkspaceDetailsMobile.png" width="220"></td>
+    <td><img src="docs/screenshots/ArchiveProjectAlert.png" width="750"></td>
+    <td><img src="docs/screenshots/DeleteProjectAlert.png" width="750"></td>
+  </tr>
+</table>
+
+![ProjectDetails Page](docs/screenshots/ProjectDetails.png)
+
+<td><img src="docs/screenshots/AddSprintDialog.png" width="750"></td>
+
+![BoardView Page](docs/screenshots/BoardView.png)
+
+<table>
+  <tr>
+<td><img src="docs/screenshots/TaskDetailsDialog.png" width="750"></td>
+<td><img src="docs/screenshots/EditCommentDialog.png" width="750"></td>
   </tr>
 </table>
 
