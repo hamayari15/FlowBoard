@@ -2,10 +2,6 @@
 
 Flowboard is a fully responsive task tracking web application that lets teams organize their work into workspaces, projects, and Kanban-style boards — complete with team collaboration and per-workspace analytics.
 
-## 🎬 Demo
-
-A quick overview of Flowboard's core features, from authentication to managing tasks on a board.
-
 ## 🖼️ Preview
 
 Here's what Flowboard looks like in action, from workspace overview to board management.
@@ -16,6 +12,13 @@ Here's what Flowboard looks like in action, from workspace overview to board man
 
 ![Privacy Page](docs/screenshots/Privacy.png)
 
+<table>
+  <tr>
+    <td><img src="docs/screenshots/Register.png" width="750"></td>
+    <td><img src="docs/screenshots/Login.png" width="750"></td>
+  </tr>
+</table>
+
 ![Workspaces Page](docs/screenshots/Workspaces.png)
 
 ![AddWorkspace Dialog](docs/screenshots/AddWorkspaceDialog.png)
@@ -24,7 +27,7 @@ Here's what Flowboard looks like in action, from workspace overview to board man
 
 ![Workspaces Page](docs/screenshots/WorkspaceStats2.png)
 
-<td><img src="docs/screenshots/InviteViaEmailDialog.png" width="750"></td>
+![InviteViaEmailDialog Page](docs/screenshots/InviteViaEmailDialog.png)
 
 ![WorkspaceDetails Page](docs/screenshots/WorkspaceDetails.png)
 
@@ -39,14 +42,23 @@ Here's what Flowboard looks like in action, from workspace overview to board man
 
 ![ProjectDetails Page](docs/screenshots/ProjectDetails.png)
 
-<td><img src="docs/screenshots/AddSprintDialog.png" width="750"></td>
+![AddSprintDialog Page](docs/screenshots/AddSprintDialog.png)
 
 ![BoardView Page](docs/screenshots/BoardView.png)
 
 <table>
   <tr>
-<td><img src="docs/screenshots/TaskDetailsDialog.png" width="750"></td>
-<td><img src="docs/screenshots/EditCommentDialog.png" width="750"></td>
+    <td><img src="docs/screenshots/TaskDetailsDialog.png" width="750"></td>
+    <td><img src="docs/screenshots/EditCommentDialog.png" width="750"></td>
+  </tr>
+</table>
+
+<table>
+  <tr>
+    <td><img src="docs/screenshots/HomeMobile.png" width="220px"></td>
+    <td><img src="docs/screenshots/AboutMobile.png" width="220px"></td>
+    <td><img src="docs/screenshots/WorskspacesMobile.png" width="220px"></td>
+    <td><img src="docs/screenshots/WorkspaceDetailsMobile.png" width="220px"></td>
   </tr>
 </table>
 
