@@ -174,6 +174,11 @@ flowboard/
 │
 └── frontend/
     └── src/
+        ├── assets/
+        ├── environments/
+        │   ├── environment.prod.ts
+        │   └── environment.ts
+        │
         └── app/
             ├── features/
             │   ├── home/
@@ -201,10 +206,11 @@ flowboard/
             │
             ├── core/
             │   ├── guards/
-            │   │   └── user.guard.ts
+            │   ├── models/
             │   └── services/
             │
             ├── app-routing.module.ts
             └── app.module.ts
+```
 
 ## 🗂️ Class Diagram
