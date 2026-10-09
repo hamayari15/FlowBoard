@@ -214,3 +214,6 @@ flowboard/
 ```
 
 ## 🗂️ Class Diagram
+
+![Class Diagram](docs/screenshots/classDiagram.jpg)
+
